@@ -1,4 +1,4 @@
-# DeskMate
+# DeskMate <img src="https://github.com/DAQEM/DeskMate/blob/master/MVC/wwwroot/images/logo_small_transparant.png" height="30">
 DeskMate is a web application that allows users to reserve workspaces. It allows users to search for workspaces based on location, time, and availability.
 
 The project is built using C# .NET Core 7 with 4 layers: MVC layer, BLL layer, DAL layer, and a factory layer that connects the MVC and DAL layers.
