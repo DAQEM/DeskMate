@@ -9,7 +9,7 @@ The project is built using C# .NET Core 7 with 4 layers: MVC layer, BLL layer, D
 ## Installation
 1. Clone the repository
 ```
-git clone https://github.com/yourusername/deskmate.git
+git clone https://github.com/DAQEM/DeskMate.git
 ```
 2. Open the solution file DeskMate.sln in your IDE.
 3. Build the solution.
