@@ -1,4 +1,4 @@
-﻿using BLL.Data.Repositories;
+﻿using BLL.Data.Example;
 using BLL.Entities;
 
 namespace DAL.Repositories;

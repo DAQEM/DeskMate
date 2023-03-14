@@ -8,7 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\BLL\BLL.csproj" />
-      <ProjectReference Include="..\DataFactory\DataFactory.csproj" />
+      <ProjectReference Include="..\DAL\DAL.csproj" />
     </ItemGroup>
 
     <ItemGroup>

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
+using BLL.Data.Example;
 using BLL.Entities;
-using DataFactory.Factories;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
 
@@ -9,17 +9,17 @@ namespace MVC.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
-    private readonly ExampleFactory _exampleFactory;
+    private readonly IExampleService _exampleService;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IExampleService exampleService)
     {
         _logger = logger;
-        _exampleFactory = new ExampleFactory();
+        _exampleService = exampleService;
     }
 
     public IActionResult Index()
     {
-        List<ExampleEntity> exampleEntities = _exampleFactory.GetAll();
+        List<ExampleEntity> exampleEntities = _exampleService.GetAll();
         foreach (ExampleEntity exampleEntity in exampleEntities)
         {
             Console.WriteLine(exampleEntity.Id);

@@ -1,9 +1,15 @@
-var builder = WebApplication.CreateBuilder(args);
+using BLL.Data.Example;
+using DAL.Repositories;
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-var app = builder.Build();
+IServiceCollection services = builder.Services;
+services.AddControllersWithViews();
+
+services.AddScoped<IExampleRepository, ExampleRepository>();
+services.AddScoped<IExampleService, ExampleService>();
+
+WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
