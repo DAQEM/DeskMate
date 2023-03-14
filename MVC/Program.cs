@@ -4,7 +4,7 @@ using DAL.Repositories;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 IServiceCollection services = builder.Services;
-services.AddControllersWithViews();
+services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 services.AddScoped<IExampleRepository, ExampleRepository>();
 services.AddScoped<IExampleService, ExampleService>();
