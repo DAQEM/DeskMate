@@ -1,4 +1,5 @@
-using BLL.Data.Example;
+using BLL.Data.Company.Location.Floor.Room.Workspace;
+using BLL.Data.Company.Location.Floor.Room.Workspace.Characteristic;
 using DAL.Repositories;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -6,8 +7,11 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
 services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
-services.AddScoped<IExampleRepository, ExampleRepository>();
-services.AddScoped<IExampleService, ExampleService>();
+services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
+services.AddScoped<IWorkspaceService, WorkspaceService>();
+
+services.AddScoped<ICharacteristicRepository, CharacteristicRepository>();
+services.AddScoped<ICharacteristicService, CharacteristicService>();
 
 WebApplication app = builder.Build();
 
