@@ -1,0 +1,60 @@
+﻿@model MVC.Models.Partial.TimeSelectorModel
+
+<div id="@Model.Type" class="d-flex justify-content-center" style="flex: 1">
+    <div class="bg-primary rounded text-center text-white" style="height: 400px; width: 500px">
+        <h2 class="p-2">Time @Model.Type</h2>
+        <div class="d-flex align-items-center justify-content-center flex-row h-75 time-selector">
+            <div class="d-flex flex-column" style="flex: 1; margin-left: 15%"
+                 onwheel="ChangeHour(event)">
+                @await Html.PartialAsync("Partial/Components/_ButtonUpPartial")
+                <div>
+                    <p class="m-0 number" style="font-size: 120px; font-weight: 700">@Model.Hours</p>
+                </div>
+                @await Html.PartialAsync("Partial/Components/_ButtonDownPartial")
+            </div>
+            <div>
+                <p class="m-0" style="font-size: 120px; font-weight: 700">:</p>
+            </div>
+            <div class="d-flex flex-column" style="flex: 1; margin-right: 15%"
+                 onwheel="ChangeMinute(event)">
+                @await Html.PartialAsync("Partial/Components/_ButtonUpPartial")
+                <div>
+                    <p class="m-0 number" style="font-size: 120px; font-weight: 700">@Model.Minutes</p>
+                </div>
+                @await Html.PartialAsync("Partial/Components/_ButtonDownPartial")
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ChangeHour(event) {
+        event.preventDefault();
+        let x = event.target.closest(".number");
+        if (event.deltaY < 0)
+        {
+            let i = parseInt(x.innerText);
+            x.innerText = i < 23 ? i + 1 : 0;
+        }
+        else if (event.deltaY > 0)
+        {
+            let i = parseInt(x.innerText);
+            x.innerText = i > 0 ? i - 1 : 23;
+        }
+    }
+    
+    function ChangeMinute(event) {
+        event.preventDefault();
+        let x = event.target.closest(".number");
+        if (event.deltaY < 0)
+        {
+            let i = parseInt(x.innerText);
+            x.innerText = i < 55 ? i + 5 : 0;
+        }
+        else if (event.deltaY > 0)
+        {
+            let i = parseInt(x.innerText);
+            x.innerText = i > 0 ? i - 5 : 55;
+        }
+    }
+</script>
