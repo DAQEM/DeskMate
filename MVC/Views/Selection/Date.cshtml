@@ -1,16 +1,32 @@
 ﻿@using MVC.Models.Partial
+@model DateSelectorModel
 @{
     ViewBag.Title = "Date selection";
     Layout = "_Layout";
 }
 
-<form method="post" asp-action="SubmitDate">
-    <input type="hidden" id="date"/>
-    <input type="hidden" id="timeFrom"/>
-    <input type="hidden" id="timeTo"/>
-    @await Html.PartialAsync("Partial/Components/_DateSelectorPartial")
+@using (Html.BeginForm("Date", "Selection", FormMethod.Post))
+{
+    @Html.HiddenFor(model => model.Date, new { id = "Date", value = Model.Date })
+    @Html.HiddenFor(model => model.TimeFrom, new { id = "TimeFrom", value = Model.TimeFrom })
+    @Html.HiddenFor(model => model.TimeTo, new { id = "TimeTo", value = Model.TimeTo })
+
+    @await Html.PartialAsync("Partial/Components/_DateSelectorPartial", Model)
+
     <div class="d-flex justify-content-between flex-wrap mt-3">
-        @await Html.PartialAsync("Partial/Components/_TimeSelectorPartial", new TimeSelectorModel { Type = "From", Date = DateTime.Now })
-        @await Html.PartialAsync("Partial/Components/_TimeSelectorPartial", new TimeSelectorModel { Type = "To", Date = DateTime.Now.AddHours(1) })
+        @await Html.PartialAsync("Partial/Components/_TimeSelectorPartial", new TimeSelectorModel
+               {
+                   DateSelectorModel = Model,
+                   Type = "From"
+               })
+        @await Html.PartialAsync("Partial/Components/_TimeSelectorPartial", new TimeSelectorModel
+               {
+                   DateSelectorModel = Model,
+                   Type = "To"
+               })
     </div>
-</form>
+
+    <div class="d-flex justify-content-center mt-3">
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+}

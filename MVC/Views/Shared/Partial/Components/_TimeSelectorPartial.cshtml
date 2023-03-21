@@ -1,14 +1,36 @@
 ﻿@model MVC.Models.Partial.TimeSelectorModel
 
+@functions{
+
+    private string GetHour()
+    {
+        return Model.Type switch
+        {
+            "From" => Model.DateSelectorModel.TimeFrom.Hour.ToString(),
+            "To" => Model.DateSelectorModel.TimeTo.Hour.ToString(),
+            _ => "0"};
+    }
+
+    private string GetMinute()
+    {
+        return Model.Type switch
+        {
+            "From" => Model.DateSelectorModel.TimeFrom.Minute.ToString(),
+            "To" => Model.DateSelectorModel.TimeTo.Minute.ToString(),
+            _ => "0"};
+    }
+
+}
+
 <div id="@Model.Type" class="d-flex justify-content-center" style="flex: 1">
     <div class="bg-primary rounded text-center text-white" style="height: 400px; width: 500px">
         <h2 class="p-2">Time @Model.Type</h2>
         <div class="d-flex align-items-center justify-content-center flex-row h-75 time-selector">
             <div class="d-flex flex-column" style="flex: 1; margin-left: 15%"
-                 onwheel="ChangeHour(event)">
+                 onwheel="ChangeHour(event, '@Model.Type')">
                 @await Html.PartialAsync("Partial/Components/_ButtonUpPartial")
                 <div>
-                    <p class="m-0 number" style="font-size: 120px; font-weight: 700">@Model.Hours</p>
+                    <p class="m-0 number" style="font-size: 120px; font-weight: 700">@GetHour()</p>
                 </div>
                 @await Html.PartialAsync("Partial/Components/_ButtonDownPartial")
             </div>
@@ -16,10 +38,10 @@
                 <p class="m-0" style="font-size: 120px; font-weight: 700">:</p>
             </div>
             <div class="d-flex flex-column" style="flex: 1; margin-right: 15%"
-                 onwheel="ChangeMinute(event)">
+                 onwheel="ChangeMinute(event, '@Model.Type')">
                 @await Html.PartialAsync("Partial/Components/_ButtonUpPartial")
                 <div>
-                    <p class="m-0 number" style="font-size: 120px; font-weight: 700">@Model.Minutes</p>
+                    <p class="m-0 number" style="font-size: 120px; font-weight: 700">@GetMinute()</p>
                 </div>
                 @await Html.PartialAsync("Partial/Components/_ButtonDownPartial")
             </div>
@@ -28,33 +50,24 @@
 </div>
 
 <script>
-    function ChangeHour(event) {
+    function ChangeHour(event, type) {
         event.preventDefault();
-        let x = event.target.closest(".number");
-        if (event.deltaY < 0)
-        {
-            let i = parseInt(x.innerText);
-            x.innerText = i < 23 ? i + 1 : 0;
-        }
-        else if (event.deltaY > 0)
-        {
-            let i = parseInt(x.innerText);
-            x.innerText = i > 0 ? i - 1 : 23;
-        }
+        let numberElement = event.target.closest(".number");
+        let hour = parseInt(numberElement.innerText);
+        hour = event.deltaY < 0 ? hour < 23 ? hour + 1 : 0 : event.deltaY > 0 ? hour > 0 ? hour - 1 : 23 : hour;
+        numberElement.innerText = hour;
+        let dateElement = document.getElementById("Time" + type);
+        dateElement.value = `${hour}:${dateElement.value.split(":")[1]}:00`;
+
     }
     
-    function ChangeMinute(event) {
+    function ChangeMinute(event, type) {
         event.preventDefault();
-        let x = event.target.closest(".number");
-        if (event.deltaY < 0)
-        {
-            let i = parseInt(x.innerText);
-            x.innerText = i < 55 ? i + 5 : 0;
-        }
-        else if (event.deltaY > 0)
-        {
-            let i = parseInt(x.innerText);
-            x.innerText = i > 0 ? i - 5 : 55;
-        }
+        let numberElement = event.target.closest(".number");
+        let minute = parseInt(numberElement.innerText);
+        minute = event.deltaY < 0 ? minute < 55 ? minute + 5 : 0 : event.deltaY > 0 ? minute > 0 ? minute - 5 : 55 : minute;
+        numberElement.innerText = minute;
+        let dateElement = document.getElementById("Time" + type);
+        dateElement.value = `${dateElement.value.split(":")[0]}:${minute}:00`;
     }
 </script>

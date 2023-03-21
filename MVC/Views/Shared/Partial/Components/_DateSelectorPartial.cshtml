@@ -1,4 +1,6 @@
-﻿<div class="d-flex align-items-center justify-content-center bg-primary rounded p-2 px-5 flex-wrap">
+﻿@model DateSelectorModel
+
+<div class="d-flex align-items-center justify-content-center bg-primary rounded p-2 px-5 flex-wrap">
     <div class="d-flex justify-content-between align-items-center" style="flex: 1">
         <p class="m-0 date" id="date1" onclick="setDate(-3)">date</p>
         <p class="m-0 date" id="date2" onclick="setDate(-2)">date</p>
@@ -86,7 +88,9 @@
     }
     
     function setDate(i) {
+        
         date.setDate(date.getDate() + i);
+        document.getElementById("Date").value = date.toLocaleDateString();
         setDates();
     }
     
@@ -109,4 +113,3 @@
     
     setDates();
 </script>
-
