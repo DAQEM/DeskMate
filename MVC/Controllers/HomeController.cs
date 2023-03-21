@@ -6,14 +6,12 @@ using MVC.Models;
 
 namespace MVC.Controllers;
 
-public class HomeController : Controller
+public class HomeController : BaseController<HomeController>
 {
-    private readonly ILogger<HomeController> _logger;
     private readonly IExampleService _exampleService;
 
-    public HomeController(ILogger<HomeController> logger, IExampleService exampleService)
+    public HomeController(ILogger<HomeController> logger, IExampleService exampleService) : base(logger)
     {
-        _logger = logger;
         _exampleService = exampleService;
     }
 
