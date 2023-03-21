@@ -6,10 +6,6 @@ namespace MVC.Controllers;
 
 public class HomeController : BaseController<HomeController>
 {
-    public HomeController(ILogger<HomeController> logger) : base(logger)
-    {
-    }
-
     public IActionResult Index()
     {
         return View();

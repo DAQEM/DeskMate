@@ -1,6 +1,8 @@
-﻿namespace BLL.Data.Company.Location.Floor.Room.Workspace;
+﻿using BLL.Entities;
+
+namespace BLL.Data;
 
 public interface IWorkspaceRepository
 {
-    
+    List<Workspace> GetAllWorkspaces();
 }

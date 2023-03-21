@@ -1,0 +1,28 @@
+﻿@using BLL.Entities
+@model MVC.Models.Workspace.WorkspaceListModel
+
+@{
+    ViewBag.Title = "Workspaces";
+    Layout = "_Layout";
+}
+
+<div class="d-flex justify-content-center flex-wrap">
+    @foreach (Workspace workspace in Model.Workspaces)
+    {
+        <div class="d-flex flex-column m-3 p-3 bg-primary rounded">
+            <div>
+                <h1>@workspace.Name</h1>
+            </div>
+            <div>
+                @foreach(Characteristic characteristic in workspace.Characteristics)
+                {
+                    <div class="d-flex">
+                        <p><strong>@characteristic.Amount</strong></p>
+                        <p> @characteristic.Type</p>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>
+

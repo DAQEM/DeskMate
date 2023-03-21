@@ -1,6 +1,4 @@
-﻿using BLL.Entities.Company.Location.Floor.Room.Workspace;
-
-namespace BLL.Entities.Company.Employee.Reservation;
+﻿namespace BLL.Entities;
 
 public class Reservation
 {

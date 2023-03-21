@@ -1,5 +1,4 @@
-using BLL.Data.Company.Location.Floor.Room.Workspace;
-using BLL.Data.Company.Location.Floor.Room.Workspace.Characteristic;
+using BLL.Data;
 using DAL.Repositories;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);

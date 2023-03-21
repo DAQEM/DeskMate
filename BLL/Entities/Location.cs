@@ -1,4 +1,4 @@
-﻿namespace BLL.Entities.Company.Location;
+﻿namespace BLL.Entities;
 
 public class Location
 {
@@ -9,10 +9,10 @@ public class Location
     private readonly string _city;
     private readonly string _street;
     private readonly string _streetNumber;
-    private readonly List<Floor.Floor> _floors;
+    private readonly List<Floor> _floors;
     
     public Location(Guid? id = null, string name = "", string country = "", string postal = "", 
-        string city = "", string street = "", string streetNumber = "", List<Floor.Floor>? floors = null)
+        string city = "", string street = "", string streetNumber = "", List<Floor>? floors = null)
     {
         _id = id ?? Guid.Empty;
         _name = name;
@@ -21,7 +21,7 @@ public class Location
         _city = city;
         _street = street;
         _streetNumber = streetNumber;
-        _floors = floors ?? new List<Floor.Floor>();
+        _floors = floors ?? new List<Floor>();
     }
     
     public Guid Id => _id;
@@ -31,5 +31,5 @@ public class Location
     public string City => _city;
     public string Street => _street;
     public string StreetNumber => _streetNumber;
-    public List<Floor.Floor> Floors => _floors;
+    public List<Floor> Floors => _floors;
 }

@@ -1,6 +1,4 @@
-﻿using BLL.Entities.Company.Location.Floor.Room.Workspace;
-
-namespace BLL.Entities.Company.Employee;
+﻿namespace BLL.Entities;
 
 public class Employee
 {
@@ -8,22 +6,22 @@ public class Employee
     private readonly string _name;
     private readonly string _email;
     private readonly string _hashedPassword;
-    private readonly List<Reservation.Reservation> _reservations;
+    private readonly List<Reservation> _reservations;
     
     public Employee(Guid? id = null, string name = "", string email = "", string hashedPassword = "", 
-        List<Reservation.Reservation>? reservations = null)
+        List<Reservation>? reservations = null)
     {
         _id = id ?? Guid.Empty;
         _name = name;
         _email = email;
         _hashedPassword = hashedPassword;
-        _reservations = reservations ?? new List<Reservation.Reservation>();
+        _reservations = reservations ?? new List<Reservation>();
     }
     
     public Guid Id => _id;
     public string Name => _name;
     public string Email => _email;
-    public List<Reservation.Reservation> Reservations => _reservations;
+    public List<Reservation> Reservations => _reservations;
     
     public bool HasReservationForDate(DateTime date)
     {

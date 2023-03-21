@@ -1,4 +1,4 @@
-﻿namespace BLL.Entities.Company.Location.Floor;
+﻿namespace BLL.Entities;
 
 public class Floorplan
 {

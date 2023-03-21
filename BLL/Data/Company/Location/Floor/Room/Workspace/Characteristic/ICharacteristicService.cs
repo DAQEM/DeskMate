@@ -1,6 +1,8 @@
-﻿namespace BLL.Data.Company.Location.Floor.Room.Workspace.Characteristic;
+﻿using BLL.Entities;
+
+namespace BLL.Data;
 
 public interface ICharacteristicService
 {
-    
+    List<Characteristic> GetCharacteristicsForWorkspace(Workspace workspace);
 }
