@@ -3,8 +3,13 @@ using MVC.Models.Auth;
 
 namespace MVC.Controllers;
 
-public class AuthController : Controller
+public class AuthController : BaseController<AuthController>
 {
+    
+    public AuthController(ILogger<AuthController> logger) : base(logger)
+    {
+    }
+    
     [HttpGet]
     [Route("login")]
     public IActionResult Login()
