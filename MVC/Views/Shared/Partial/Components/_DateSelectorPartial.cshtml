@@ -15,7 +15,11 @@
                 <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
             </svg>
         </button>
-        <h2 class="m-0 text-white text-center" id="dateSelected" style="width: 200px">selected date</h2>
+        <h2 class="m-0 text-white text-center" id="dateSelected"
+            style="width: 200px"
+            onwheel="onScrollDate(event)">
+            selected date
+        </h2>
         <button type="button"
                 class="rounded bg-white d-flex align-items-center justify-content-center border-0"
                 style="width: 30px; height: 30px; color: #0a53be"
@@ -105,10 +109,10 @@
         default: return 'th';
       }
     }
-    
-    function onScrollHour(event) {
+        
+    function onScrollDate(event) {
         event.preventDefault();
-        console.log(event);
+        event.deltaY < 0 ? previousDate() : nextDate();
     }
     
     setDates();

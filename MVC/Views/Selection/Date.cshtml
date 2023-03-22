@@ -5,15 +5,17 @@
     Layout = "_Layout";
 }
 
-@using (Html.BeginForm("Date", "Selection", FormMethod.Post))
+@using (Html.BeginForm("Date", "Selection", FormMethod.Post, new { id = "form" }))
 {
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(model => model.ReservationType, new { id = "ReservationType", value = "Individual" })
     @Html.HiddenFor(model => model.Date, new { id = "Date", value = Model.Date })
     @Html.HiddenFor(model => model.TimeFrom, new { id = "TimeFrom", value = Model.TimeFrom })
     @Html.HiddenFor(model => model.TimeTo, new { id = "TimeTo", value = Model.TimeTo })
 
     @await Html.PartialAsync("Partial/Components/_DateSelectorPartial", Model)
 
-    <div class="d-flex justify-content-between flex-wrap mt-3">
+    <div class="d-flex justify-content-center flex-wrap my-5">
         @await Html.PartialAsync("Partial/Components/_TimeSelectorPartial", new TimeSelectorModel
                {
                    DateSelectorModel = Model,
@@ -26,7 +28,21 @@
                })
     </div>
 
-    <div class="d-flex justify-content-center mt-3">
-        <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="d-flex justify-content-center my-2">
+        <button type="button" class="btn btn-danger mx-3" style="width: 150px">Cancel</button>
+        <button type="button" class="btn btn-primary mx-3" style="width: 200px"
+                onclick="{
+                    document.getElementById('ReservationType').value = 'Group';
+                    document.getElementById('form').submit();
+                }">
+            Group reservation
+        </button>
+        <button type="button" class="btn btn-success mx-3" style="width: 150px"
+                onclick="{
+                    document.getElementById('ReservationType').value = 'Individual';
+                    document.getElementById('form').submit();
+                }">
+            Next
+        </button>
     </div>
 }

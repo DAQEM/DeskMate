@@ -21,10 +21,12 @@ public class SelectionController : BaseController<SelectionController>
     [Route("selection/date")]
     public IActionResult Date(DateSelectorModel model)
     {
-        Console.WriteLine(model.Date);
-        Console.WriteLine(model.TimeFrom);
-        Console.WriteLine(model.TimeTo);
-        return RedirectToAction("Group");
+        if (model.ReservationType == "Group")
+        {
+            return RedirectToAction("Group");
+        }
+
+        return RedirectToAction("Select");
     }
 
     [HttpGet]

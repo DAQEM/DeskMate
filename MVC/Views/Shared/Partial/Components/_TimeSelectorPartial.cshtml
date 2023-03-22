@@ -1,4 +1,5 @@
-﻿@model MVC.Models.Partial.TimeSelectorModel
+﻿@using MVC.Models.Partial
+@model MVC.Models.Partial.TimeSelectorModel
 
 @functions{
 
@@ -22,28 +23,28 @@
 
 }
 
-<div id="@Model.Type" class="d-flex justify-content-center" style="flex: 1">
+<div id="@Model.Type" class="d-flex justify-content-center my-3" style="flex: 1">
     <div class="bg-primary rounded text-center text-white" style="height: 400px; width: 500px">
         <h2 class="p-2">Time @Model.Type</h2>
         <div class="d-flex align-items-center justify-content-center flex-row h-75 time-selector">
             <div class="d-flex flex-column" style="flex: 1; margin-left: 15%"
                  onwheel="ChangeHour(event, '@Model.Type')">
-                @await Html.PartialAsync("Partial/Components/_ButtonUpPartial")
+                @await Html.PartialAsync("Partial/Components/_ButtonUpPartial", new TimeSelectorButtonModel { TimeId = "Hour-" + Model.Type, Type = Model.Type })
                 <div>
-                    <p class="m-0 number" style="font-size: 120px; font-weight: 700">@GetHour()</p>
+                    <p class="m-0 number" id="Hour-@Model.Type" style="font-size: 120px; font-weight: 700">@GetHour()</p>
                 </div>
-                @await Html.PartialAsync("Partial/Components/_ButtonDownPartial")
+                @await Html.PartialAsync("Partial/Components/_ButtonDownPartial", new TimeSelectorButtonModel { TimeId = "Hour-" + Model.Type, Type = Model.Type })
             </div>
             <div>
                 <p class="m-0" style="font-size: 120px; font-weight: 700">:</p>
             </div>
             <div class="d-flex flex-column" style="flex: 1; margin-right: 15%"
                  onwheel="ChangeMinute(event, '@Model.Type')">
-                @await Html.PartialAsync("Partial/Components/_ButtonUpPartial")
+                @await Html.PartialAsync("Partial/Components/_ButtonUpPartial", new TimeSelectorButtonModel { TimeId = "Minute-" + Model.Type, Type = Model.Type })
                 <div>
-                    <p class="m-0 number" style="font-size: 120px; font-weight: 700">@GetMinute()</p>
+                    <p class="m-0 number" id="Minute-@Model.Type" style="font-size: 120px; font-weight: 700">@GetMinute()</p>
                 </div>
-                @await Html.PartialAsync("Partial/Components/_ButtonDownPartial")
+                @await Html.PartialAsync("Partial/Components/_ButtonDownPartial", new TimeSelectorButtonModel { TimeId = "Minute-" + Model.Type, Type = Model.Type })
             </div>
         </div>
     </div>
@@ -54,7 +55,7 @@
         event.preventDefault();
         let numberElement = event.target.closest(".number");
         let hour = parseInt(numberElement.innerText);
-        hour = event.deltaY < 0 ? hour < 23 ? hour + 1 : 0 : event.deltaY > 0 ? hour > 0 ? hour - 1 : 23 : hour;
+        hour = event.deltaY < 0 ? hour > 0 ? hour - 1 : 23 : event.deltaY > 0 ? hour < 23 ? hour + 1 : 0 : hour;
         numberElement.innerText = hour;
         let dateElement = document.getElementById("Time" + type);
         dateElement.value = `${hour}:${dateElement.value.split(":")[1]}:00`;
@@ -65,7 +66,7 @@
         event.preventDefault();
         let numberElement = event.target.closest(".number");
         let minute = parseInt(numberElement.innerText);
-        minute = event.deltaY < 0 ? minute < 55 ? minute + 5 : 0 : event.deltaY > 0 ? minute > 0 ? minute - 5 : 55 : minute;
+        minute = event.deltaY < 0 ? minute > 0 ? minute - 5 : 55 : event.deltaY > 0 ? minute < 55 ? minute + 5 : 0 : minute;
         numberElement.innerText = minute;
         let dateElement = document.getElementById("Time" + type);
         dateElement.value = `${dateElement.value.split(":")[0]}:${minute}:00`;

@@ -1,8 +1,29 @@
-﻿<div class="d-flex w-100 justify-content-center">
-    <button type="button" class="rounded bg-white d-flex align-items-center justify-content-center border-0 text-primary p-2">
+﻿@model MVC.Models.Partial.TimeSelectorButtonModel
+
+<div class="d-flex w-100 justify-content-center">
+    <button type="button" class="rounded d-flex align-items-center justify-content-center border-0 text-white bg-primary p-2"
+            onclick="{
+                if (@Model.TimeId.Contains("Hour").ToString().ToLower()) {
+                    let numberElement = document.getElementById('@Model.TimeId');
+                    let hour = parseInt(numberElement.innerText);
+                    hour = hour < 23 ? hour + 1 : 0;
+                    numberElement.innerText = hour;
+                    
+                    let dateElement = document.getElementById('Time' + '@Model.Type');
+                    dateElement.value = `${hour}:${dateElement.value.split(':')[1]}:00`;
+                }
+                else {
+                    let numberElement = document.getElementById('@Model.TimeId');
+                    let minute = parseInt(numberElement.innerText);
+                    minute = minute < 55 ? minute + 5 : 0;
+                    numberElement.innerText = minute;
+                    
+                    let dateElement = document.getElementById('Time' + '@Model.Type');
+                    dateElement.value = `${dateElement.value.split(':')[0]}:${minute}:00`;
+                }
+            }">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-down-short" viewBox="4 4 8 8">
             <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v5.793l2.146-2.147a.5.5 0 0 1 .708.708l-3 3a.5.5 0 0 1-.708 0l-3-3a.5.5 0 1 1 .708-.708L7.5 10.293V4.5A.5.5 0 0 1 8 4z"/>
         </svg>
     </button>
 </div>
-
