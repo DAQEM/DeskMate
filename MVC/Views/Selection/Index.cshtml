@@ -1,0 +1,36 @@
+﻿@model SelectionModel
+
+@{
+    ViewBag.Title = "Selection";
+    Layout = "_Layout";
+}
+
+<h1>Selection</h1>
+
+@if (Model.Step >= 1)
+{
+    @using (Html.BeginForm("DateTimeSelection", "Selection", FormMethod.Post))
+    {
+        @await Html.PartialAsync("Partial/DateTimeSelection", Model)
+    }
+}
+
+@if (Model.Step >= 2)
+{
+    <hr/>
+
+    @using (Html.BeginForm("EmployeeSelection", "Selection", FormMethod.Post))
+    {
+        @await Html.PartialAsync("Partial/EmployeeSelection", Model)
+    }
+}
+
+@if (Model.Step >= 3)
+{
+    <hr/>
+
+    @using (Html.BeginForm("WorkspaceSelection", "Selection", FormMethod.Post))
+    {
+        @await Html.PartialAsync("Partial/WorkspaceSelection", Model)
+    }
+}
