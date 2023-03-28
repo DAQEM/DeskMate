@@ -4,10 +4,6 @@ namespace MVC.Controllers;
 
 public class SelectionController : BaseController<SelectionController>
 {
-    public SelectionController(ILogger<SelectionController> logger) : base(logger)
-    {
-    }
-    
     [HttpGet]
     [Route("selection/date")]
     public IActionResult Date()

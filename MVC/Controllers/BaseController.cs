@@ -2,12 +2,9 @@
 
 namespace MVC.Controllers;
 
-public class BaseController<T> : Controller where T : Controller
+public class BaseController<T> : Controller where T : BaseController<T>
 {
-    private readonly ILogger<T> _logger;
-    
-    public BaseController(ILogger<T> logger)
-    {
-        _logger = logger;
-    }
+    private ILogger<T>? _logger;
+
+    protected ILogger<T> Logger => _logger ??= HttpContext.RequestServices.GetRequiredService<ILogger<T>>();
 }

@@ -5,11 +5,7 @@ namespace MVC.Controllers;
 
 public class AuthController : BaseController<AuthController>
 {
-    
-    public AuthController(ILogger<AuthController> logger) : base(logger)
-    {
-    }
-    
+
     [HttpGet]
     [Route("login")]
     public IActionResult Login()
