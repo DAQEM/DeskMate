@@ -34,31 +34,63 @@ namespace DAL
            modelBuilder.Entity<WorkplaceCharacteristicsDTO>().HasKey(w => new { w.WorkspaceId, w.CharacteristicId });
            
             modelBuilder.Entity<CompanyDTO>()
-            .HasMany(c => c.locationDTOList)
-            .WithOne(l => l.companyDTO)
-            .HasForeignKey(l => l.CompanyId);
+               .HasMany(c => c.locationDTOList)
+               .WithOne(l => l.companyDTO)
+               .HasForeignKey(l => l.CompanyId);
 
            modelBuilder.Entity<RoleDTO>()
-            .HasMany(r => r.permissionDTO)
-            .WithOne(p => p.roleDTO)
-            .HasForeignKey(p => p.RoleId);
+               .HasMany(r => r.permissionDTO)
+               .WithOne(p => p.roleDTO)
+               .HasForeignKey(p => p.RoleId);
 
             modelBuilder.Entity<FloorDTO>()
-            .HasMany(f => f.roomDTO)
-            .WithOne(r => r.floorDTO)
-            .HasForeignKey(r => r.FloorId);
+               .HasMany(f => f.roomDTO)
+               .WithOne(r => r.floorDTO)
+               .HasForeignKey(r => r.FloorId);
             
            modelBuilder.Entity<LocationDTO>()
-           .HasMany(l => l.floorDTO)
-           .WithOne(f => f.locationDTO)
-           .HasForeignKey(f => f.LocationId);
+               .HasMany(l => l.floorDTO)
+               .WithOne(f => f.locationDTO)
+               .HasForeignKey(f => f.LocationId);
 
             modelBuilder.Entity<RoomDTO>()
-           .HasMany(r => r.workplaceDTO)
-           .WithOne(w => w.roomDTO)
-           .HasForeignKey(w => w.RoomId);
+                .HasMany(r => r.workplaceDTO)
+                .WithOne(w => w.roomDTO)
+                .HasForeignKey(w => w.RoomId);
 
-           
+
+            modelBuilder.Entity<RoleDTO>()
+                .HasMany(r => r.userDTO)
+                .WithOne(u => u.roleDTO)
+                .HasForeignKey(u => u.RoleId);
+     
+
+             modelBuilder.Entity<CompanyDTO>()
+                .HasMany(c => c.userDTO)
+                .WithOne(u =>  u.companyDTO)
+                .HasForeignKey(u => u.CompanyId);
+
+
+            modelBuilder.Entity<UserDTO>()
+                .HasMany(u => u.reservationDTOs)
+                .WithOne(r => r.userDTO)
+                .HasForeignKey(r => r.UserId);
+
+            modelBuilder.Entity<WorkplaceDTO>()
+                .HasMany(w => w.reservationDTOs)
+                .WithOne(r => r.workplaceDTO)
+                .HasForeignKey(r => r.WorkspaceId);
+
+            modelBuilder.Entity<WorkplaceDTO>()
+               .HasMany(w => w.workplaceCharacteristicsDTOs)
+               .WithOne(wc => wc.workplaceDTO)
+               .HasForeignKey(wc => wc.WorkspaceId);
+
+            modelBuilder.Entity<CharacteristicDTO>()
+                .HasMany(c => c.workplaceCharacteristicsDTOs)
+                .WithOne(wc => wc.characteristicDTO)
+                .HasForeignKey(wc => wc.CharacteristicId);
+
 
         }
     }

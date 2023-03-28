@@ -13,5 +13,8 @@ namespace BLL.DTOS
         public DateTime EndDate { get; set; }
         public Guid UserId { get; set; }
         public Guid WorkspaceId { get; set; }
+
+        public UserDTO userDTO { get; set; }
+        public WorkplaceDTO workplaceDTO { get; set; }
     }
 }

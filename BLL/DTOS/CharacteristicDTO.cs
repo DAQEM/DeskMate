@@ -10,7 +10,6 @@ namespace BLL.DTOS
     {
         public Guid Id { get; set; } = Guid.NewGuid();
         public int Type { get; set; }
-        public int Amount { get; set; }
-        public WorkplaceCharacteristicsDTO workplaceCharacteristicsDTO { get; set; }
+        public ICollection<WorkplaceCharacteristicsDTO> workplaceCharacteristicsDTOs { get; set; }
     }
 }
