@@ -1,7 +1,7 @@
 ﻿using BLL.Data;
 using BLL.Entities;
 
-namespace DAL.Repositories;
+namespace BLL.Repositories;
 
 public class WorkspaceRepository : IWorkspaceRepository
 {
