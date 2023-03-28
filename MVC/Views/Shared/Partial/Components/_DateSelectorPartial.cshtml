@@ -1,16 +1,12 @@
-﻿@{
-    ViewBag.Title = "Date selection";
-    Layout = "_Layout";
-}
+﻿@model DateSelectorModel
 
-<form method="post" asp-action="SubmitDate">
-    <input type="hidden" id="date"/>
-    <input type="hidden" id="timeFrom"/>
-    <input type="hidden" id="timeTo"/>
-    <div class="d-flex align-items-center justify-content-between bg-primary rounded p-2 px-5">
+<div class="d-flex align-items-center justify-content-center bg-primary rounded p-2 px-5 flex-wrap">
+    <div class="d-flex justify-content-between align-items-center" style="flex: 1">
         <p class="m-0 date" id="date1" onclick="setDate(-3)">date</p>
         <p class="m-0 date" id="date2" onclick="setDate(-2)">date</p>
         <p class="m-0 date" id="date3" onclick="setDate(-1)">date</p>
+    </div>
+    <div class="d-flex justify-content-center align-items-center" style="flex: 1">
         <button type="button"
                 class="rounded bg-white d-flex align-items-center justify-content-center border-0"
                 style="width: 30px; height: 30px; color: #0a53be;"
@@ -19,7 +15,11 @@
                 <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5z"/>
             </svg>
         </button>
-        <h2 class="m-0 text-white text-center" id="dateSelected" style="width: 200px">selected date</h2>
+        <h2 class="m-0 text-white text-center" id="dateSelected"
+            style="width: 200px"
+            onwheel="onScrollDate(event)">
+            selected date
+        </h2>
         <button type="button"
                 class="rounded bg-white d-flex align-items-center justify-content-center border-0"
                 style="width: 30px; height: 30px; color: #0a53be"
@@ -28,67 +28,13 @@
                 <path fill-rule="evenodd" d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z"/>
             </svg>
         </button>
+    </div>
+    <div class="d-flex justify-content-between align-items-center" style="flex: 1">
         <p class="m-0 date" id="date5" onclick="setDate(1)">date</p>
         <p class="m-0 date" id="date6" onclick="setDate(2)">date</p>
         <p class="m-0 date" id="date7" onclick="setDate(3)">date</p>
     </div>
-    <div class="d-flex justify-content-between flex-wrap mt-3">
-        <div class="d-flex justify-content-center" style="flex: 1">
-            <div class="bg-primary rounded text-center text-white" style="height: 400px; width: 500px">
-                @* time from *@
-                <h2 class="p-2">Time From</h2>
-                <div class="d-flex align-items-center justify-content-center flex-row h-75">
-                    <div class="d-flex flex-column" style="flex: 1; margin-left: 15%"
-                         onscroll="onScrollHour()">
-                        @await Html.PartialAsync("Partial/Components/_ButtonUpPartial")
-                        <div>
-                            <p class="m-0" style="font-size: 120px; font-weight: 700">10</p>
-                        </div>
-                        @await Html.PartialAsync("Partial/Components/_ButtonDownPartial")
-                    </div>
-                    <div>
-                        <p class="m-0" style="font-size: 120px; font-weight: 700">:</p>
-                    </div>
-                    <div class="d-flex flex-column" style="flex: 1; margin-right: 15%"
-                         onscroll="onScrollHour()">
-                        @await Html.PartialAsync("Partial/Components/_ButtonUpPartial")
-                        <div>
-                            <p class="m-0" style="font-size: 120px; font-weight: 700">59</p>
-                        </div>
-                        @await Html.PartialAsync("Partial/Components/_ButtonDownPartial")
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="d-flex justify-content-center" style="flex: 1">
-            <div class="bg-primary rounded text-center text-white" style="height: 400px; width: 500px">
-                @* time from *@
-                <h2 class="p-2">Time To</h2>
-                <div class="d-flex align-items-center justify-content-center flex-row h-75">
-                    <div class="d-flex flex-column" style="flex: 1; margin-left: 15%"
-                         onscroll="onScrollHour()">
-                        @await Html.PartialAsync("Partial/Components/_ButtonUpPartial")
-                        <div>
-                            <p class="m-0" style="font-size: 120px; font-weight: 700">10</p>
-                        </div>
-                        @await Html.PartialAsync("Partial/Components/_ButtonDownPartial")
-                    </div>
-                    <div>
-                        <p class="m-0" style="font-size: 120px; font-weight: 700">:</p>
-                    </div>
-                    <div class="d-flex flex-column" style="flex: 1; margin-right: 15%"
-                         onscroll="onScrollHour()">
-                        @await Html.PartialAsync("Partial/Components/_ButtonUpPartial")
-                        <div>
-                            <p class="m-0" style="font-size: 120px; font-weight: 700">59</p>
-                        </div>
-                        @await Html.PartialAsync("Partial/Components/_ButtonDownPartial")
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
+</div>
 
 <style>
     .date {
@@ -146,7 +92,9 @@
     }
     
     function setDate(i) {
+        
         date.setDate(date.getDate() + i);
+        document.getElementById("Date").value = date.toLocaleDateString();
         setDates();
     }
     
@@ -161,10 +109,10 @@
         default: return 'th';
       }
     }
-    
-    function onScrollHour(event) {
+        
+    function onScrollDate(event) {
         event.preventDefault();
-        console.log(event);
+        event.deltaY < 0 ? previousDate() : nextDate();
     }
     
     setDates();
