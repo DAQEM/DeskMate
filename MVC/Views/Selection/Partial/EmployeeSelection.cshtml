@@ -1,16 +1,46 @@
 ﻿@model SelectionModel
 
 @Html.AntiForgeryToken()
-<h4>Employee selection</h4>
+<h4>Who?</h4>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div>
-    @for (int i = 0; i < Model.EmployeeModels.Count; i++)
-    {
-        <div id="employee-@i">
-            @Html.HiddenFor(model => model.EmployeeModels[i].Employee)
-        </div>
-    }
-    <div style="flex: .5">
-        <button type="submit" class="btn btn-primary">Submit</button>
+    <div id="employee-search">
+        @Html.TextBox("EmployeeSearch", "", new { @class = "form-control my-2", placeholder = "Search employee" })
+        @* TODO: Add search functionality using AJAX *@
+    </div>
+    <div>
+        @for (int i = 0; i < Model.EmployeeModels.Count; i++)
+        {
+            <div id="employee-@i" class="d-flex justify-content-between align-items-center p-2 my-2 rounded bg-white border-1 border">
+                <p class="m-0">@Model.EmployeeModels[i].Employee.Name</p>
+                @Html.HiddenFor(model => model.EmployeeModels[i].Employee)
+                <button type="button" class="btn btn-danger m-0"
+                        onclick="document.getElementById('employee-@i').remove()">
+                    X
+                </button>
+            </div>
+        }
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary w-100"
+                onclick="{
+                    document.getElementById('step').value = 3;
+                    document.getElementById('form').submit();
+                }">
+            Submit Employees
+        </button>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    // This is the script that prevents the form from submitting when the enter key is pressed
+    $(document).ready(function() {
+      $(window).keydown(function(event){
+        if(event.keyCode === 13) {
+          event.preventDefault();
+          return false;
+        }
+      });
+    });
+</script>
