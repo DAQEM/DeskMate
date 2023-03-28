@@ -1,10 +1,21 @@
 using BLL.Data;
-using DAL.Repositories;
+using BLL.Repositories;
+using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 IServiceCollection services = builder.Services;
 services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+
+var config = new ConfigurationBuilder()
+         .AddJsonFile("appsettings.json")
+         .Build();
+
+builder.Services.AddDbContext<DAL.DeskMateContext>(options =>
+{
+    options.UseMySql(config.GetConnectionString("MySqlConnection"), ServerVersion.AutoDetect(config.GetConnectionString("MySqlConnection")));
+}, ServiceLifetime.Transient);
 
 services.AddScoped<IWorkspaceRepository, WorkspaceRepository>();
 services.AddScoped<IWorkspaceService, WorkspaceService>();
