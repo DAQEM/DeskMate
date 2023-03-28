@@ -4,9 +4,11 @@
 <h4>Who?</h4>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div>
-    <div id="employee-search">
-        @Html.TextBox("EmployeeSearch", "", new { @class = "form-control my-2", placeholder = "Search employee" })
-        @* TODO: Add search functionality using AJAX *@
+    <div id="employee-search" class="d-flex flex-column justify-content-center align-items-center">
+        @Html.TextBox("EmployeeSearch", "", new { @class = "form-control mt-2", placeholder = "Search employee", onkeyup = "fetchEmployees(this.value)" })
+        <div id="employee-search-results" class="w-75 py-3 px-3 rounded-bottom pb-3 m-0 border-top-0 border border-1">
+            <p class="m-0 text-black-50 text-center">Search results</p>
+        </div>
     </div>
     <div>
         @for (int i = 0; i < Model.EmployeeModels.Count; i++)
@@ -43,4 +45,50 @@
         }
       });
     });
+    
+    function fetchEmployees(search) {
+        fetch(`/employees?search=${search}`)
+            .then((response) => response.json())
+            .then((data) => {
+                data = data.employees;
+                clearSearchResults(data.length !== 0);
+                data.forEach((employee) => {
+                    addSearchResult(employee);
+                });
+            });
+    }
+    
+    function clearSearchResults(all = false) {
+        if (all) {
+            document.getElementById("employee-search-results").innerHTML = "";
+        } else {
+            document.getElementById("employee-search-results").innerHTML = `<p class="m-0 text-black-50 text-center">Search results</p>`;
+        }
+    }
+    
+    function addSearchResult(employee) {
+        let employeeSearchResults = document.getElementById("employee-search-results");
+        let employeeSearchResult = document.createElement("div");
+        employeeSearchResult.id = "employee-search-result-" + employee.id;
+        employeeSearchResult.className = "d-flex justify-content-between align-items-center p-2 my-2 rounded bg-white border-1 border";
+        employeeSearchResult.innerHTML = `
+            <p class="m-0">${employee.name}</p>
+            <button type="button" class="btn btn-primary m-0" onclick="addEmployee(${employee.id}, '${employee.name}')">+</button>
+        `;
+        employeeSearchResults.appendChild(employeeSearchResult);
+    }
+    
+    function addEmployee(id, name) {
+        let employeeSearchResult = document.getElementById("employee-search-result-" + id);
+        employeeSearchResult.remove();
+        let employeeSelection = document.getElementById("employee-selection");
+        let employee = document.createElement("div");
+        employee.id = "employee-" + id;
+        employee.className = "d-flex justify-content-between align-items-center p-2 my-2 rounded bg-white border-1 border";
+        employee.innerHTML = `
+            <p class="m-0">${name}</p>
+            <button type="button" class="btn btn-danger m-0" onclick="document.getElementById('employee-${id}').remove()">X</button>
+        `;
+        employeeSelection.appendChild(employee);
+    }
 </script>
