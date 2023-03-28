@@ -9,7 +9,7 @@
 
 <hr class="my-5"/>
 
-@using (Html.BeginForm("DateTimeSelection", "Selection", FormMethod.Post, new { id = "form" }))
+@using (Html.BeginForm("Selection", "Selection", FormMethod.Post, new { id = "form" }))
 {
     @Html.HiddenFor(model => model.Step, new { id = "step" })
 

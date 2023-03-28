@@ -17,7 +17,8 @@ public class EmployeeController : BaseController<EmployeeController>
         new Employee(Guid.NewGuid(), "Karel"),
         new Employee(Guid.NewGuid(), "Klaas"),
         new Employee(Guid.NewGuid(), "Kees"),
-        new Employee(Guid.NewGuid(), "Klaasje")
+        new Employee(Guid.NewGuid(), "Klaasje"),
+        new Employee(Guid.NewGuid(), "JORG")
     };
 
     [HttpGet]

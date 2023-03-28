@@ -15,11 +15,12 @@ public class SelectionController : BaseController<SelectionController>
     [HttpPost]
     public IActionResult Selection(SelectionModel model)
     {
+        Console.WriteLine(model.Step);
         return model.Step switch
         {
-            1 => DateTimeSelection(model),
-            2 => EmployeeSelection(model),
-            3 => WorkspaceSelection(model),
+            2 => DateTimeSelection(model),
+            3 => EmployeeSelection(model),
+            4 => WorkspaceSelection(model),
             _ => Index()
         };
     }
@@ -33,7 +34,7 @@ public class SelectionController : BaseController<SelectionController>
                           model.DateTimeSelectionModel.EndTime.ToShortTimeString());
         //TODO: Get employees from database
         model.EmployeeModels = new List<EmployeeModel>
-            { new() { Employee = new Employee(Guid.NewGuid(), "Viewer name") } };
+            { new(new Employee(Guid.NewGuid(), "Viewer name")) };
         return View("Index", model);
     }
 
