@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace BLL.DTOS
+﻿namespace BLL.DTOs
 {
     public class WorkplaceCharacteristicsDTO
     {
-
         public Guid WorkspaceId { get; set; }
         public Guid CharacteristicId { get; set; }
         public int Amount { get; set; }

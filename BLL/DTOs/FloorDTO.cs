@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace BLL.DTOS
+namespace BLL.DTOs
 {
     public class FloorDTO
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        [Column(TypeName = "varchar(200)")]
-        public string Name { get; set; }
+        [Column(TypeName = "varchar(200)")] public string Name { get; set; }
         public int Number { get; set; }
         public Guid LocationId { get; set; }
         public ICollection<RoomDTO> roomDTO { get; set; }
