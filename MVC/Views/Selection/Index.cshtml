@@ -5,32 +5,28 @@
     Layout = "_Layout";
 }
 
-<h1>Selection</h1>
+<h1>Workspace reservation</h1>
 
-@if (Model.Step >= 1)
+<hr class="my-5"/>
+
+@using (Html.BeginForm("Selection", "Selection", FormMethod.Post, new { id = "form" }))
 {
-    @using (Html.BeginForm("DateTimeSelection", "Selection", FormMethod.Post))
+    @Html.HiddenFor(model => model.Step, new { id = "step" })
+
+    @if (Model.Step >= 1)
     {
         @await Html.PartialAsync("Partial/DateTimeSelection", Model)
     }
-}
 
-@if (Model.Step >= 2)
-{
-    <hr/>
-
-    @using (Html.BeginForm("EmployeeSelection", "Selection", FormMethod.Post))
+    @if (Model.Step >= 2)
     {
+        <hr class="my-5"/>
         @await Html.PartialAsync("Partial/EmployeeSelection", Model)
     }
-}
 
-@if (Model.Step >= 3)
-{
-    <hr/>
-
-    @using (Html.BeginForm("WorkspaceSelection", "Selection", FormMethod.Post))
+    @if (Model.Step >= 3)
     {
+        <hr class="my-5"/>
         @await Html.PartialAsync("Partial/WorkspaceSelection", Model)
     }
 }

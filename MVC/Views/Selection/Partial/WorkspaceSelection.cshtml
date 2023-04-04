@@ -1,10 +1,16 @@
 ﻿@model SelectionModel
 
 @Html.AntiForgeryToken()
-<h4>Workspace selection</h4>
+<h4>Where?</h4>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div class="d-flex justify-content-between align-items-end gap-5">
     <div style="flex: .5">
-        <button type="submit" class="btn btn-primary w-100">Submit</button>
+        <button type="submit" class="btn btn-primary w-100"
+                onclick="{
+                    document.getElementById('step').value = 4;
+                    document.getElementById('form').submit();
+                }">
+            Submit
+        </button>
     </div>
 </div>

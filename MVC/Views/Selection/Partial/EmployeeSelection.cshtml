@@ -1,16 +1,100 @@
 ﻿@model SelectionModel
 
 @Html.AntiForgeryToken()
-<h4>Employee selection</h4>
+<h4>Who?</h4>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div>
-    @for (int i = 0; i < Model.EmployeeModels.Count; i++)
-    {
-        <div id="employee-@i">
-            @Html.HiddenFor(model => model.EmployeeModels[i].Employee)
+    <div id="employee-search" class="d-flex flex-column justify-content-center align-items-center">
+        @Html.TextBox("EmployeeSearch", "", new { @class = "form-control mt-2", placeholder = "Search employee", onkeyup = "fetchEmployees(this.value)" })
+        <div id="employee-search-results" class="w-75 py-3 px-3 rounded-bottom pb-3 m-0 border-top-0 border border-1">
+            <p class="m-0 text-black-50 text-center">Search results</p>
         </div>
-    }
-    <div style="flex: .5">
-        <button type="submit" class="btn btn-primary">Submit</button>
+    </div>
+    <div id="employee-selection">
+        @for (int i = 0; i < Model.EmployeeModels.Count; i++)
+        {
+            <div id="employee-@i" class="d-flex justify-content-between align-items-center p-2 my-2 rounded bg-white border-1 border">
+                <p class="m-0">@Model.EmployeeModels[i].Name</p>
+                @Html.HiddenFor(model => model.EmployeeModels[i].Id)
+                @Html.HiddenFor(model => model.EmployeeModels[i].Name)
+                @Html.HiddenFor(model => model.EmployeeModels[i].Email)
+                <button type="button" class="btn btn-danger m-0"
+                        onclick="document.getElementById('employee-@i').remove()">
+                    X
+                </button>
+            </div>
+        }
+    </div>
+    <div>
+        <button type="submit" class="btn btn-primary w-100"
+                onclick="{
+                    document.getElementById('step').value = 3;
+                    document.getElementById('form').submit();
+                }">
+            Submit Employees
+        </button>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    // This is the script that prevents the form from submitting when the enter key is pressed
+    $(document).ready(function() {
+      $(window).keydown(function(event){
+        if(event.keyCode === 13) {
+          event.preventDefault();
+          return false;
+        }
+      });
+    });
+    
+    function fetchEmployees(search) {
+        fetch(`/employees?search=${search}`)
+            .then((response) => response.json())
+            .then((data) => {
+                data = data.employees;
+                clearSearchResults(data.length !== 0);
+                data.forEach((employee) => {
+                    addSearchResult(employee);
+                });
+            });
+    }
+    
+    function clearSearchResults(all = false) {
+        if (all) {
+            document.getElementById("employee-search-results").innerHTML = "";
+        } else {
+            document.getElementById("employee-search-results").innerHTML = `<p class="m-0 text-black-50 text-center">Search results</p>`;
+        }
+    }
+    
+    function addSearchResult(employee) {
+        let id = document.getElementById("employee-selection").children.length;
+        let employeeSearchResults = document.getElementById("employee-search-results");
+        let employeeSearchResult = document.createElement("div");
+        employeeSearchResult.id = "employee-search-result-" + id;
+        employeeSearchResult.className = "d-flex justify-content-between align-items-center p-2 my-2 rounded bg-white border-1 border";
+        employeeSearchResult.innerHTML = `
+            <p class="m-0">${employee.name}</p>
+            <button type="button" class="btn btn-primary m-0" onclick="addEmployee('${id}', '${employee.id}', '${employee.name}', '${employee.email}')">+</button>
+        `;
+        employeeSearchResults.appendChild(employeeSearchResult);
+    }
+    
+    function addEmployee(id, employeeId, employeeName, employeeEmail) {
+        document.getElementById("employee-search-result-" + id).remove();
+        let employeeElement = document.createElement("div");
+        employeeElement.id = "employee-" + id;
+        employeeElement.className = "d-flex justify-content-between align-items-center p-2 my-2 rounded bg-white border-1 border";
+        employeeElement.innerHTML = `
+            <p class="m-0">${employeeName}</p>
+            <input data-val="true" data-val-required="The Id field is required." id="EmployeeModels_${id}__Id" name="EmployeeModels[${id}].Id" type="hidden" value="${employeeId}">
+            <input data-val="true" data-val-required="The Name field is required." id="EmployeeModels_${id}__Name" name="EmployeeModels[${id}].Name" type="hidden" value="${employeeName}">
+            <input data-val="true" data-val-required="The Email field is required." id="EmployeeModels_${id}__Email" name="EmployeeModels[${id}].Email" type="hidden" value="${employeeEmail}">
+            <button type="button" class="btn btn-danger m-0" onclick="document.getElementById('employee-${id}').remove()">X</button>
+        `;
+        document.getElementById("employee-selection").appendChild(employeeElement);
+        document.getElementById("EmployeeSearch").value = "";
+        clearSearchResults();
+    }
+</script>
