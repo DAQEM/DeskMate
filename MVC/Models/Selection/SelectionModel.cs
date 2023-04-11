@@ -7,4 +7,5 @@ public class SelectionModel
     public DateTimeSelectionModel DateTimeSelectionModel { get; set; } = new();
     public List<EmployeeModel> EmployeeModels { get; set; } = new();
     public List<WorkspaceModel> WorkspaceModels { get; set; } = new();
+    public List<LocationModel> LocationModels { get; set; } = new();
 }

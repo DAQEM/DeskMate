@@ -1,4 +1,5 @@
-﻿using BLL.Entities;
+﻿using BLL.Data;
+using BLL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
 
@@ -6,6 +7,13 @@ namespace MVC.Controllers;
 
 public class SelectionController : BaseController<SelectionController>
 {
+    private readonly ILocationService _locationService;
+
+    public SelectionController(ILocationService locationService)
+    {
+        _locationService = locationService;
+    }
+
     [HttpGet]
     public IActionResult Index()
     {
@@ -42,6 +50,14 @@ public class SelectionController : BaseController<SelectionController>
     public IActionResult EmployeeSelection(SelectionModel model)
     {
         Console.WriteLine(DateTime.Now.ToLongTimeString() + " => " + model.EmployeeModels.Count);
+        model.LocationModels = _locationService.GetAllLocations().Select(LocationModel.FromLocation).ToList();
+        return View("Index", model);
+    }
+
+    [HttpPost]
+    public IActionResult LocationSelection(SelectionModel model)
+    {
+        Console.WriteLine(DateTime.Now.ToLongTimeString() + " => " + model.LocationModels.Count);
         return View("Index", model);
     }
 

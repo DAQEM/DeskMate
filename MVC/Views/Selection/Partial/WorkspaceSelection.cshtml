@@ -4,6 +4,10 @@
 <h4>Where?</h4>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div class="d-flex justify-content-between align-items-end gap-5">
+    @if (Model.LocationModels.Any())
+    {
+        @Html.DropDownListFor(model => model.LocationModels[0].Name, new SelectList(Model.LocationModels.Select(m => m.Name)), new { @class = "w-100", placeholder = "Location", required = true })
+    }
     <div style="flex: .5">
         <button type="submit" class="btn btn-primary w-100"
                 onclick="{
