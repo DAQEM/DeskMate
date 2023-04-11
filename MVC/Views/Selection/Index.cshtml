@@ -11,22 +11,11 @@
 
 @using (Html.BeginForm("Selection", "Selection", FormMethod.Post, new { id = "form" }))
 {
-    @Html.HiddenFor(model => model.Step, new { id = "step" })
+    @await Html.PartialAsync("Partial/DateTimeSelection", Model)
+    <hr class="my-5"/>
+    @await Html.PartialAsync("Partial/EmployeeSelection", Model)
+    <hr class="my-5"/>
+    @await Html.PartialAsync("Partial/WorkspaceSelection", Model)
 
-    @if (Model.Step >= 1)
-    {
-        @await Html.PartialAsync("Partial/DateTimeSelection", Model)
-    }
-
-    @if (Model.Step >= 2)
-    {
-        <hr class="my-5"/>
-        @await Html.PartialAsync("Partial/EmployeeSelection", Model)
-    }
-
-    @if (Model.Step >= 3)
-    {
-        <hr class="my-5"/>
-        @await Html.PartialAsync("Partial/WorkspaceSelection", Model)
-    }
+    <button type="submit" class="btn btn-primary w-100"> Submit </button>
 }

@@ -19,13 +19,4 @@
         @Html.TextBoxFor(model => model.DateTimeSelectionModel.EndTime, "{0:HH:mm}", new { type = "time", @class = "form-control", onclick = "this.showPicker()" })
         @Html.ValidationMessageFor(model => model.DateTimeSelectionModel.EndTime, "", new { @class = "text-danger" })
     </div>
-    <div style="flex: 1">
-        <button type="button" class="btn btn-primary w-100"
-                onclick="{
-                    document.getElementById('step').value = 2;
-                    document.getElementById('form').submit();
-                }">
-            Submit
-        </button>
-    </div>
 </div>
