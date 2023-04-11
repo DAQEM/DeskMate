@@ -1,5 +1,6 @@
 using BLL.Data;
 using BLL.Data.Employee;
+using BLL.Data.Floor;
 using DAL;
 using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -32,6 +33,9 @@ services.AddScoped<IEmployeeService, EmployeeService>();
 
 services.AddScoped<ILocationRepository, LocationRepository>();
 services.AddScoped<ILocationService, LocationService>();
+
+services.AddScoped<IFloorRepository, FloorRepository>();
+services.AddScoped<IFloorService, FloorService>();
 
 WebApplication app = builder.Build();
 
