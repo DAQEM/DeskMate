@@ -5,16 +5,16 @@ namespace DAL.Repositories;
 
 public class CharacteristicRepository : ICharacteristicRepository
 {
+    private readonly DeskMateContext _context;
+
+    public CharacteristicRepository(DeskMateContext context)
+    {
+        _context = context;
+    }
+
     public List<Characteristic> GetCharacteristicsForWorkspace(Workspace workspace)
     {
-        return new List<Characteristic>()
-        {
-            //TODO: Get characteristics from database
-            //These are just some examples
-            new(type: CharacteristicType.Keyboard, amount: 1),
-            new(type: CharacteristicType.Mouse, amount: 1),
-            new(type: CharacteristicType.Monitor, amount: 2),
-            new(type: CharacteristicType.WallOutlet, amount: 3),
-        };
+        //Todo: Implement this method
+        return new List<Characteristic>();
     }
 }

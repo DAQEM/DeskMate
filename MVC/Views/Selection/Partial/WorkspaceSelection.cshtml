@@ -7,8 +7,6 @@
     @if (Model.LocationModels.Any())
     {
         @Html.DropDownListFor(model => model.LocationModels[0].Name, new SelectList(Model.LocationModels.Select(m => m.Name)), new { @class = "w-100", placeholder = "Location", required = true })
-    }
-    <div style="flex: .5">
         <button type="submit" class="btn btn-primary w-100"
                 onclick="{
                     document.getElementById('step').value = 4;
@@ -16,5 +14,25 @@
                 }">
             Submit
         </button>
-    </div>
+    }
+    @if (Model.FloorModels.Any())
+    {
+        @Html.DropDownListFor(model => model.FloorModels[0].FloorNumber, new SelectList(Model.FloorModels.Select(m => m.FloorNumber)), new { @class = "w-100", placeholder = "Floor", required = true })
+        <button type="submit" class="btn btn-primary w-100"
+                onclick="{
+                    document.getElementById('step').value = 5;
+                    document.getElementById('form').submit();
+                }">
+            Submit
+        </button>
+    }
+    @*     <div style="flex: .5"> *@
+    @*         <button type="submit" class="btn btn-primary w-100" *@
+    @*                 onclick="{ *@
+    @*                     document.getElementById('step').value = 4; *@
+    @*                     document.getElementById('form').submit(); *@
+    @*                 }"> *@
+    @*             Submit *@
+    @*         </button> *@
+    @*     </div> *@
 </div>
