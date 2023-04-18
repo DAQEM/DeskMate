@@ -1,5 +1,7 @@
 using BLL.Data;
 using BLL.Data.Employee;
+using BLL.Data.Floor;
+using DAL;
 using DAL.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,7 +15,7 @@ IConfigurationRoot config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
     .Build();
 
-builder.Services.AddDbContext<DAL.DeskMateContext>(
+builder.Services.AddDbContext<DeskMateContext>(
     options =>
     {
         options.UseMySql(config.GetConnectionString("MySqlConnection"),
@@ -28,6 +30,12 @@ services.AddScoped<ICharacteristicService, CharacteristicService>();
 
 services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 services.AddScoped<IEmployeeService, EmployeeService>();
+
+services.AddScoped<ILocationRepository, LocationRepository>();
+services.AddScoped<ILocationService, LocationService>();
+
+services.AddScoped<IFloorRepository, FloorRepository>();
+services.AddScoped<IFloorService, FloorService>();
 
 WebApplication app = builder.Build();
 
@@ -47,7 +55,7 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    "default",
+    "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
