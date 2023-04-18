@@ -15,15 +15,29 @@ public class EmployeeRepository : IEmployeeRepository
     public List<UserDTO> GetAllEmployees()
     {
         return _context.user
-            .Select(u => new UserDTO()
+            .Select(u => new UserDTO
             {
                 Id = u.Id,
                 Name = u.Name,
                 Email = u.Email,
                 Password = u.Email,
                 roleDTO = u.roleDTO,
-                reservationDTOs = u.reservationDTOs,
+                reservationDTOs = u.reservationDTOs
             })
+            .ToList();
+    }
+
+    public UserDTO? GetEmployeeById(Guid guid)
+    {
+        return _context.user
+            .FirstOrDefault(u => u.Id == guid);
+    }
+
+    public List<UserDTO> GetEmployeeBySearch(string search)
+    {
+        return _context.user
+            .Where(u => 
+                u.Name.ToLower().Contains(search.ToLower()))
             .ToList();
     }
 }

@@ -2,7 +2,7 @@
 
 public class SelectionModel
 {
-    public int Step { get; set; } = 1;
+    public bool ReservationIsDone { get; set; } = false;
 
     public DateTimeSelectionModel DateTimeSelectionModel { get; set; } = new();
     public List<EmployeeModel> EmployeeModels { get; set; } = new();

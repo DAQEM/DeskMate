@@ -9,4 +9,5 @@ public interface IWorkspaceService
     List<Workspace> GetAllWorkspacesWithCharacteristics();
 
     List<Workspace> GetWorkspacesByFloorId(Guid modelSelectedFloorId);
+    Workspace GetWorkspaceById(Guid workspaceId);
 }

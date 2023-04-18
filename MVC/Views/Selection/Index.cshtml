@@ -11,11 +11,13 @@
 
 @using (Html.BeginForm("Selection", "Selection", FormMethod.Post, new { id = "form" }))
 {
+    @Html.HiddenFor(model => model.ReservationIsDone)
+
     @await Html.PartialAsync("Partial/DateTimeSelection", Model)
     <hr class="my-5"/>
     @await Html.PartialAsync("Partial/EmployeeSelection", Model)
     <hr class="my-5"/>
     @await Html.PartialAsync("Partial/WorkspaceSelection", Model)
 
-    <button type="submit" class="btn btn-primary w-100"> Submit </button>
+    <button type="submit" class="btn btn-primary w-100" onclick="document.getElementById('ReservationIsDone').value = 'True'; document.getElementById('form').submit()"> Make Reservation </button>
 }

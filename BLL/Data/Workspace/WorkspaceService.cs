@@ -1,4 +1,6 @@
-﻿using BLL.Entities;
+﻿using BLL.DTOs;
+using BLL.Entities;
+using BLL.Exception;
 
 namespace BLL.Data;
 
@@ -37,5 +39,16 @@ public class WorkspaceService : IWorkspaceService
         return _workspaceRepository.GetWorkspacesByFloorId(modelSelectedFloorId)
             .Select(w => w.ToWorkspace())
             .ToList();
+    }
+
+    public Workspace GetWorkspaceById(Guid workspaceId)
+    {
+        WorkplaceDTO? workspace = _workspaceRepository.GetWorkspaceById(workspaceId);
+        if (workspace == null)
+        {
+            throw new ServiceException(nameof(Workspace), workspaceId.ToString());
+        }
+
+        return workspace.ToWorkspace();
     }
 }

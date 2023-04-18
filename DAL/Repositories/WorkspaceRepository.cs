@@ -26,4 +26,10 @@ public class WorkspaceRepository : IWorkspaceRepository
             .Where(w => w.roomDTO.FloorId == floorId)
             .ToList();
     }
+
+    public WorkplaceDTO? GetWorkspaceById(Guid workspaceId)
+    {
+        return _context.workspace
+            .FirstOrDefault(w => w.Id == workspaceId);
+    }
 }
