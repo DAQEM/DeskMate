@@ -1,0 +1,42 @@
+﻿@model MVC.Models.Dashboard.RegisterModel
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_Layout";
+    await Html.PartialAsync("_ValidationScriptsPartial", Model);
+}
+
+<h4>Register</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        @using (Html.BeginForm("Create", "Dashboard", FormMethod.Post))
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.Username, new { @class = "control-label" })
+                @Html.TextBoxFor(model => model.Username, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Username, string.Empty, new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Email, new { @class = "control-label" })
+                @Html.TextBoxFor(model => model.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Email, string.Empty, new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Password, new { @class = "control-label" })
+                @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Password, string.Empty, new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ConfirmPassword, new { @class = "control-label" })
+                @Html.PasswordFor(model => model.ConfirmPassword, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ConfirmPassword, string.Empty, new { @class = "text-danger" })
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        }
+    </div>
+</div>
+
+

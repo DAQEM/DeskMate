@@ -1,4 +1,5 @@
 ﻿using BLL.DTOs;
+using BLL.Exception;
 
 namespace BLL.Data.Employee;
 
@@ -15,5 +16,22 @@ public class EmployeeService : IEmployeeService
     {
         List<UserDTO> empoyees = _employeeRepository.GetAllEmployees();
         return empoyees.Select(e => e.ToEmployee()).ToList();
+    }
+
+    public Entities.Employee GetEmployeeById(Guid guid)
+    {
+        UserDTO? employee = _employeeRepository.GetEmployeeById(guid);
+        if (employee == null)
+        {
+            throw new ServiceException(nameof(Entities.Employee), guid.ToString());
+        }
+
+        return employee.ToEmployee();
+    }
+
+    public List<Entities.Employee> GetEmployeeBySearch(string search)
+    {
+        List<UserDTO> employees = _employeeRepository.GetEmployeeBySearch(search);
+        return employees.Select(e => e.ToEmployee()).ToList();
     }
 }

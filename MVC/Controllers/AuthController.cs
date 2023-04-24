@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MVC.Models.Auth;
+using MVC.Models.Dashboard;
 
 namespace MVC.Controllers;
 
