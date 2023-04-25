@@ -1,5 +1,6 @@
 using BLL.Data;
 using BLL.Data.Employee;
+using BLL.Data.Employee.Reservation;
 using BLL.Data.Floor;
 using DAL;
 using DAL.Repositories;
@@ -36,6 +37,9 @@ services.AddScoped<ILocationService, LocationService>();
 
 services.AddScoped<IFloorRepository, FloorRepository>();
 services.AddScoped<IFloorService, FloorService>();
+
+services.AddScoped<IReservationRepository, ReservationRepository>();
+services.AddScoped<IReservationService, ReservationService>();
 
 WebApplication app = builder.Build();
 
