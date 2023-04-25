@@ -15,10 +15,10 @@ public class AuthController : BaseController<AuthController>
 {
     private readonly IAuthService _authService;
 
-	public AuthController(IAuthService authService)
-	{
+    public AuthController(IAuthService authService)
+    {
         _authService = authService;
-	}
+    }
 
     [HttpGet]
     [Route("login")]
@@ -36,24 +36,31 @@ public class AuthController : BaseController<AuthController>
             return View(loginModel);
         }
 
-        Employee? employee = _authService.LoginEmployee(new Employee(email: loginModel.Email, hashedPassword: loginModel.Password));
+        Employee? employee =
+            _authService.LoginEmployee(new Employee(email: loginModel.Email, hashedPassword: loginModel.Password));
 
         if (employee == null)
         {
+            Console.WriteLine("Employee is null");
             ModelState.AddModelError("Password", "Password incorrect.");
             return View(loginModel);
         }
 
-        List<Claim> claim = new ()
+        List<Claim> claim = new()
         {
             new Claim(ClaimTypes.Name, employee.Id.ToString())
         };
 
         ClaimsIdentity identity = new(claim, CookieAuthenticationDefaults.AuthenticationScheme);
 
+
         await HttpContext.SignInAsync(
             CookieAuthenticationDefaults.AuthenticationScheme,
-            new ClaimsPrincipal(identity));
+            new ClaimsPrincipal(identity),
+            new AuthenticationProperties
+            {
+                IsPersistent = loginModel.RememberMe,
+            });
 
         return RedirectToAction("Index", "Home");
     }
@@ -78,17 +85,17 @@ public class AuthController : BaseController<AuthController>
     [Route("register")]
     public IActionResult Register(RegisterModel registerModel)
     {
-	    if (!ModelState.IsValid)
-	    {
+        if (!ModelState.IsValid)
+        {
             return View(registerModel);
-	    }
+        }
 
         bool isEmailTaken = _authService.RegisterEmployeeIfNotTaken(RegisterModelToUserDto(registerModel).ToEmployee());
 
         if (isEmailTaken)
         {
             ModelState.AddModelError("Email", "Email is already taken");
-	        return View(registerModel);
+            return View(registerModel);
         }
 
         return RedirectToAction("Index", "Home");
@@ -98,9 +105,9 @@ public class AuthController : BaseController<AuthController>
     {
         return new UserDTO()
         {
-			Name = registerModel.Username,
-			Email = registerModel.Email,
-			Password = registerModel.Password
-		};
+            Name = registerModel.Username,
+            Email = registerModel.Email,
+            Password = registerModel.Password
+        };
     }
 }

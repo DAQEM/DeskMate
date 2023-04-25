@@ -1,3 +1,4 @@
+using System.Text;
 using BLL.Data;
 using BLL.Data.Auth;
 using BLL.Data.Employee;
@@ -11,8 +12,8 @@ using Microsoft.EntityFrameworkCore;
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 IServiceCollection services = builder.Services;
-services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
+services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 IConfigurationRoot config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -46,27 +47,13 @@ services.AddScoped<IReservationService, ReservationService>();
 services.AddScoped<IAuthRepository, AuthRepository>();
 services.AddScoped<IAuthService, AuthService>();
 
-
 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-   .AddCookie(options =>
-   {
-       options.Cookie.Name = "EmployeeId";
-       options.Cookie.SameSite = SameSiteMode.Strict;
-       options.Cookie.HttpOnly = true;
-       options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-
-       options.LoginPath = "/login";
-       options.LogoutPath = "/logout";
-   });
-
-services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Cookie.SameSite = SameSiteMode.Strict;
-});
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+        options =>
+        {
+            options.LoginPath = "/login";
+            options.LogoutPath = "/logout";
+        });
 
 WebApplication app = builder.Build();
 
@@ -84,9 +71,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseSession();
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     "default",

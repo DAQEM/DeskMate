@@ -7,7 +7,10 @@ public class LoginModel
     [Required]
     [DataType(DataType.EmailAddress, ErrorMessage = "Requires a valid e-mail address.")]
     public string Email { get; set; } = string.Empty;
+
     [Required]
-    [DataType(DataType.Password)]
+    [DataType(DataType.Password, ErrorMessage = "Requires a valid password.")]
     public string Password { get; set; } = string.Empty;
+
+    [Display(Name = "Remember me")] public bool RememberMe { get; set; }
 }
