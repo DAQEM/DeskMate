@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BLL.Data.Auth;
+using BLL.DTOs;
+using BLL.Entities;
+using Microsoft.AspNetCore.Mvc;
 using MVC.Models.Auth;
 using MVC.Models.Dashboard;
 
@@ -6,6 +9,12 @@ namespace MVC.Controllers;
 
 public class AuthController : BaseController<AuthController>
 {
+    private readonly IAuthService _authService;
+
+	public AuthController(IAuthService authService)
+	{
+        _authService = authService;
+	}
 
     [HttpGet]
     [Route("login")]
@@ -20,11 +29,18 @@ public class AuthController : BaseController<AuthController>
     {
         if (!ModelState.IsValid)
         {
-            //TODO: login
-            return RedirectToAction("Index", "Home");
+            return View(loginModel);
         }
 
-        return View();
+        Employee employee = _authService.LoginEmployee(new Employee(email: loginModel.Email, hashedPassword: loginModel.Password));
+
+        if (employee == null)
+        {
+            ModelState.AddModelError("Password", "Password incorrect.");
+            return View(loginModel);
+        }
+
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpGet]
@@ -46,11 +62,29 @@ public class AuthController : BaseController<AuthController>
     [Route("register")]
     public IActionResult Register(RegisterModel registerModel)
     {
-        if (!ModelState.IsValid)
-            //TODO: register
-            return RedirectToAction("Index", "Home");
+	    if (!ModelState.IsValid)
+	    {
+            return View(registerModel);
+	    }
+
+        bool isEmailTaken = _authService.RegisterEmployeeIfNotTaken(RegisterModelToUserDto(registerModel));
+
+        if (isEmailTaken)
         {
-            return View();
+            ModelState.AddModelError("Email", "Email is already taken");
+	        return View(registerModel);
         }
+
+        return RedirectToAction("Index", "Home");
+    }
+
+    public UserDTO RegisterModelToUserDto(RegisterModel registerModel)
+    {
+        return new UserDTO()
+        {
+			Name = registerModel.Username,
+			Email = registerModel.Email,
+			Password = registerModel.Password
+		};
     }
 }

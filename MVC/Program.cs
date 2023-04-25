@@ -1,9 +1,11 @@
 using BLL.Data;
+using BLL.Data.Auth;
 using BLL.Data.Employee;
 using BLL.Data.Employee.Reservation;
 using BLL.Data.Floor;
 using DAL;
 using DAL.Repositories;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -41,6 +43,9 @@ services.AddScoped<IFloorService, FloorService>();
 services.AddScoped<IReservationRepository, ReservationRepository>();
 services.AddScoped<IReservationService, ReservationService>();
 
+services.AddScoped<IAuthRepository, AuthRepository>();
+services.AddScoped<IAuthService, AuthService>();
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -51,12 +56,34 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "EmployeeId";
+        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+
+        options.LoginPath = "/Auth/Login";
+        options.LogoutPath = "/Auth/Logout";
+    });
+
+services.AddSession(options =>
+{
+    options.Cookie.Name = "EmployeeId";
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession();
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllerRoute(
     "default",

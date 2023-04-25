@@ -1,5 +1,3 @@
-﻿using BLL.DTOs;
-
 namespace BLL.Entities;
 
 public class Employee
@@ -8,6 +6,8 @@ public class Employee
     private readonly string _hashedPassword;
     private readonly Guid _id;
     private readonly string _name;
+    private readonly string _email;
+    private string _hashedPassword;
     private readonly List<Reservation> _reservations;
 
     public Employee(Guid? id = null, string name = "", string email = "", string hashedPassword = "",
@@ -40,5 +40,22 @@ public class Employee
             Password = _hashedPassword,
             reservationDTOs = _reservations.Select(r => r.ToReservationDTO()).ToList()
         };
+    }
+
+    public void HashPassword()
+    {
+        MD5 md5 = MD5.Create();
+
+        byte[] inputBytes = Encoding.ASCII.GetBytes(password);
+        byte[] hash = md5.ComputeHash(inputBytes);
+
+        StringBuilder sb = new();
+
+        foreach (byte b in hash)
+        {
+            sb.Append(b.ToString("X2"));
+        }
+
+        _hashedPassword = sb.ToString();
     }
 }

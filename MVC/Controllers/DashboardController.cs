@@ -7,7 +7,7 @@ namespace MVC.Controllers
     [Route("dashboard")]
     public class DashboardController : BaseController<DashboardController>
     {
-        // GET: DashboardController
+	    // GET: DashboardController
         [HttpGet]
         [Route("")]
         public ActionResult Index()
