@@ -3,58 +3,52 @@
 @Html.AntiForgeryToken()
 <h4>Where?</h4>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-<div class="d-flex justify-content-between flex-wrap gap-5">
-    @if (Model.LocationModels.Any())
-    {
-        @Html.DropDownListFor(model => model.SelectedLocationId, new SelectList(Model.LocationModels, "Id", "Name"), new { @class = "w-100", placeholder = "Location", required = true })
-        <button type="submit" class="btn btn-primary w-100"
-                onclick="{
-                    document.getElementById('step').value = 4;
-                    document.getElementById('form').submit();
-                }">
-            Submit
-        </button>
-    }
-    @if (Model.FloorModels.Any())
-    {
-        @Html.DropDownListFor(model => model.SelectedFloorId, new SelectList(Model.FloorModels, "Id", "Name"), new { @class = "w-100", placeholder = "Floor", required = true })
-        <button type="submit" class="btn btn-primary w-100"
-                onclick="{
-                    document.getElementById('step').value = 5;
-                    document.getElementById('form').submit();
-                }">
-            Submit
-        </button>
-    }
-    @if (Model.Step >= 5)
-    {
-        <div class="d-flex flex-column">
-            <div class="d-flex flex-column">
-                @foreach (WorkspacePropModel workspace in Model.WorkspaceModels)
-                {
-                    <div class="w-100 m-1 p-2 border border-dark rounded">
-                        <div class="d-flex">
-                            <p>@workspace.Name</p>
-                            @{
-                                if (!Model.Reservations.ContainsKey(workspace.Id.ToString()))
-                                {
-                                    Model.Reservations.Add(workspace.Id.ToString(), "");
-                                }
-                            }
-                            @Html.DropDownListFor(model => model.Reservations[workspace.Id.ToString()], new SelectList(Model.EmployeeModels, "Id", "Name"), "", new { @class = "w-100", placeholder = "Employee" })
-                        </div>
-                    </div>
-                }
-            </div>
-            <div style="flex: .5">
-                <button type="submit" class="btn btn-primary w-100"
-                        onclick="{
-                            document.getElementById('step').value = 6;
-                            document.getElementById('form').submit();
-                        }">
-                    Submit
-                </button>
-            </div>
+<div class="d-flex justify-content-between flex-wrap">
+    <div class="d-flex flex-row flex-wrap w-100 gap-5 mb-5">
+        <div style="flex: 1">
+            @if (Model.LocationModels.Any())
+            {
+                @Html.LabelFor(model => model.SelectedLocationId, "Location", new { @class = "w-100 control-label" })
+                @Html.DropDownListFor(model => model.SelectedLocationId, new SelectList(Model.LocationModels, "Id", "Name"), new { @class = "w-100 form-control", placeholder = "Location", required = true, id = "location_selection" })
+            }
         </div>
-    }
+        <div style="flex: 1">
+            @if (Model.FloorModels.Any())
+            {
+                @Html.LabelFor(model => model.SelectedFloorId, "Floor", new { @class = "w-100 control-label" })
+                @Html.DropDownListFor(model => model.SelectedFloorId, new SelectList(Model.FloorModels.OrderBy(fm => fm.FloorNumber), "Id", "Name"), new { @class = "w-100 form-control", placeholder = "Floor", required = true, id = "floor_selection" })
+            }
+        </div>
+    </div>
+    <div class="d-flex flex-column w-100">
+        <p class="m-0">Available workspaces</p>
+        <div class="d-flex flex-column">
+            @foreach (WorkspacePropModel workspace in Model.WorkspaceModels)
+            {
+                <div class="w-100 my-2 p-2 border rounded">
+                    <div class="d-flex justify-content-between">
+                        <p>@workspace.Name</p>
+                        @{
+                            if (!Model.Reservations.ContainsKey(workspace.Id.ToString()))
+                            {
+                                Model.Reservations.Add(workspace.Id.ToString(), "");
+                            }
+                        }
+                        @Html.DropDownListFor(model => model.Reservations[workspace.Id.ToString()], new SelectList(Model.EmployeeModels, "Id", "Name"), "Select Employee", new { @class = "w-100 form-control", style = "max-width: 200px; color: lightgray", placeholder = "Employee", onchange = "this.style.color = (this.value === '') ? 'lightgray' : 'black'" })
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
 </div>
+
+<script>
+    $("#location_selection").change(function () {
+        $('#floor_selection').val('');
+        $("#form").submit();
+    });
+    
+    $("#floor_selection").change(function () {
+        $("#form").submit();
+    });
+</script>

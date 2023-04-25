@@ -1,0 +1,17 @@
+﻿@using BLL.Entities
+@model ReservationModel
+
+@{
+    ViewBag.Title = "Reservation Complete";
+    Layout = "_Layout";
+}
+
+<h1>Reservation Complete</h1>
+
+<p>@Model.Reservations.Count Reservations</p>
+
+@foreach (KeyValuePair<Workspace, Employee> reservation in Model.Reservations)
+{
+    <p>Workspace: @reservation.Key.Name</p>
+    <p>Employee: @reservation.Value.Name</p>
+}

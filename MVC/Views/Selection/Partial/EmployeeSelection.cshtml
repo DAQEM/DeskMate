@@ -19,20 +19,11 @@
                 @Html.HiddenFor(model => model.EmployeeModels[i].Name)
                 @Html.HiddenFor(model => model.EmployeeModels[i].Email)
                 <button type="button" class="btn btn-danger m-0"
-                        onclick="document.getElementById('employee-@i').remove()">
+                        onclick="document.getElementById('employee-@i').remove(); renumberEmployees(); document.getElementById('form').submit()">
                     X
                 </button>
             </div>
         }
-    </div>
-    <div>
-        <button type="submit" class="btn btn-primary w-100"
-                onclick="{
-                    document.getElementById('step').value = 3;
-                    document.getElementById('form').submit();
-                }">
-            Submit Employees
-        </button>
     </div>
 </div>
 
@@ -76,7 +67,7 @@
         employeeSearchResult.className = "d-flex justify-content-between align-items-center p-2 my-2 rounded bg-white border-1 border";
         employeeSearchResult.innerHTML = `
             <p class="m-0">${employee.name}</p>
-            <button type="button" class="btn btn-primary m-0" onclick="addEmployee('${id}', '${employee.id}', '${employee.name}', '${employee.email}')">+</button>
+            <button type="submit" class="btn btn-primary m-0" onclick="addEmployee('${id}', '${employee.id}', '${employee.name}', '${employee.email}'); document.getElementById('form').submit()">+</button>
         `;
         employeeSearchResults.appendChild(employeeSearchResult);
     }
@@ -91,10 +82,50 @@
             <input data-val="true" data-val-required="The Id field is required." id="EmployeeModels_${id}__Id" name="EmployeeModels[${id}].Id" type="hidden" value="${employeeId}">
             <input data-val="true" data-val-required="The Name field is required." id="EmployeeModels_${id}__Name" name="EmployeeModels[${id}].Name" type="hidden" value="${employeeName}">
             <input data-val="true" data-val-required="The Email field is required." id="EmployeeModels_${id}__Email" name="EmployeeModels[${id}].Email" type="hidden" value="${employeeEmail}">
-            <button type="button" class="btn btn-danger m-0" onclick="document.getElementById('employee-${id}').remove()">X</button>
+            <button type="button" class="btn btn-danger m-0" onclick="document.getElementById('employee-${id}').remove(); renumberEmployees(); document.getElementById('form').submit()">X</button>
         `;
         document.getElementById("employee-selection").appendChild(employeeElement);
         document.getElementById("EmployeeSearch").value = "";
         clearSearchResults();
+    }
+    
+    function renumberEmployees() {
+        //loop through all employees in id 'employee-selection' with jQuery
+        $('#employee-selection').children().each(function(index) {
+            //change id of employee
+            $(this).attr('id', 'employee-' + index);
+
+            //change id of employee id hidden input
+            $(this).children('input').each(function() {
+                if ($(this).attr('id').includes('__Id')) { 
+                    $(this).attr('id', 'EmployeeModels_' + index + '__Id');
+                    $(this).attr('name', 'EmployeeModels[' + index + '].Id');
+                    $(this).attr('value', document.getElementById('EmployeeModels_' + index + '__Id').value);
+                }
+            });
+
+            //change id of employee name hidden input
+            $(this).children('input').each(function() {
+                if ($(this).attr('id').includes('__Name')) { 
+                    $(this).attr('id', 'EmployeeModels_' + index + '__Name');
+                    $(this).attr('name', 'EmployeeModels[' + index + '].Name');
+                    $(this).attr('value', document.getElementById('EmployeeModels_' + index + '__Name').value);
+                }
+            });
+
+            //change id of employee email hidden input
+            $(this).children('input').each(function() {
+                if ($(this).attr('id').includes('__Email')) { 
+                    $(this).attr('id', 'EmployeeModels_' + index + '__Email');
+                    $(this).attr('name', 'EmployeeModels[' + index + '].Email');
+                    $(this).attr('value', document.getElementById('EmployeeModels_' + index + '__Email').value);
+                }
+            });
+
+            //change onclick of button
+            $(this).children('button').each(function() {
+                $(this).attr('onclick', "document.getElementById('employee-" + index + "').remove(); renumberEmployees(); document.getElementById('form').submit()");
+            });
+        });
     }
 </script>

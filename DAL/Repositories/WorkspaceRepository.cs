@@ -28,6 +28,7 @@ public class WorkspaceRepository : IWorkspaceRepository
             .ToList();
     }
 
+<<<<<<< HEAD
     public List<WorkspaceDTO> GetWorkspacesWithCharacteristicsAndReservations()
     {
 	    return _context.workspace
@@ -35,5 +36,11 @@ public class WorkspaceRepository : IWorkspaceRepository
 		    .ThenInclude(wc => wc.characteristicDTO)
 		    .Include(w => w.reservationDTOs)
 		    .ToList();
+=======
+    public WorkplaceDTO? GetWorkspaceById(Guid workspaceId)
+    {
+        return _context.workspace
+            .FirstOrDefault(w => w.Id == workspaceId);
+>>>>>>> 20aeecdd64fcdeed72d551ff698610c39029a503
     }
 }
