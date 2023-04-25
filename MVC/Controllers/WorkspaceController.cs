@@ -18,8 +18,17 @@ public class WorkspaceController : BaseController<WorkspaceController>
     [Route("workspaces")]
     public IActionResult Index()
     {
-        List<Workspace> workspaces = _workspaceService.GetAllWorkspacesWithCharacteristics();
-        WorkspaceListModel model = new() { Workspaces = workspaces };
-        return View(model);
+	    List<Workspace> workspaces = _workspaceService.GetWorkspacesWithCharacteristicsAndReservations();
+	    WorkspaceListModel model = new() { Workspaces = workspaces };
+	    return View(model);
     }
+
+	//public IActionResult Index()
+	//{
+	//    List<Workspace> workspaces = _workspaceService.GetAllWorkspacesWithCharacteristics();
+	//    WorkspaceListModel model = new() { Workspaces = workspaces };
+	//    return View(model);
+	//}
+
+
 }

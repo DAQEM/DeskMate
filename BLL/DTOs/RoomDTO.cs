@@ -8,6 +8,6 @@ namespace BLL.DTOs
         [Column(TypeName = "varchar(200)")] public string Name { get; set; }
         public Guid FloorId { get; set; }
         public FloorDTO floorDTO { get; set; }
-        public ICollection<WorkplaceDTO> workplaceDTO { get; set; }
+        public ICollection<WorkspaceDTO> WorkspaceDtos { get; set; }
     }
 }

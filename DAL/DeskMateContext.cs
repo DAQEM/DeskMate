@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace DAL
 {
     public class DeskMateContext : DbContext
-    {
+    { 
         public DbSet<LocationDTO> location { get; set; }
         public DbSet<PermissionDTO> permission { get; set; }
         public DbSet<RoleDTO> role { get; set; }
@@ -12,8 +12,8 @@ namespace DAL
         public DbSet<CharacteristicDTO> characteristic { get; set; }
         public DbSet<FloorDTO> floor { get; set; }
         public DbSet<ReservationDTO> reservation { get; set; }
-        public DbSet<WorkplaceDTO> workspace { get; set; }
-        public DbSet<WorkplaceCharacteristicsDTO> workplaceCharacteristic { get; set; }
+        public DbSet<WorkspaceDTO> workspace { get; set; }
+        public DbSet<WorkspaceCharacteristicsDTO> workspaceCharacteristic { get; set; }
         public DbSet<RoomDTO> room { get; set; }
         public DbSet<UserDTO> user { get; set; }
 
@@ -23,7 +23,7 @@ namespace DAL
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<WorkplaceCharacteristicsDTO>().HasKey(w => new { w.WorkspaceId, w.CharacteristicId });
+            modelBuilder.Entity<WorkspaceCharacteristicsDTO>().HasKey(w => new { w.WorkspaceId, w.CharacteristicId });
 
             modelBuilder.Entity<CompanyDTO>()
                 .HasMany(c => c.locationDTOList)
@@ -46,7 +46,7 @@ namespace DAL
                 .HasForeignKey(f => f.LocationId);
 
             modelBuilder.Entity<RoomDTO>()
-                .HasMany(r => r.workplaceDTO)
+                .HasMany(r => r.WorkspaceDtos)
                 .WithOne(w => w.roomDTO)
                 .HasForeignKey(w => w.RoomId);
 
@@ -68,18 +68,18 @@ namespace DAL
                 .WithOne(r => r.userDTO)
                 .HasForeignKey(r => r.UserId);
 
-            modelBuilder.Entity<WorkplaceDTO>()
+            modelBuilder.Entity<WorkspaceDTO>()
                 .HasMany(w => w.reservationDTOs)
-                .WithOne(r => r.workplaceDTO)
+                .WithOne(r => r.WorkspaceDto)
                 .HasForeignKey(r => r.WorkspaceId);
 
-            modelBuilder.Entity<WorkplaceDTO>()
-                .HasMany(w => w.workplaceCharacteristicsDTOs)
-                .WithOne(wc => wc.workplaceDTO)
+            modelBuilder.Entity<WorkspaceDTO>()
+                .HasMany(w => w.workspaceCharacteristicsDTOs)
+                .WithOne(wc => wc.WorkspaceDTO)
                 .HasForeignKey(wc => wc.WorkspaceId);
 
             modelBuilder.Entity<CharacteristicDTO>()
-                .HasMany(c => c.workplaceCharacteristicsDTOs)
+                .HasMany(c => c.WorkspaceCharacteristicsDtos)
                 .WithOne(wc => wc.characteristicDTO)
                 .HasForeignKey(wc => wc.CharacteristicId);
         }
