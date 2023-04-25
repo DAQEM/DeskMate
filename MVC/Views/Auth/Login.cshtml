@@ -7,15 +7,15 @@
 
 <h2>Login</h2>
 
-<div>
-	@using (Html.BeginForm("Login", "Auth", FormMethod.Post))
-	{
-		@Html.LabelFor(model => model.Email)
-		@Html.TextBoxFor(model => model.Email)
+<div class="d-flex justify-content-start">
+    @using (Html.BeginForm("Login", "Auth", FormMethod.Post))
+    {
+        @Html.LabelFor(model => model.Email, new { @class = "control-label mt-1" })
+        @Html.TextBoxFor(model => model.Email, new { @class = "form-control mb-1" })
 
-		@Html.LabelFor(model => model.Password)
-		@Html.PasswordFor(model => model.Password)
+        @Html.LabelFor(model => model.Password, new { @class = "control-label mt-1" })
+        @Html.PasswordFor(model => model.Password, new { @class = "form-control mb-1" })
 
-		<button type="submit">Login</button>
-	}
+        <button type="submit" class="btn btn-primary w-100 my-1">Login</button>
+    }
 </div>

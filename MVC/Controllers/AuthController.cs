@@ -44,12 +44,12 @@ public class AuthController : BaseController<AuthController>
             return View(loginModel);
         }
 
-        var claim = new List<Claim>
+        List<Claim> claim = new ()
         {
             new Claim(ClaimTypes.Name, employee.Id.ToString())
         };
 
-        var identity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
+        ClaimsIdentity identity = new(claim, CookieAuthenticationDefaults.AuthenticationScheme);
 
         await HttpContext.SignInAsync(
             CookieAuthenticationDefaults.AuthenticationScheme,
