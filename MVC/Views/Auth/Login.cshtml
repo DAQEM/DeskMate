@@ -6,3 +6,16 @@
 }
 
 <h2>Login</h2>
+
+<div>
+	@using (Html.BeginForm("Login", "Auth", FormMethod.Post))
+	{
+		@Html.LabelFor(model => model.Email)
+		@Html.TextBoxFor(model => model.Email)
+
+		@Html.LabelFor(model => model.Password)
+		@Html.PasswordFor(model => model.Password)
+
+		<button type="submit">Login</button>
+	}
+</div>

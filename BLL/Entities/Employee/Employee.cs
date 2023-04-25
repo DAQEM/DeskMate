@@ -1,9 +1,11 @@
+using System.Security.Cryptography;
+using System.Text;
+using BLL.DTOs;
+
 namespace BLL.Entities;
 
 public class Employee
 {
-    private readonly string _email;
-    private readonly string _hashedPassword;
     private readonly Guid _id;
     private readonly string _name;
     private readonly string _email;
@@ -46,7 +48,7 @@ public class Employee
     {
         MD5 md5 = MD5.Create();
 
-        byte[] inputBytes = Encoding.ASCII.GetBytes(password);
+        byte[] inputBytes = Encoding.ASCII.GetBytes(_hashedPassword);
         byte[] hash = md5.ComputeHash(inputBytes);
 
         StringBuilder sb = new();

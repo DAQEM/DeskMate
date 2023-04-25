@@ -4,7 +4,7 @@ namespace BLL.Data.Auth
 {
 	public interface IAuthService
 	{
-		bool RegisterEmployeeIfNotTaken(UserDTO userDto);
-		Entities.Employee? LoginEmployee(Employee employee);
+		bool RegisterEmployeeIfNotTaken(Entities.Employee userDto);
+		Entities.Employee? LoginEmployee(Entities.Employee employee);
 	}
 }

@@ -1,6 +1,10 @@
-﻿using BLL.Data.Auth;
+﻿using System.Diagnostics;
+using System.Security.Claims;
+using BLL.Data.Auth;
 using BLL.DTOs;
 using BLL.Entities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models.Auth;
 using MVC.Models.Dashboard;
@@ -25,14 +29,14 @@ public class AuthController : BaseController<AuthController>
 
     [HttpPost]
     [Route("login")]
-    public IActionResult Login(LoginModel loginModel)
+    public async Task<IActionResult> Login(LoginModel loginModel)
     {
         if (!ModelState.IsValid)
         {
             return View(loginModel);
         }
 
-        Employee employee = _authService.LoginEmployee(new Employee(email: loginModel.Email, hashedPassword: loginModel.Password));
+        Employee? employee = _authService.LoginEmployee(new Employee(email: loginModel.Email, hashedPassword: loginModel.Password));
 
         if (employee == null)
         {
@@ -40,14 +44,26 @@ public class AuthController : BaseController<AuthController>
             return View(loginModel);
         }
 
+        var claim = new List<Claim>
+        {
+            new Claim(ClaimTypes.Name, employee.Id.ToString())
+        };
+
+        var identity = new ClaimsIdentity(claim, CookieAuthenticationDefaults.AuthenticationScheme);
+
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(identity));
+
         return RedirectToAction("Index", "Home");
     }
 
     [HttpGet]
     [Route("logout")]
-    public IActionResult Logout()
+    public async Task<IActionResult> Logout()
     {
-        //TODO: logout
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
         return RedirectToAction("Index", "Home");
     }
 
@@ -67,7 +83,7 @@ public class AuthController : BaseController<AuthController>
             return View(registerModel);
 	    }
 
-        bool isEmailTaken = _authService.RegisterEmployeeIfNotTaken(RegisterModelToUserDto(registerModel));
+        bool isEmailTaken = _authService.RegisterEmployeeIfNotTaken(RegisterModelToUserDto(registerModel).ToEmployee());
 
         if (isEmailTaken)
         {

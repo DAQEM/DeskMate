@@ -13,12 +13,13 @@ namespace BLL.Data.Auth
 			_authRepository = authRepository;
 		}
 
-		public bool RegisterEmployeeIfNotTaken(UserDTO userDto)
+		public bool RegisterEmployeeIfNotTaken(Entities.Employee employee)
 		{
-			if (IsEmailTaken(userDto.Email)) return true;
+			if (IsEmailTaken(employee.Email)) return true;
 
-			//userDto.Password = HashPassword(userDto.Password);
-			_authRepository.RegisterEmployee(userDto);
+            employee.HashPassword();
+
+			_authRepository.RegisterEmployee(employee.ToUserDTO());
 
 			return false;
 		}
@@ -27,7 +28,7 @@ namespace BLL.Data.Auth
 		{
             employee.HashPassword();
 
-			return _authRepository.LoginEmployee(employee)?.ToEmployee();
+			return _authRepository.LoginEmployee(employee.ToUserDTO())?.ToEmployee();
 		}
 
 		public bool IsEmailTaken(string email)

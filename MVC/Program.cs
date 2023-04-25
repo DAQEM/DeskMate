@@ -46,6 +46,28 @@ services.AddScoped<IReservationService, ReservationService>();
 services.AddScoped<IAuthRepository, AuthRepository>();
 services.AddScoped<IAuthService, AuthService>();
 
+
+services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+   .AddCookie(options =>
+   {
+       options.Cookie.Name = "EmployeeId";
+       options.Cookie.SameSite = SameSiteMode.Strict;
+       options.Cookie.HttpOnly = true;
+       options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
+
+       options.LoginPath = "/login";
+       options.LogoutPath = "/logout";
+   });
+
+services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+});
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -56,25 +78,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.Cookie.Name = "EmployeeId";
-        options.Cookie.SameSite = SameSiteMode.Strict;
-        options.Cookie.HttpOnly = true;
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-
-        options.LoginPath = "/Auth/Login";
-        options.LogoutPath = "/Auth/Logout";
-    });
-
-services.AddSession(options =>
-{
-    options.Cookie.Name = "EmployeeId";
-    options.IdleTimeout = TimeSpan.FromMinutes(30);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-});
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
