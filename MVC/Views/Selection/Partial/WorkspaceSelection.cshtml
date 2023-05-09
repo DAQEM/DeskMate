@@ -1,7 +1,7 @@
 ﻿@model SelectionModel
 
 @Html.AntiForgeryToken()
-<h4>Where?</h4>
+<h4 id="where">Where?</h4>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div class="d-flex justify-content-between flex-wrap">
     <div class="d-flex flex-row flex-wrap w-100 gap-5 mb-5">
@@ -45,10 +45,12 @@
 <script>
     $("#location_selection").change(function () {
         $('#floor_selection').val('');
+        $("#SectionChanged").val("where");
         $("#form").submit();
     });
     
     $("#floor_selection").change(function () {
+        $("#SectionChanged").val("where");
         $("#form").submit();
     });
 </script>

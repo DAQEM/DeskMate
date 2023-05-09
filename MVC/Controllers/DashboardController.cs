@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models.Dashboard;
 
@@ -7,9 +8,12 @@ namespace MVC.Controllers
     [Route("dashboard")]
     public class DashboardController : BaseController<DashboardController>
     {
+
         // GET: DashboardController
+        
         [HttpGet]
         [Route("")]
+        [Authorize]
         public ActionResult Index()
         {
             return View(new RegisterModel());
