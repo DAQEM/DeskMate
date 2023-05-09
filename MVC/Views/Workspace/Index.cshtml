@@ -12,6 +12,7 @@
         <tr>
             <th>Workspace Name</th>
             <th>Characteristics</th>
+            <th class="AvailabilityClass">Current availability</th>
         </tr>
         </thead>
         <tbody>
@@ -25,6 +26,17 @@
                         <span style="font-weight:200" class="badge  text-black badge-primary mr-2">@characteristic.Amount @characteristic.Type</span>
                     }
                 </td>
+                <td class="OccupiedClass">
+                    @if (workspace.Occupied == true)
+                    {
+                        <span class="dot red"></span>
+                    }
+                    else
+                    {
+                        <span class="dot green"></span>
+                    }
+                </td>
+ 
               
             </tr>
         }

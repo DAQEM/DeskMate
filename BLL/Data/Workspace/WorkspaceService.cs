@@ -1,4 +1,5 @@
-﻿using BLL.DTOs;
+﻿using System.Reflection.Metadata;
+using BLL.DTOs;
 using BLL.Entities;
 using BLL.Exception;
 
@@ -8,6 +9,7 @@ public class WorkspaceService : IWorkspaceService
 {
     private readonly ICharacteristicService _characteristicService;
 	private readonly IWorkspaceRepository _workspaceRepository;
+
 
 
 	public WorkspaceService(IWorkspaceRepository workspaceRepository,
@@ -48,11 +50,20 @@ public class WorkspaceService : IWorkspaceService
 
 	public List<Workspace> GetWorkspacesWithCharacteristicsAndReservations()
 	{
-	   return _workspaceRepository.GetWorkspacesWithCharacteristicsAndReservations()
+	  List<Workspace> workspaces = _workspaceRepository.GetWorkspacesWithCharacteristicsAndReservations()
 		   .Select(w => w.ToWorkspaceWithCharacteristicAndReservation())
 		   .ToList();
 
-	}
+      foreach ( Workspace workspace in workspaces)
+      {
+          if (workspace.Reservations.Where(r => DateTime.Now >= r.StartDate && DateTime.Now < r.EndDate).Any())
+          {
+				workspace.Occupied = true;
+          }
+      }
+
+      return workspaces;
+    }
 
 
 }
