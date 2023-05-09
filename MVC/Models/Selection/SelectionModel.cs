@@ -3,6 +3,7 @@
 public class SelectionModel
 {
     public bool ReservationIsDone { get; set; } = false;
+    public string SectionChanged { get; set; } = "";
 
     public DateTimeSelectionModel DateTimeSelectionModel { get; set; } = new();
     public List<EmployeeModel> EmployeeModels { get; set; } = new();

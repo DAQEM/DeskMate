@@ -1,6 +1,9 @@
-﻿using BLL.Data;
+﻿using System.Globalization;
+using BLL.Data;
 using BLL.Data.Employee;
+using BLL.Data.Employee.Reservation;
 using BLL.Data.Floor;
+using BLL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
 
@@ -12,15 +15,18 @@ public class SelectionController : BaseController<SelectionController>
     private readonly IEmployeeService _employeeService;
     private readonly IFloorService _floorService;
     private readonly ILocationService _locationService;
+    private readonly IReservationService _reservationService;
     private readonly IWorkspaceService _workspaceService;
 
     public SelectionController(ILocationService locationService, IFloorService floorService,
-        IWorkspaceService workspaceService, IEmployeeService employeeService)
+        IWorkspaceService workspaceService, IEmployeeService employeeService,
+        IReservationService reservationService)
     {
         _locationService = locationService;
         _floorService = floorService;
         _workspaceService = workspaceService;
         _employeeService = employeeService;
+        _reservationService = reservationService;
     }
 
     [HttpGet]
@@ -77,6 +83,11 @@ public class SelectionController : BaseController<SelectionController>
 
             TempData["reservationModel"] = dataTransferList.Aggregate((x, y) => x + "," + y);
 
+            TempData["date"] = model.DateTimeSelectionModel.Date.ToString("yyyy-MM-dd HH:mm:ss");
+            TempData["startTime"] = model.DateTimeSelectionModel.StartTime.ToString("HH:mm:ss");
+            TempData["endTime"] = model.DateTimeSelectionModel.EndTime.ToString("HH:mm:ss");
+
+
             return RedirectToAction("Reserve");
         }
 
@@ -87,7 +98,20 @@ public class SelectionController : BaseController<SelectionController>
     [Route("Reserve")]
     public IActionResult Reserve(ReservationModel model)
     {
+        Console.WriteLine(TempData["reservationModel"]);
+        Console.WriteLine(TempData["date"]);
+        Console.WriteLine(TempData["startTime"]);
+        Console.WriteLine(TempData["endTime"]);
+
         string dataTransferString = TempData["reservationModel"] as string;
+        DateTime date = DateTime.ParseExact(TempData["date"] as string, "yyyy-MM-dd HH:mm:ss",
+            CultureInfo.InvariantCulture);
+        TimeSpan startTime = TimeSpan.Parse(TempData["startTime"].ToString());
+        TimeSpan endTime = TimeSpan.Parse(TempData["endTime"].ToString());
+
+        DateTime startDate = date.Add(startTime);
+        DateTime endDate = date.Add(endTime);
+
         if (dataTransferString != null)
         {
             List<string> dataTransferList = dataTransferString.Split(",").ToList();
@@ -96,6 +120,13 @@ public class SelectionController : BaseController<SelectionController>
                 .ToDictionary(
                     x => _workspaceService.GetWorkspaceById(new Guid(x.Split(":")[0])),
                     x => _employeeService.GetEmployeeById(new Guid(x.Split(":")[1])));
+        }
+
+        //Add reservations to the database
+        foreach (KeyValuePair<Workspace, Employee> reservation in model.Reservations)
+        {
+            _reservationService.CreateReservation(new Reservation(Guid.NewGuid(), startDate, endDate, reservation.Value,
+                reservation.Key));
         }
 
         return View(model);

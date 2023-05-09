@@ -1,15 +1,19 @@
+using System.Text;
 using BLL.Data;
+using BLL.Data.Auth;
 using BLL.Data.Employee;
+using BLL.Data.Employee.Reservation;
 using BLL.Data.Floor;
 using DAL;
 using DAL.Repositories;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 IServiceCollection services = builder.Services;
-services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
+services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
 IConfigurationRoot config = new ConfigurationBuilder()
     .AddJsonFile("appsettings.json")
@@ -37,6 +41,20 @@ services.AddScoped<ILocationService, LocationService>();
 services.AddScoped<IFloorRepository, FloorRepository>();
 services.AddScoped<IFloorService, FloorService>();
 
+services.AddScoped<IReservationRepository, ReservationRepository>();
+services.AddScoped<IReservationService, ReservationService>();
+
+services.AddScoped<IAuthRepository, AuthRepository>();
+services.AddScoped<IAuthService, AuthService>();
+
+services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
+        options =>
+        {
+            options.LoginPath = "/login";
+            options.LogoutPath = "/logout";
+        });
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -47,11 +65,13 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

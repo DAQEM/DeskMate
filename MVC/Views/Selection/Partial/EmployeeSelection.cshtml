@@ -1,7 +1,7 @@
 ﻿@model SelectionModel
 
 @Html.AntiForgeryToken()
-<h4>Who?</h4>
+<h4 id="who">Who?</h4>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div>
     <div id="employee-search" class="d-flex flex-column justify-content-center align-items-center">
@@ -19,7 +19,7 @@
                 @Html.HiddenFor(model => model.EmployeeModels[i].Name)
                 @Html.HiddenFor(model => model.EmployeeModels[i].Email)
                 <button type="button" class="btn btn-danger m-0"
-                        onclick="document.getElementById('employee-@i').remove(); renumberEmployees(); document.getElementById('form').submit()">
+                        onclick="document.getElementById('employee-@i').remove(); renumberEmployees(); document.getElementById('SectionChanged').value = 'who'; document.getElementById('form').submit()">
                     X
                 </button>
             </div>
@@ -67,7 +67,7 @@
         employeeSearchResult.className = "d-flex justify-content-between align-items-center p-2 my-2 rounded bg-white border-1 border";
         employeeSearchResult.innerHTML = `
             <p class="m-0">${employee.name}</p>
-            <button type="submit" class="btn btn-primary m-0" onclick="addEmployee('${id}', '${employee.id}', '${employee.name}', '${employee.email}'); document.getElementById('form').submit()">+</button>
+            <button type="submit" class="btn btn-primary m-0" onclick="addEmployee('${id}', '${employee.id}', '${employee.name}', '${employee.email}'); document.getElementById('SectionChanged').value = 'who'; document.getElementById('form').submit()">+</button>
         `;
         employeeSearchResults.appendChild(employeeSearchResult);
     }
@@ -82,7 +82,7 @@
             <input data-val="true" data-val-required="The Id field is required." id="EmployeeModels_${id}__Id" name="EmployeeModels[${id}].Id" type="hidden" value="${employeeId}">
             <input data-val="true" data-val-required="The Name field is required." id="EmployeeModels_${id}__Name" name="EmployeeModels[${id}].Name" type="hidden" value="${employeeName}">
             <input data-val="true" data-val-required="The Email field is required." id="EmployeeModels_${id}__Email" name="EmployeeModels[${id}].Email" type="hidden" value="${employeeEmail}">
-            <button type="button" class="btn btn-danger m-0" onclick="document.getElementById('employee-${id}').remove(); renumberEmployees(); document.getElementById('form').submit()">X</button>
+            <button type="button" class="btn btn-danger m-0" onclick="document.getElementById('employee-${id}').remove(); renumberEmployees(); document.getElementById('SectionChanged').value = 'who'; document.getElementById('form').submit()">X</button>
         `;
         document.getElementById("employee-selection").appendChild(employeeElement);
         document.getElementById("EmployeeSearch").value = "";
@@ -124,7 +124,7 @@
 
             //change onclick of button
             $(this).children('button').each(function() {
-                $(this).attr('onclick', "document.getElementById('employee-" + index + "').remove(); renumberEmployees(); document.getElementById('form').submit()");
+                $(this).attr('onclick', "document.getElementById('employee-" + index + "').remove(); renumberEmployees(); document.getElementById('SectionChanged').value = 'who'; document.getElementById('form').submit()");
             });
         });
     }
