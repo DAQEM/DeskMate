@@ -1,6 +1,7 @@
 ﻿using BLL.Data;
 using BLL.DTOs;
 using BLL.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories;
 
@@ -20,16 +21,24 @@ public class WorkspaceRepository : IWorkspaceRepository
             .ToList();
     }
 
-    public List<WorkplaceDTO> GetWorkspacesByFloorId(Guid floorId)
+    public List<WorkspaceDTO> GetWorkspacesByFloorId(Guid floorId)
     {
         return _context.workspace
             .Where(w => w.roomDTO.FloorId == floorId)
             .ToList();
     }
 
-    public WorkplaceDTO? GetWorkspaceById(Guid workspaceId)
+    public WorkspaceDTO? GetWorkspaceById(Guid workspaceId)
     {
         return _context.workspace
             .FirstOrDefault(w => w.Id == workspaceId);
+    }
+    public List<WorkspaceDTO> GetWorkspacesWithCharacteristicsAndReservations()
+    {
+        return _context.workspace
+            .Include(w => w.workspaceCharacteristicsDTOs)
+            .ThenInclude(wc => wc.characteristicDTO)
+            .Include(w => w.reservationDTOs)
+            .ToList();
     }
 }

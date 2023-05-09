@@ -9,6 +9,6 @@
         public Guid WorkspaceId { get; set; }
 
         public UserDTO userDTO { get; set; }
-        public WorkplaceDTO workplaceDTO { get; set; }
+        public WorkspaceDTO _WorkspaceDto { get; set; }
     }
 }
