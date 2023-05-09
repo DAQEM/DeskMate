@@ -43,29 +43,12 @@ public class WorkspaceService : IWorkspaceService
 
     public Workspace GetWorkspaceById(Guid workspaceId)
     {
-        WorkspaceDTO? workspace = _workspaceRepository.GetWorkspaceById(workspaceId);
+        WorkplaceDTO? workspace = _workspaceRepository.GetWorkspaceById(workspaceId);
         if (workspace == null)
         {
             throw new ServiceException(nameof(Workspace), workspaceId.ToString());
         }
 
         return workspace.ToWorkspace();
-    }
-    
-    public List<Workspace> GetWorkspacesWithCharacteristicsAndReservations()
-    {
-        List<Workspace> workspaces = _workspaceRepository.GetWorkspacesWithCharacteristicsAndReservations()
-            .Select(w => w.ToWorkspaceWithCharacteristicAndReservation())
-            .ToList();
-
-        foreach ( Workspace workspace in workspaces)
-        {
-            if (workspace.Reservations.Where(r => DateTime.Now >= r.StartDate && DateTime.Now < r.EndDate).Any())
-            {
-                workspace.Occupied = true;
-            }
-        }
-
-        return workspaces;
     }
 }

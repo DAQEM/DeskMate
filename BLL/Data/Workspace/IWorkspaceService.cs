@@ -10,6 +10,4 @@ public interface IWorkspaceService
 
     List<Workspace> GetWorkspacesByFloorId(Guid modelSelectedFloorId);
     Workspace GetWorkspaceById(Guid workspaceId);
-    
-    List<Workspace> GetWorkspacesWithCharacteristicsAndReservations();
 }

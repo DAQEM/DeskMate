@@ -7,39 +7,22 @@
 }
 
 <div class="d-flex justify-content-center flex-wrap">
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Workspace Name</th>
-            <th>Characteristics</th>
-            <th class="AvailabilityClass">Current availability</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (Workspace workspace in Model.Workspaces)
-        {
-            <tr>
-                <td>@workspace.Name</td>
-                <td>
-                    @foreach (Characteristic characteristic in workspace.Characteristics)
-                    {
-                        <span style="font-weight:200" class="badge  text-black badge-primary mr-2">@characteristic.Amount @characteristic.Type</span>
-                    }
-                </td>
-                <td class="OccupiedClass">
-                    @if (workspace.Occupied == true)
-                    {
-                        <span class="dot red"></span>
-                    }
-                    else
-                    {
-                        <span class="dot green"></span>
-                    }
-                </td>
- 
-              
-            </tr>
-        }
-        </tbody>
-    </table>
+    @foreach (Workspace workspace in Model.Workspaces)
+    {
+        <div class="d-flex flex-column m-3 p-3 bg-primary rounded">
+            <div>
+                <h1>@workspace.Name</h1>
+            </div>
+            <div>
+                @foreach(Characteristic characteristic in workspace.Characteristics)
+                {
+                    <div class="d-flex">
+                        <p><strong>@characteristic.Amount</strong></p>
+                        <p> @characteristic.Type</p>
+                    </div>
+                }
+            </div>
+        </div>
+    }
 </div>
+

@@ -6,7 +6,6 @@ namespace BLL.Data;
 public interface IWorkspaceRepository
 {
     List<Workspace> GetAllWorkspaces();
-    List<WorkspaceDTO> GetWorkspacesByFloorId(Guid floorId);
-    WorkspaceDTO? GetWorkspaceById(Guid workspaceId);
-    List<WorkspaceDTO> GetWorkspacesWithCharacteristicsAndReservations();
+    List<WorkplaceDTO> GetWorkspacesByFloorId(Guid floorId);
+    WorkplaceDTO? GetWorkspaceById(Guid workspaceId);
 }
