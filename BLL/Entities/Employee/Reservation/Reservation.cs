@@ -57,7 +57,7 @@ public class Reservation
             WorkspaceId = _workspace.Id,
 
             userDTO = _employee.ToUserDTO(),
-            workplaceDTO = _workspace.ToWorkspaceDTO()
+            WorkspaceDto = _workspace.ToWorkspaceDTO()
         };
     }
 

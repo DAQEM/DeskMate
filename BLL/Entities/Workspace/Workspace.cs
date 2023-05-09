@@ -8,6 +8,7 @@ public class Workspace
     private readonly Guid _id;
     private readonly string _name;
     private readonly List<Reservation> _reservations;
+    private bool _occupied = false;
 
     public Workspace(Guid? id = null, string name = "",
         List<Characteristic>? characteristics = null, List<Reservation>? reservations = null)
@@ -22,6 +23,11 @@ public class Workspace
     public string Name => _name;
     public List<Characteristic> Characteristics => _characteristics;
     public List<Reservation> Reservations => _reservations;
+    public bool Occupied
+    {
+        get { return _occupied; }
+        set { _occupied = value; }
+    }
 
     public void SetCharacteristics(List<Characteristic> characteristics)
     {
@@ -29,20 +35,20 @@ public class Workspace
         _characteristics.AddRange(characteristics);
     }
 
-    public WorkplaceDTO ToWorkspaceDTO()
+    public WorkspaceDTO ToWorkspaceDTO()
     {
-        return new WorkplaceDTO
+        return new WorkspaceDTO
         {
             Id = _id,
             Name = _name,
-            workplaceCharacteristicsDTOs = GetWorkplaceCharacteristicsDTOs(),
+            workspaceCharacteristicsDTOs = GetWorkspaceCharacteristicsDTOs(),
             reservationDTOs = _reservations.Select(r => r.ToReservationDTO()).ToList()
         };
     }
 
-    private List<WorkplaceCharacteristicsDTO> GetWorkplaceCharacteristicsDTOs()
+    private List<WorkspaceCharacteristicsDTO> GetWorkspaceCharacteristicsDTOs()
     {
-        return _characteristics.Select(c => new WorkplaceCharacteristicsDTO
+        return _characteristics.Select(c => new WorkspaceCharacteristicsDTO
             {
                 WorkspaceId = _id,
                 CharacteristicId = c.Id,

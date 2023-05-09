@@ -11,12 +11,12 @@ public class ReservationDTO
     public Guid WorkspaceId { get; set; }
 
     public UserDTO userDTO { get; set; }
-    public WorkplaceDTO workplaceDTO { get; set; }
+    public WorkspaceDTO WorkspaceDto { get; set; }
 
     public Reservation ToReservation()
     {
         return new Reservation(
-            Id, StartDate, EndDate, userDTO.ToEmployee(), workplaceDTO.ToWorkspace());
+            Id, StartDate, EndDate, userDTO.ToEmployee(), WorkspaceDto.ToWorkspace());
     }
 
     public Reservation ToSmallReservation()

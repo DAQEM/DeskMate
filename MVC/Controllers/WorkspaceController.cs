@@ -18,7 +18,7 @@ public class WorkspaceController : BaseController<WorkspaceController>
     [Route("workspaces")]
     public IActionResult Index()
     {
-        List<Workspace> workspaces = _workspaceService.GetAllWorkspacesWithCharacteristics();
+        List<Workspace> workspaces = _workspaceService.GetWorkspacesWithCharacteristicsAndReservations();
         WorkspaceListModel model = new() { Workspaces = workspaces };
         return View(model);
     }

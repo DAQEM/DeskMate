@@ -17,7 +17,7 @@ public class ReservationRepository : IReservationRepository
     {
         return _context.reservation
             .Include(r => r.userDTO)
-            .Include(r => r.workplaceDTO)
+            .Include(r => r.WorkspaceDto)
             .Select(r => new ReservationDTO
             {
                 Id = r.Id,
@@ -30,10 +30,10 @@ public class ReservationRepository : IReservationRepository
                     Id = r.userDTO.Id,
                     Name = r.userDTO.Name
                 },
-                workplaceDTO = new WorkplaceDTO
+                WorkspaceDto = new WorkspaceDTO
                 {
-                    Id = r.workplaceDTO.Id,
-                    Name = r.workplaceDTO.Name
+                    Id = r.WorkspaceDto.Id,
+                    Name = r.WorkspaceDto.Name
                 }
             }).ToList();
     }

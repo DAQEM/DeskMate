@@ -6,9 +6,9 @@ public class Characteristic
 {
     private readonly int _amount;
     private readonly Guid _id;
-    private readonly CharacteristicType _type;
+    private readonly string _type;
 
-    public Characteristic(Guid? id = null, CharacteristicType type = CharacteristicType.Empty, int amount = 0)
+    public Characteristic(string type, Guid? id = null, int amount = 0)
     {
         _id = id ?? Guid.Empty;
         _type = type;
@@ -16,7 +16,7 @@ public class Characteristic
     }
 
     public Guid Id => _id;
-    public CharacteristicType Type => _type;
+    public string Type => _type;
     public int Amount => _amount;
 
     public CharacteristicDTO ToCharacteristicDTO()
@@ -24,7 +24,7 @@ public class Characteristic
         return new CharacteristicDTO
         {
             Id = _id,
-            Type = (int)_type
+            Type = _type
         };
     }
 }
