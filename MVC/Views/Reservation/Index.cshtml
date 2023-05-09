@@ -1,0 +1,63 @@
+﻿@using BLL.Entities
+@model MVC.Models.Reservation.ReservationsModel
+
+@{
+    ViewBag.Title = "Reservations";
+    Layout = "_Layout";
+}
+
+<h2>Reservations</h2>
+
+<div class="d-flex flex-row">
+    <p style="flex: 1">
+        <strong>Name</strong>
+    </p>
+    <p style="flex: 1">
+        <strong>Workspace Name</strong>
+    </p>
+    <p style="flex: 1">
+        <strong>Start Date</strong>
+    </p>
+    <p style="flex: 1">
+        <strong>End Date</strong>
+    </p>
+</div>
+@{
+    int i = 0;
+}
+@foreach (Reservation modelReservation in Model.Reservations)
+{
+    i++;
+    string classes = i % 2 == 0 ? "" : "bg-dark bg-opacity-10";
+
+    <div id="@modelReservation.Id" class="d-flex flex-row p-2 @classes" style="border-radius: 5px">
+        <p style="flex: 1">@modelReservation.Employee.Name</p>
+        <p style="flex: 1">@modelReservation.Workspace.Name</p>
+        <p style="flex: 1">@modelReservation.StartDate</p>
+        <p style="flex: 1">@modelReservation.EndDate</p>
+        <button class="btn btn-primary mx-2" onclick="Edit(event)">Edit</button>
+        <button class="btn btn-danger mx-2" onclick="Delete(event)">Delete</button>
+    </div>
+}
+
+<script>
+    function Edit(event) {
+        const id = event.target.parentNode.id;
+        window.location.href = "/Reservation/Edit/" + id;
+    }
+    
+    function Delete(event) {
+            const id = event.target.parentNode.id;
+            const url = "/Reservation/Delete/" + id;
+            $.ajax({
+                url: url,
+                type: "POST",
+                success: function () {
+                    location.reload();
+                },
+                error: function (data) {
+                    alert(data.status + " " + data.statusText + "\n" + data.responseText);
+                }
+            });
+        }
+</script>

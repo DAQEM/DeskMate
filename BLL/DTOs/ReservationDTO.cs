@@ -15,7 +15,8 @@ public class ReservationDTO
 
     public Reservation ToReservation()
     {
-        return new Reservation(Id, StartDate, EndDate, userDTO.ToEmployee(), workplaceDTO.ToWorkspace());
+        return new Reservation(
+            Id, StartDate, EndDate, userDTO.ToEmployee(), workplaceDTO.ToWorkspace());
     }
 
     public Reservation ToSmallReservation()

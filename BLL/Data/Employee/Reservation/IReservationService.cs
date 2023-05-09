@@ -10,5 +10,5 @@ public interface IReservationService
 
     Entities.Reservation UpdateReservation(Entities.Reservation reservation);
 
-    Entities.Reservation? DeleteReservation(Guid guid);
+    void DeleteReservation(Guid guid);
 }

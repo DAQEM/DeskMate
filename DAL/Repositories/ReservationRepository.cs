@@ -1,5 +1,6 @@
 ﻿using BLL.Data.Employee.Reservation;
 using BLL.DTOs;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAL.Repositories;
 
@@ -14,7 +15,27 @@ public class ReservationRepository : IReservationRepository
 
     public List<ReservationDTO> GetAllReservations()
     {
-        return _context.reservation.ToList();
+        return _context.reservation
+            .Include(r => r.userDTO)
+            .Include(r => r.workplaceDTO)
+            .Select(r => new ReservationDTO
+            {
+                Id = r.Id,
+                StartDate = r.StartDate,
+                EndDate = r.EndDate,
+                UserId = r.UserId,
+                WorkspaceId = r.WorkspaceId,
+                userDTO = new UserDTO
+                {
+                    Id = r.userDTO.Id,
+                    Name = r.userDTO.Name
+                },
+                workplaceDTO = new WorkplaceDTO
+                {
+                    Id = r.workplaceDTO.Id,
+                    Name = r.workplaceDTO.Name
+                }
+            }).ToList();
     }
 
     public ReservationDTO? GetReservationById(Guid guid)
@@ -41,7 +62,7 @@ public class ReservationRepository : IReservationRepository
         return reservation;
     }
 
-    public ReservationDTO? DeleteReservation(Guid guid)
+    public void DeleteReservation(Guid guid)
     {
         ReservationDTO? reservation = _context.reservation
             .FirstOrDefault(r => r.Id == guid);
@@ -49,10 +70,7 @@ public class ReservationRepository : IReservationRepository
         if (reservation != null)
         {
             _context.reservation.Remove(reservation);
-
             _context.SaveChanges();
         }
-
-        return reservation;
     }
 }
