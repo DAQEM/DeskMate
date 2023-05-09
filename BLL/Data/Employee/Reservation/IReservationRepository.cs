@@ -12,5 +12,5 @@ public interface IReservationRepository
 
     ReservationDTO UpdateReservation(ReservationDTO reservation);
 
-    ReservationDTO? DeleteReservation(Guid guid);
+    void DeleteReservation(Guid guid);
 }

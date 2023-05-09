@@ -31,8 +31,8 @@ public class ReservationService : IReservationService
         return _reservationRepository.UpdateReservation(reservation.ToSmallReservationDTO()).ToSmallReservation();
     }
 
-    public Entities.Reservation? DeleteReservation(Guid guid)
+    public void DeleteReservation(Guid guid)
     {
-        return _reservationRepository.DeleteReservation(guid)?.ToReservation();
+        _reservationRepository.DeleteReservation(guid);
     }
 }
