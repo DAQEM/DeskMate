@@ -26,6 +26,7 @@ public class Employee
     public string Name => _name;
     public string Email => _email;
     public List<Reservation> Reservations => _reservations;
+    public string HashedPassword => _hashedPassword;
 
     public bool HasReservationForDate(DateTime date)
     {

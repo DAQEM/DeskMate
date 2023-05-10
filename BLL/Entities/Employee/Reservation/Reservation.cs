@@ -72,4 +72,9 @@ public class Reservation
             WorkspaceId = _workspace.Id
         };
     }
+
+    public bool IsOccupied(DateTime startDate, DateTime endDate)
+    {
+        return _startDate < endDate && _endDate > startDate;
+    }
 }

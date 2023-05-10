@@ -34,4 +34,24 @@ public class EmployeeService : IEmployeeService
         List<UserDTO> employees = _employeeRepository.GetEmployeeBySearch(search);
         return employees.Select(e => e.ToEmployee()).ToList();
     }
+
+    public Entities.Employee? CreateEmployee(Entities.Employee employee)
+    {
+        if (!string.IsNullOrWhiteSpace(employee.Name)
+            && !string.IsNullOrWhiteSpace(employee.Email)
+            && !string.IsNullOrWhiteSpace(employee.HashedPassword))
+        {
+            Entities.Employee newEmployee = new(
+                Guid.NewGuid(),
+                employee.Name,
+                employee.Email,
+                employee.HashedPassword
+            );
+            newEmployee.HashPassword();
+            _employeeRepository.CreateEmployee(newEmployee.ToUserDTO());
+            return newEmployee;
+        }
+
+        return null;
+    }
 }

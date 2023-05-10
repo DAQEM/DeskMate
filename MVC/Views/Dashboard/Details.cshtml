@@ -1,4 +1,4 @@
-﻿@model MVC.Models.Dashboard.RegisterModel
+﻿@model BLL.Entities.Employee
 
 @{
     ViewData["Title"] = "Details";
@@ -10,25 +10,25 @@
 
 <div>
     <h4>Registered user</h4>
-    <hr />
+    <hr/>
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Username)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Id)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Username)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Id)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Email)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Password)
         </dd>
     </dl>
 </div>

@@ -18,27 +18,7 @@
         <tbody>
         @foreach (Workspace workspace in Model.Workspaces)
         {
-            <tr>
-                <td>@workspace.Name</td>
-                <td>
-                    @foreach (Characteristic characteristic in workspace.Characteristics)
-                    {
-                        <span style="font-weight:200" class="badge  text-black badge-primary mr-2">@characteristic.Amount @characteristic.Type</span>
-                    }
-                </td>
-                <td class="OccupiedClass">
-                    @if (workspace.Occupied == true)
-                    {
-                        <span class="dot red"></span>
-                    }
-                    else
-                    {
-                        <span class="dot green"></span>
-                    }
-                </td>
- 
-              
-            </tr>
+            @await Html.PartialAsync("Partial/Components/_WorkspacePartial", workspace)
         }
         </tbody>
     </table>

@@ -30,4 +30,10 @@ public class EmployeeRepository : IEmployeeRepository
                 u.Name.ToLower().Contains(search.ToLower()))
             .ToList();
     }
+
+    public void CreateEmployee(UserDTO toUserDto)
+    {
+        _context.user.Add(toUserDto);
+        _context.SaveChanges();
+    }
 }
