@@ -9,14 +9,14 @@
             <span style="font-weight:200" class="badge  text-black badge-primary mr-2">@characteristic.Amount @characteristic.Type</span>
         }
     </td>
-    <td class="OccupiedClass">
+    <td class="text-center">
         @if (Model.Occupied)
         {
-            <span class="dot red"></span>
+            <span class="dot bg-danger"></span>
         }
         else
         {
-            <span class="dot green"></span>
+            <span class="dot bg-success"></span>
         }
     </td>
 </tr>

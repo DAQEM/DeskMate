@@ -1,4 +1,5 @@
-﻿@model SelectionModel
+﻿@using BLL.Entities
+@model SelectionModel
 
 @functions {
 
@@ -12,7 +13,7 @@
             .Where(r => !string.IsNullOrEmpty(r.Value))
             .Select(r => r.Value)
             .ToList();
-        
+
         if (reservedEmployeeIds.Count > 0)
         {
             employees.RemoveAll(e => reservedEmployeeIds.Contains(e.Id.ToString()));
@@ -52,13 +53,19 @@
                     <div class="d-flex justify-content-between align-items-center">
                         @if (workspace.Occupied)
                         {
-                            <div class="rounded-circle bg-danger" style="width: 1.5rem; height: 1.5rem"></div>
+                            <div class="rounded-circle bg-danger me-2" style="width: 1.5rem; height: 1.5rem"></div>
                         }
                         else
                         {
-                            <div class="rounded-circle bg-success" style="width: 1.5rem; height: 1.5rem"></div>
+                            <div class="rounded-circle bg-success me-2" style="width: 1.5rem; height: 1.5rem"></div>
                         }
-                        <p class="m-0">@workspace.Name</p>
+                        <p class="m-0" style="flex: 1">@workspace.Name</p>
+                        <div style="flex: 1">
+                            @foreach (Characteristic characteristic in workspace.Characteristics)
+                            {
+                                <span style="font-weight:200" class="badge  text-black badge-primary mr-2">@characteristic.Amount @characteristic.Type</span>
+                            }
+                        </div>
                         @{
                             if (!Model.Reservations.ContainsKey(workspace.Id.ToString()))
                             {
@@ -67,11 +74,11 @@
                         }
                         @if (workspace.Occupied)
                         {
-                            @Html.DropDownListFor(model => model.Reservations[workspace.Id.ToString()], new SelectList(GetEmployees(workspace), "Id", "Name"), "Select Employee", new { @class = "w-100 form-control", style = "max-width: 200px; color: lightgray", placeholder = "Employee", onchange = "changeWorkspaceEmployee()", disabled = true })
+                            @Html.DropDownListFor(model => model.Reservations[workspace.Id.ToString()], new SelectList(GetEmployees(workspace), "Id", "Name"), "Select Employee", new { @class = "w-100 form-control", style = "max-width: 200px; color: lightgray; flex: 1", placeholder = "Employee", onchange = "changeWorkspaceEmployee()", disabled = true })
                         }
                         else
                         {
-                            @Html.DropDownListFor(model => model.Reservations[workspace.Id.ToString()], new SelectList(GetEmployees(workspace), "Id", "Name"), "Select Employee", new { @class = "w-100 form-control", style = "max-width: 200px; color: lightgray", placeholder = "Employee", onchange = "changeWorkspaceEmployee()" })
+                            @Html.DropDownListFor(model => model.Reservations[workspace.Id.ToString()], new SelectList(GetEmployees(workspace), "Id", "Name"), "Select Employee", new { @class = "w-100 form-control", style = "max-width: 200px; color: lightgray; flex: 1", placeholder = "Employee", onchange = "changeWorkspaceEmployee()" })
                         }
                     </div>
                 </div>
