@@ -52,4 +52,11 @@ public class WorkspaceDTO
 
         return workspace;
     }
+
+    public Workspace ToSmallWorkspace()
+    {
+        return new Workspace(
+            Id,
+            Name);
+    }
 }

@@ -1,6 +1,4 @@
-﻿@using BLL.Entities
-@model MVC.Models.Reservation.ReservationsModel
-
+﻿@using System.Security.Claims
 @{
     ViewBag.Title = "Reservations";
     Layout = "_Layout";
@@ -8,39 +6,65 @@
 
 <h2>Reservations</h2>
 
-<div class="d-flex flex-row">
-    <p style="flex: 1">
-        <strong>Name</strong>
-    </p>
-    <p style="flex: 1">
-        <strong>Workspace Name</strong>
-    </p>
-    <p style="flex: 1">
-        <strong>Start Date</strong>
-    </p>
-    <p style="flex: 1">
-        <strong>End Date</strong>
-    </p>
-</div>
-@{
-    int i = 0;
-}
-@foreach (Reservation modelReservation in Model.Reservations)
-{
-    i++;
-    string classes = i % 2 == 0 ? "" : "bg-dark bg-opacity-10";
-
-    <div id="@modelReservation.Id" class="d-flex flex-row p-2 @classes" style="border-radius: 5px">
-        <p style="flex: 1">@modelReservation.Employee.Name</p>
-        <p style="flex: 1">@modelReservation.Workspace.Name</p>
-        <p style="flex: 1">@modelReservation.StartDate</p>
-        <p style="flex: 1">@modelReservation.EndDate</p>
-        <button class="btn btn-primary mx-2" onclick="Edit(event)">Edit</button>
-        <button class="btn btn-danger mx-2" onclick="Delete(event)">Delete</button>
+<div class="d-flex justify-content-center m-3">
+    <div id="filters" class="d-flex flex-row gap-3" style="max-width: 500px">
+        <div>
+            <label>
+                <strong>Date from</strong>
+            </label>
+            <input id="date-from" type="date" class="form-control"/>
+        </div>
+        <div>
+            <label>
+                <strong>Date to</strong>
+            </label>
+            <input id="date-to" type="date" class="form-control"/>
+        </div>
     </div>
-}
+</div>
+
+<div id="reservations">
+</div>
 
 <script>
+    $(document).ready(function () {
+        const dateFromElement = document.getElementById("date-from");
+        const dateToElement = document.getElementById("date-to");
+        const reservationsElement = document.getElementById("reservations");
+        
+        const date = new Date();
+        dateFromElement.valueAsDate = date;
+        date.setDate(date.getDate() + 1);
+        dateToElement.valueAsDate = date;
+        
+        Fetch();
+        
+        dateFromElement.addEventListener("change", function () {
+            ClearReservations();
+            Fetch();
+        });
+        dateToElement.addEventListener("change", function () {
+            ClearReservations();
+            Fetch();
+        });
+    });
+    
+    function Fetch() {
+        const dateFromElement = document.getElementById("date-from");
+        const dateToElement = document.getElementById("date-to");
+        const url = "/api/filtered/reservation/@User.FindFirst(ClaimTypes.NameIdentifier).Value?dateFrom=" + new Date(dateFromElement.value).toISOString() + "&dateTo=" + new Date(dateToElement.value).toISOString();
+        $.ajax({
+            url: url,
+            type: "GET",
+            success: function (data) {
+                data.reservations.forEach(r => PrintReservation(r));
+            },
+            error: function (data) {
+                alert(data.status + " " + data.statusText + "\n" + data.responseText);
+            }
+        });
+    }
+
     function Edit(event) {
         const id = event.target.parentNode.id;
         window.location.href = "/Reservation/Edit/" + id;
@@ -60,4 +84,32 @@
                 }
             });
         }
+        
+    function PrintReservation(reservation) {
+        const element = document.createElement("div");
+        const mainElement = document.getElementById("reservations");
+        element.id = reservation.id;
+        if (mainElement.children.length % 2 == 0) {
+            element.className = "d-flex flex-row p-2";
+        } else {
+            element.className = "d-flex flex-row p-2 bg-dark bg-opacity-10";
+        }
+        element.style.borderRadius = "5px";
+        element.innerHTML = `
+            <p style="flex: 1">${reservation.employee.name}</p>
+            <p style="flex: 1">${reservation.workspace.name}</p>
+            <p style="flex: 1">${new Date(reservation.startDate).toLocaleString()}</p>
+            <p style="flex: 1">${new Date(reservation.endDate).toLocaleString()}</p>
+            <button class="btn btn-primary mx-2" onclick="Edit(event)">Edit</button>
+            <button class="btn btn-danger mx-2" onclick="Delete(event)">Delete</button>
+        `;
+        mainElement.appendChild(element);
+    }
+    
+    function ClearReservations() {     
+        const reservationsElement = document.getElementById("reservations");
+        while (reservationsElement.firstChild) {
+            reservationsElement.removeChild(reservationsElement.firstChild);
+        }
+    }
 </script>

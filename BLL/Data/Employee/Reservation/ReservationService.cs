@@ -35,4 +35,19 @@ public class ReservationService : IReservationService
     {
         _reservationRepository.DeleteReservation(guid);
     }
+
+    public List<Entities.Reservation> GetFilteredReservationsByEmployeeId(Guid employeeId, DateTime dateFrom,
+        DateTime dateTo)
+    {
+        return _reservationRepository.GetFilteredReservationsByEmployeeId(employeeId, dateFrom, dateTo)
+            .Select(r => r.ToReservationWithSmallEmployeeAndWorkspace())
+            .ToList();
+    }
+
+    public List<Entities.Reservation> GetFilteredReservations(DateTime dateStart, DateTime dateEnd)
+    {
+        return _reservationRepository.GetFilteredReservations(dateStart, dateEnd)
+            .Select(r => r.ToReservationWithSmallEmployeeAndWorkspace())
+            .ToList();
+    }
 }

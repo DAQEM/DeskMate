@@ -2,7 +2,6 @@
 using BLL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MVC.Models.Reservation;
 
 namespace MVC.Controllers;
 
@@ -21,8 +20,7 @@ public class ReservationController : BaseController<ReservationController>
     [Route("")]
     public IActionResult Index()
     {
-        List<Reservation> reservations = _reservationService.GetAllReservations();
-        return View(new ReservationsModel { Reservations = reservations });
+        return View();
     }
 
     [HttpPost]
@@ -34,10 +32,34 @@ public class ReservationController : BaseController<ReservationController>
     }
 
     [HttpGet]
-    [Route("edit{guid}")]
+    [Route("edit/{guid}")]
     public IActionResult Edit(Guid guid)
     {
         Reservation reservation = _reservationService.GetReservationById(guid);
         return View(reservation);
+    }
+
+    [HttpGet]
+    [Route("/api/filtered/reservation")]
+    public IActionResult GetFilteredReservations(string dateFrom, string dateTo)
+    {
+        List<Reservation> reservations =
+            _reservationService.GetFilteredReservations(DateTime.Parse(dateFrom), DateTime.Parse(dateTo));
+        return new JsonResult(new { reservations });
+    }
+
+    [HttpGet]
+    [Route("/api/filtered/reservation/{employeeId}")]
+    public IActionResult GetFilteredReservationsByEmployeeId(string employeeId, string dateFrom, string dateTo)
+    {
+        if (!Guid.TryParse(employeeId, out Guid employeeGuid))
+        {
+            return new JsonResult(new { error = "Invalid employee id" });
+        }
+
+        List<Reservation> reservations =
+            _reservationService.GetFilteredReservationsByEmployeeId(employeeGuid, DateTime.Parse(dateFrom),
+                DateTime.Parse(dateTo));
+        return new JsonResult(new { reservations });
     }
 }

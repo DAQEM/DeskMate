@@ -17,7 +17,7 @@ public class ReservationRepository : IReservationRepository
     {
         return _context.reservation
             .Include(r => r.userDTO)
-            .Include(r => r.WorkspaceDto)
+            .Include(r => r.WorkspaceDTO)
             .Select(r => new ReservationDTO
             {
                 Id = r.Id,
@@ -30,10 +30,10 @@ public class ReservationRepository : IReservationRepository
                     Id = r.userDTO.Id,
                     Name = r.userDTO.Name
                 },
-                WorkspaceDto = new WorkspaceDTO
+                WorkspaceDTO = new WorkspaceDTO
                 {
-                    Id = r.WorkspaceDto.Id,
-                    Name = r.WorkspaceDto.Name
+                    Id = r.WorkspaceDTO.Id,
+                    Name = r.WorkspaceDTO.Name
                 }
             }).ToList();
     }
@@ -72,5 +72,23 @@ public class ReservationRepository : IReservationRepository
             _context.reservation.Remove(reservation);
             _context.SaveChanges();
         }
+    }
+
+    public List<ReservationDTO> GetFilteredReservationsByEmployeeId(Guid employeeId, DateTime dateFrom, DateTime dateTo)
+    {
+        return _context.reservation
+            .Include(r => r.userDTO)
+            .Include(r => r.WorkspaceDTO)
+            .Where(r => r.userDTO.Id == employeeId && r.StartDate >= dateFrom && r.EndDate <= dateTo)
+            .ToList();
+    }
+
+    public List<ReservationDTO> GetFilteredReservations(DateTime dateStart, DateTime dateEnd)
+    {
+        return _context.reservation
+            .Include(r => r.userDTO)
+            .Include(r => r.WorkspaceDTO)
+            .Where(r => r.StartDate >= dateStart && r.EndDate <= dateEnd)
+            .ToList();
     }
 }

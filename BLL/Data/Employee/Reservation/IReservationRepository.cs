@@ -13,4 +13,6 @@ public interface IReservationRepository
     ReservationDTO UpdateReservation(ReservationDTO reservation);
 
     void DeleteReservation(Guid guid);
+    List<ReservationDTO> GetFilteredReservationsByEmployeeId(Guid employeeId, DateTime dateFrom, DateTime dateTo);
+    List<ReservationDTO> GetFilteredReservations(DateTime dateStart, DateTime dateEnd);
 }
