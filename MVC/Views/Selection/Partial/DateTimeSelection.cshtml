@@ -6,17 +6,32 @@
 <div class="d-flex justify-content-between align-items-end gap-5 flex-wrap">
     <div style="flex: 1">
         @Html.LabelFor(model => model.DateTimeSelectionModel.Date, "Date", new { @class = "control-label" })
-        @Html.TextBoxFor(model => model.DateTimeSelectionModel.Date, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control", onclick = "this.showPicker()" })
+        @Html.TextBoxFor(model => model.DateTimeSelectionModel.Date, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control", onclick = "this.showPicker()", id = "date_selection" })
         @Html.ValidationMessageFor(model => model.DateTimeSelectionModel.Date, "", new { @class = "text-danger" })
     </div>
     <div style="flex: 1">
         @Html.LabelFor(model => model.DateTimeSelectionModel.StartTime, "Start time", new { @class = "control-label" })
-        @Html.TextBoxFor(model => model.DateTimeSelectionModel.StartTime, "{0:HH:mm}", new { type = "time", @class = "form-control", onclick = "this.showPicker()" })
+        @Html.TextBoxFor(model => model.DateTimeSelectionModel.StartTime, "{0:HH:mm}", new { type = "time", @class = "form-control", onclick = "this.showPicker()", id = "start_time_selection" })
         @Html.ValidationMessageFor(model => model.DateTimeSelectionModel.StartTime, "", new { @class = "text-danger" })
     </div>
     <div style="flex: 1">
         @Html.LabelFor(model => model.DateTimeSelectionModel.EndTime, "End time", new { @class = "control-label" })
-        @Html.TextBoxFor(model => model.DateTimeSelectionModel.EndTime, "{0:HH:mm}", new { type = "time", @class = "form-control", onclick = "this.showPicker()" })
+        @Html.TextBoxFor(model => model.DateTimeSelectionModel.EndTime, "{0:HH:mm}", new { type = "time", @class = "form-control", onclick = "this.showPicker()", id = "end_time_selection" })
         @Html.ValidationMessageFor(model => model.DateTimeSelectionModel.EndTime, "", new { @class = "text-danger" })
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+    $("#date_selection").focusout(function () {
+            $("#form").submit();
+        });
+    
+    $("#start_time_selection").focusout(function () {
+                $("#form").submit();
+            });
+    
+    $("#end_time_selection").focusout(function () {
+        $("#form").submit();
+    });
+</script>

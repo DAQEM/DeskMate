@@ -51,16 +51,34 @@ public class WorkspaceService : IWorkspaceService
 
         return workspace.ToWorkspace();
     }
-    
+
     public List<Workspace> GetWorkspacesWithCharacteristicsAndReservations()
     {
         List<Workspace> workspaces = _workspaceRepository.GetWorkspacesWithCharacteristicsAndReservations()
             .Select(w => w.ToWorkspaceWithCharacteristicAndReservation())
             .ToList();
 
-        foreach ( Workspace workspace in workspaces)
+        foreach (Workspace workspace in workspaces)
         {
             if (workspace.Reservations.Where(r => DateTime.Now >= r.StartDate && DateTime.Now < r.EndDate).Any())
+            {
+                workspace.Occupied = true;
+            }
+        }
+
+        return workspaces;
+    }
+
+    public List<Workspace> GetWorkspacesWithCharacteristicsAndReservationsByFloorId(Guid floorId)
+    {
+        List<Workspace> workspaces = _workspaceRepository
+            .GetWorkspacesWithCharacteristicsAndReservationsByFloorId(floorId)
+            .Select(w => w.ToWorkspaceWithCharacteristicAndReservation())
+            .ToList();
+
+        foreach (Workspace workspace in workspaces)
+        {
+            if (!workspace.IsOccupied(DateTime.Now, DateTime.Now))
             {
                 workspace.Occupied = true;
             }

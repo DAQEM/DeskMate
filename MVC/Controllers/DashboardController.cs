@@ -6,6 +6,7 @@ using MVC.Models.Dashboard;
 
 namespace MVC.Controllers;
 
+[Authorize]
 [Route("dashboard")]
 public class DashboardController : BaseController<DashboardController>
 {
@@ -18,7 +19,6 @@ public class DashboardController : BaseController<DashboardController>
 
     [HttpGet]
     [Route("")]
-    [Authorize]
     public ActionResult Index()
     {
         return View(new RegisterModel());
@@ -53,9 +53,6 @@ public class DashboardController : BaseController<DashboardController>
             ModelState.AddModelError("Username", "An error occurred while creating the user");
             return View("Index", model);
         }
-        
-        Console.WriteLine(employee.Id);
-
         return RedirectToAction(nameof(Details), new { id = employee.Id });
     }
 }

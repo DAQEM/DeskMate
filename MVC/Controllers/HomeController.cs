@@ -17,13 +17,6 @@ public class HomeController : BaseController<HomeController>
 
     public IActionResult Index()
     {
-        List<Employee> allEmployees = _employeeService.GetAllEmployees();
-
-        foreach (Employee employee in allEmployees)
-        {
-            Console.WriteLine(employee.Name);
-        }
-
         return View();
     }
 

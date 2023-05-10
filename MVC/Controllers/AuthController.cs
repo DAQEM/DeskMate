@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 using BLL.Data.Auth;
 using BLL.DTOs;
 using BLL.Entities;
@@ -41,14 +40,15 @@ public class AuthController : BaseController<AuthController>
 
         if (employee == null)
         {
-            Console.WriteLine("Employee is null");
             ModelState.AddModelError("Password", "Password incorrect.");
             return View(loginModel);
         }
 
         List<Claim> claim = new()
         {
-            new Claim(ClaimTypes.Name, employee.Id.ToString())
+            new Claim(ClaimTypes.NameIdentifier, employee.Id.ToString()),
+            new Claim(ClaimTypes.Name, employee.Name),
+            new Claim(ClaimTypes.Email, employee.Email)
         };
 
         ClaimsIdentity identity = new(claim, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -59,7 +59,7 @@ public class AuthController : BaseController<AuthController>
             new ClaimsPrincipal(identity),
             new AuthenticationProperties
             {
-                IsPersistent = loginModel.RememberMe,
+                IsPersistent = loginModel.RememberMe
             });
 
         return RedirectToAction("Index", "Home");
@@ -103,7 +103,7 @@ public class AuthController : BaseController<AuthController>
 
     public UserDTO RegisterModelToUserDto(RegisterModel registerModel)
     {
-        return new UserDTO()
+        return new UserDTO
         {
             Name = registerModel.Username,
             Email = registerModel.Email,

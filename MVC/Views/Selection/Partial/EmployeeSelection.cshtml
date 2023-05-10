@@ -48,6 +48,9 @@
                 data.forEach((employee) => {
                     addSearchResult(employee);
                 });
+                if (document.getElementById('employee-search-results').children.length === 0) {
+                    setNoResults();
+                }
             });
     }
     
@@ -60,16 +63,28 @@
     }
     
     function addSearchResult(employee) {
-        let id = document.getElementById("employee-selection").children.length;
-        let employeeSearchResults = document.getElementById("employee-search-results");
-        let employeeSearchResult = document.createElement("div");
-        employeeSearchResult.id = "employee-search-result-" + id;
-        employeeSearchResult.className = "d-flex justify-content-between align-items-center p-2 my-2 rounded bg-white border-1 border";
-        employeeSearchResult.innerHTML = `
-            <p class="m-0">${employee.name}</p>
-            <button type="submit" class="btn btn-primary m-0" onclick="addEmployee('${id}', '${employee.id}', '${employee.name}', '${employee.email}'); document.getElementById('SectionChanged').value = 'who'; document.getElementById('form').submit()">+</button>
-        `;
-        employeeSearchResults.appendChild(employeeSearchResult);
+        if (!isEmployeeAlreadySelected(employee.id)) {
+            let id = document.getElementById("employee-selection").children.length;
+            let employeeSearchResults = document.getElementById("employee-search-results");
+            let employeeSearchResult = document.createElement("div");
+            employeeSearchResult.id = "employee-search-result-" + id;
+            employeeSearchResult.className = "d-flex justify-content-between align-items-center p-2 my-2 rounded bg-white border-1 border";
+            employeeSearchResult.innerHTML = `
+                <p class="m-0">${employee.name}</p>
+                <button type="submit" class="btn btn-primary m-0" onclick="addEmployee('${id}', '${employee.id}', '${employee.name}', '${employee.email}'); document.getElementById('SectionChanged').value = 'who'; document.getElementById('form').submit()">+</button>
+            `;
+            employeeSearchResults.appendChild(employeeSearchResult);
+        }
+    }
+    
+    function isEmployeeAlreadySelected(employeeId) {
+        let employeeSelection = document.getElementById("employee-selection");
+        for (let i = 0; i < employeeSelection.children.length; i++) {
+            if (employeeSelection.children[i].children[1].value === employeeId) {
+                return true;
+            }
+        }
+        return false;
     }
     
     function addEmployee(id, employeeId, employeeName, employeeEmail) {
@@ -127,5 +142,15 @@
                 $(this).attr('onclick', "document.getElementById('employee-" + index + "').remove(); renumberEmployees(); document.getElementById('SectionChanged').value = 'who'; document.getElementById('form').submit()");
             });
         });
+    }
+    
+    function setNoResults() {
+        let employeeSearchResults = document.getElementById("employee-search-results");
+        let employeeSearchResult = document.createElement("div");
+        employeeSearchResult.className = "text-center";
+        employeeSearchResult.innerHTML = `
+            <p class="m-0">No results</p>
+        `;
+        employeeSearchResults.appendChild(employeeSearchResult);
     }
 </script>

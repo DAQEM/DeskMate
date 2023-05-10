@@ -1,5 +1,28 @@
 ﻿@model SelectionModel
 
+@functions {
+
+    private List<EmployeeModel> GetEmployees(WorkspacePropModel workspace)
+    {
+        List<EmployeeModel> employees = new(Model.EmployeeModels);
+        string workspaceId = workspace.Id.ToString();
+
+        List<string> reservedEmployeeIds = Model.Reservations
+            .Where(r => r.Key != workspaceId)
+            .Where(r => !string.IsNullOrEmpty(r.Value))
+            .Select(r => r.Value)
+            .ToList();
+        
+        if (reservedEmployeeIds.Count > 0)
+        {
+            employees.RemoveAll(e => reservedEmployeeIds.Contains(e.Id.ToString()));
+        }
+
+        return employees;
+    }
+
+}
+
 @Html.AntiForgeryToken()
 <h4 id="where">Where?</h4>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -26,15 +49,30 @@
             @foreach (WorkspacePropModel workspace in Model.WorkspaceModels)
             {
                 <div class="w-100 my-2 p-2 border rounded">
-                    <div class="d-flex justify-content-between">
-                        <p>@workspace.Name</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        @if (workspace.Occupied)
+                        {
+                            <div class="rounded-circle bg-danger" style="width: 1.5rem; height: 1.5rem"></div>
+                        }
+                        else
+                        {
+                            <div class="rounded-circle bg-success" style="width: 1.5rem; height: 1.5rem"></div>
+                        }
+                        <p class="m-0">@workspace.Name</p>
                         @{
                             if (!Model.Reservations.ContainsKey(workspace.Id.ToString()))
                             {
                                 Model.Reservations.Add(workspace.Id.ToString(), "");
                             }
                         }
-                        @Html.DropDownListFor(model => model.Reservations[workspace.Id.ToString()], new SelectList(Model.EmployeeModels, "Id", "Name"), "Select Employee", new { @class = "w-100 form-control", style = "max-width: 200px; color: lightgray", placeholder = "Employee", onchange = "this.style.color = (this.value === '') ? 'lightgray' : 'black'" })
+                        @if (workspace.Occupied)
+                        {
+                            @Html.DropDownListFor(model => model.Reservations[workspace.Id.ToString()], new SelectList(GetEmployees(workspace), "Id", "Name"), "Select Employee", new { @class = "w-100 form-control", style = "max-width: 200px; color: lightgray", placeholder = "Employee", onchange = "changeWorkspaceEmployee()", disabled = true })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(model => model.Reservations[workspace.Id.ToString()], new SelectList(GetEmployees(workspace), "Id", "Name"), "Select Employee", new { @class = "w-100 form-control", style = "max-width: 200px; color: lightgray", placeholder = "Employee", onchange = "changeWorkspaceEmployee()" })
+                        }
                     </div>
                 </div>
             }
@@ -53,4 +91,9 @@
         $("#SectionChanged").val("where");
         $("#form").submit();
     });
+    
+    function changeWorkspaceEmployee() {
+        $("#SectionChanged").val("where");
+        $("#form").submit();
+    }
 </script>

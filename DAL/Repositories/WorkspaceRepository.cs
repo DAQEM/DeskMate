@@ -33,10 +33,20 @@ public class WorkspaceRepository : IWorkspaceRepository
         return _context.workspace
             .FirstOrDefault(w => w.Id == workspaceId);
     }
-    
+
     public List<WorkspaceDTO> GetWorkspacesWithCharacteristicsAndReservations()
     {
         return _context.workspace
+            .Include(w => w.workspaceCharacteristicsDTOs)
+            .ThenInclude(wc => wc.characteristicDTO)
+            .Include(w => w.reservationDTOs)
+            .ToList();
+    }
+
+    public List<WorkspaceDTO> GetWorkspacesWithCharacteristicsAndReservationsByFloorId(Guid floorId)
+    {
+        return _context.workspace
+            .Where(w => w.roomDTO.FloorId == floorId)
             .Include(w => w.workspaceCharacteristicsDTOs)
             .ThenInclude(wc => wc.characteristicDTO)
             .Include(w => w.reservationDTOs)

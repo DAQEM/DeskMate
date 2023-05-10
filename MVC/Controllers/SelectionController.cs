@@ -1,14 +1,17 @@
 ﻿using System.Globalization;
+using System.Security.Claims;
 using BLL.Data;
 using BLL.Data.Employee;
 using BLL.Data.Employee.Reservation;
 using BLL.Data.Floor;
 using BLL.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
 
 namespace MVC.Controllers;
 
+[Authorize]
 [Route("Selection")]
 public class SelectionController : BaseController<SelectionController>
 {
@@ -33,9 +36,9 @@ public class SelectionController : BaseController<SelectionController>
     [Route("")]
     public IActionResult Index()
     {
-        //TODO: Get the employee from the session
+        Guid employeeId = new(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? Guid.Empty.ToString());
         List<EmployeeModel> employeeModels = new()
-            { new EmployeeModel(_employeeService.GetEmployeeById(new Guid("3FD1DDAD-4477-4BFF-AC5C-6B4CB9B87F97"))) };
+            { new EmployeeModel(_employeeService.GetEmployeeById(employeeId)) };
 
         List<LocationModel> locationModels =
             _locationService.GetAllLocations().Select(LocationModel.FromLocation).ToList();
@@ -43,8 +46,18 @@ public class SelectionController : BaseController<SelectionController>
         List<FloorModel> floorModels =
             _floorService.GetFloorsByLocationId(locationModels[0].Id).Select(FloorModel.FromFloor).ToList();
 
+        DateTimeSelectionModel dateTimeSelectionModel = new()
+        {
+            Date = DateTime.Now,
+            StartTime = DateTime.Now,
+            EndTime = DateTime.Now.AddHours(1)
+        };
+
         List<WorkspacePropModel> workspaceModels =
-            _workspaceService.GetWorkspacesByFloorId(floorModels[0].Id).Select(WorkspacePropModel.FromWorkspace)
+            _workspaceService.GetWorkspacesWithCharacteristicsAndReservationsByFloorId(floorModels[0].Id)
+                .Select(w =>
+                    WorkspacePropModel.FromWorkspaceWithOccupied(w, dateTimeSelectionModel.StartTime,
+                        dateTimeSelectionModel.EndTime))
                 .ToList();
 
         SelectionModel model = new()
@@ -52,7 +65,8 @@ public class SelectionController : BaseController<SelectionController>
             EmployeeModels = employeeModels,
             LocationModels = locationModels,
             FloorModels = floorModels,
-            WorkspaceModels = workspaceModels
+            WorkspaceModels = workspaceModels,
+            DateTimeSelectionModel = dateTimeSelectionModel
         };
 
         return View(model);
@@ -70,8 +84,17 @@ public class SelectionController : BaseController<SelectionController>
 
         model.SelectedFloorId = model.SelectedFloorId == Guid.Empty ? model.FloorModels[0].Id : model.SelectedFloorId;
 
+        DateTime startDate = DateTime.ParseExact(model.DateTimeSelectionModel.Date.ToString("yyyy-MM-dd") + " " +
+                                                 model.DateTimeSelectionModel.StartTime.ToString("HH:mm:ss"),
+            "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+        DateTime endDate = DateTime.ParseExact(model.DateTimeSelectionModel.Date.ToString("yyyy-MM-dd") + " " +
+                                               model.DateTimeSelectionModel.EndTime.ToString("HH:mm:ss"),
+            "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
         model.WorkspaceModels =
-            _workspaceService.GetWorkspacesByFloorId(model.SelectedFloorId).Select(WorkspacePropModel.FromWorkspace)
+            _workspaceService.GetWorkspacesWithCharacteristicsAndReservationsByFloorId(model.SelectedFloorId)
+                .Select(w => WorkspacePropModel.FromWorkspaceWithOccupied(w, startDate, endDate))
                 .ToList();
 
         if (model.ReservationIsDone)
@@ -98,11 +121,6 @@ public class SelectionController : BaseController<SelectionController>
     [Route("Reserve")]
     public IActionResult Reserve(ReservationModel model)
     {
-        Console.WriteLine(TempData["reservationModel"]);
-        Console.WriteLine(TempData["date"]);
-        Console.WriteLine(TempData["startTime"]);
-        Console.WriteLine(TempData["endTime"]);
-
         string dataTransferString = TempData["reservationModel"] as string;
         DateTime date = DateTime.ParseExact(TempData["date"] as string, "yyyy-MM-dd HH:mm:ss",
             CultureInfo.InvariantCulture);

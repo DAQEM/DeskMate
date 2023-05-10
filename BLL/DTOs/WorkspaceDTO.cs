@@ -20,20 +20,18 @@ public class WorkspaceDTO
             reservations: new List<Reservation>(),
             characteristics: new List<Characteristic>());
     }
-    
+
     public Workspace ToWorkspaceWithCharacteristicAndReservation()
     {
-
-
-        Workspace workspace = new Workspace(
+        Workspace workspace = new(
             Id,
             Name,
             new List<Characteristic>(),
             new List<Reservation>());
 
-        foreach (var reservationDTO in reservationDTOs)
+        foreach (ReservationDTO reservationDTO in reservationDTOs)
         {
-            Reservation reservation = new Reservation(
+            Reservation reservation = new(
                 reservationDTO.Id,
                 reservationDTO.StartDate,
                 reservationDTO.EndDate);
@@ -43,7 +41,7 @@ public class WorkspaceDTO
 
         foreach (WorkspaceCharacteristicsDTO workspacecharacteristicDTO in workspaceCharacteristicsDTOs)
         {
-            Characteristic characteristic = new Characteristic(
+            Characteristic characteristic = new(
                 workspacecharacteristicDTO.characteristicDTO.Type,
                 workspacecharacteristicDTO.characteristicDTO.Id,
                 workspacecharacteristicDTO.Amount);
@@ -53,7 +51,5 @@ public class WorkspaceDTO
 
 
         return workspace;
-
-
     }
 }
