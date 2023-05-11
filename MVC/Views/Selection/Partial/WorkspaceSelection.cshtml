@@ -33,14 +33,14 @@
             @if (Model.LocationModels.Any())
             {
                 @Html.LabelFor(model => model.SelectedLocationId, "Location", new { @class = "w-100 control-label" })
-                @Html.DropDownListFor(model => model.SelectedLocationId, new SelectList(Model.LocationModels, "Id", "Name"), new { @class = "w-100 form-control", placeholder = "Location", required = true, id = "location_selection" })
+                @Html.DropDownListFor(model => model.SelectedLocationId, new SelectList(Model.LocationModels, "Id", "Name"), new { @class = "w-100 form-control form__select", placeholder = "Location", required = true, id = "location_selection" })
             }
         </div>
         <div style="flex: 1">
             @if (Model.FloorModels.Any())
             {
                 @Html.LabelFor(model => model.SelectedFloorId, "Floor", new { @class = "w-100 control-label" })
-                @Html.DropDownListFor(model => model.SelectedFloorId, new SelectList(Model.FloorModels.OrderBy(fm => fm.FloorNumber), "Id", "Name"), new { @class = "w-100 form-control", placeholder = "Floor", required = true, id = "floor_selection" })
+                @Html.DropDownListFor(model => model.SelectedFloorId, new SelectList(Model.FloorModels.OrderBy(fm => fm.FloorNumber), "Id", "Name"), new { @class = "w-100 form-control form__select", placeholder = "Floor", required = true, id = "floor_selection" })
             }
         </div>
     </div>
@@ -63,7 +63,7 @@
                         <div style="flex: 1">
                             @foreach (Characteristic characteristic in workspace.Characteristics)
                             {
-                                <span style="font-weight:200" class="badge  text-black badge-primary mr-2">@characteristic.Amount @characteristic.Type</span>
+                                <span style="font-weight:300" class="badge  text-black badge-primary mr-2">@characteristic.Amount @characteristic.Type</span>
                             }
                         </div>
                         @{

@@ -59,7 +59,7 @@ public class ReservationController : BaseController<ReservationController>
 
         List<Reservation> reservations =
             _reservationService.GetFilteredReservationsByEmployeeId(employeeGuid, DateTime.Parse(dateFrom),
-                DateTime.Parse(dateTo));
+                DateTime.Parse(dateTo)).OrderBy(reservation => reservation.StartDate).ToList();
         return new JsonResult(new { reservations });
     }
 }

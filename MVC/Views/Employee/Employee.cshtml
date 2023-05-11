@@ -1,0 +1,46 @@
+﻿@model BLL.Entities.Employee
+
+@{
+    ViewBag.Title = Model == null ? "Not found" : Model.Name;
+    Layout = "_Layout";
+}
+
+@if (Model == null)
+{
+    <div class="text-center">
+        <h2>Employee Not Found</h2>
+    </div>
+}
+else
+{
+    <div class="container mt-5">
+        <div class="row">
+
+            <div class="col-md-8 w-100 text-center">
+                <div class="col-md-4 w-100 d-flex align-items-center justify-content-center">
+                    <img src="~/images/icon/profile_icon.png" class="img-fluid rounded-circle" alt="Employee Profile Image" style="height: 100px">
+                    <h1>@Model.Name</h1>
+                </div>
+
+                <p class="m-0"><strong>Position:</strong> Chief Executive Officer</p>
+                <p class="m-0">
+                    <strong>Email:</strong> @Model.Email
+                </p>
+                <p class="m-0"><strong>Phone:</strong> +31 123 456 789</p>
+            </div>
+        </div>
+        <div class="text-center w-100 d-flex justify-content-center">
+            <div class="d-flex flex-column">
+                <hr style="max-width: 500px">
+                <div style="max-width: 500px">
+                    <h2>About @Model.Name</h2>
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus consequat purus ut augue consequat viverra.
+                        Fusce luctus, mauris vitae dapibus aliquam, arcu nunc sollicitudin lorem, a fermentum nulla odio finibus tellus.
+                        Curabitur sed est nec sapien iaculis egestas. Pellentesque consequat.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+}

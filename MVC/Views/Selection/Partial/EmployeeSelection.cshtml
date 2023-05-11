@@ -27,7 +27,7 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+@* <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> *@
 <script>
     // This is the script that prevents the form from submitting when the enter key is pressed
     $(document).ready(function() {
@@ -40,7 +40,7 @@
     });
     
     function fetchEmployees(search) {
-        fetch(`/employees?search=${search}`)
+        fetch(`/employee/employees?search=${search}`)
             .then((response) => response.json())
             .then((data) => {
                 data = data.employees;
