@@ -1,25 +1,19 @@
-﻿using BLL.Entities;
+﻿using BLL.Data.Employee;
+using BLL.Entities;
+using BLL.Exception;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MVC.Controllers;
 
+[Route("employee")]
 public class EmployeeController : BaseController<EmployeeController>
 {
-    private readonly List<Employee> employees = new()
+    private readonly IEmployeeService _employeeService;
+
+    public EmployeeController(IEmployeeService employeeService)
     {
-        new Employee(Guid.NewGuid(), "Henk"),
-        new Employee(Guid.NewGuid(), "Jan"),
-        new Employee(Guid.NewGuid(), "Rik"),
-        new Employee(Guid.NewGuid(), "Karla"),
-        new Employee(Guid.NewGuid(), "Piet"),
-        new Employee(Guid.NewGuid(), "Jasmijn"),
-        new Employee(Guid.NewGuid(), "Harrie"),
-        new Employee(Guid.NewGuid(), "Karel"),
-        new Employee(Guid.NewGuid(), "Klaas"),
-        new Employee(Guid.NewGuid(), "Kees"),
-        new Employee(Guid.NewGuid(), "Klaasje"),
-        new Employee(Guid.NewGuid(), "JORG")
-    };
+        _employeeService = employeeService;
+    }
 
     [HttpGet]
     [Route("employees")]
@@ -30,9 +24,22 @@ public class EmployeeController : BaseController<EmployeeController>
             return new JsonResult(new { employees = new List<Employee>() });
         }
 
-        List<Employee> filteredEmployees = employees
-            .Where(e => e.Name.ToLower().Contains(search.ToLower())
-                        || e.Email.ToLower().Contains(search.ToLower())).ToList();
-        return new JsonResult(new { employees = filteredEmployees });
+        return new JsonResult(new { employees = _employeeService.GetEmployeeBySearch(search) });
+    }
+
+    //Employee page not json but view
+    [HttpGet]
+    [Route("{id}")]
+    public IActionResult Employee(Guid id)
+    {
+        try
+        {
+            Employee employeeById = _employeeService.GetEmployeeById(id);
+            return View(employeeById);
+        }
+        catch (ServiceException e)
+        {
+            return View(null);
+        }
     }
 }

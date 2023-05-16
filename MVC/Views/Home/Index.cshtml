@@ -1,8 +1,187 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = "_LayoutWide";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="sect" id="head">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="site">
+                    <h1 class="site__title d-flex justify-content-center">
+                        The most
+                        <p id="head_text_wrap">
+                            <strong id="head_text" class="px-2">efficient</strong>
+                        </p> workspace reservation tool
+                    </h1>
+                    <h2 class="site__subtitle">Reserve workspaces with ease</h2>
+                    <img class="site__img" src="images/homepage_image.png">
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div class="sect sect--no-padding" id="companies" style="margin-top: 100px">
+    <div class="container">
+        <div class="row">
+            <h1 class="row__title">
+                Companies who use DeskMate
+            </h1>
+            <h2 class="row__sub">Join the ranks of these satisfied DeskMate clients</h2>
+        </div>
+        <div class="row row--center mt-5">
+            <div class="col-md-3 col-xs-6 col-sm-6 partner">
+                <a href="#companies" class="partner__link">
+                    <img class="partner_img" src="https://image.ibb.co/mOtHRw/fblogo.png">
+                </a>
+            </div>
+
+            <div class="col-md-3  col-xs-6 col-sm-6 partner">
+                <a href="#companies" class="partner__link">
+                    <img class="partner_img" src="https://image.ibb.co/nfpXRw/twitterlogo.png">
+                </a>
+            </div>
+
+
+            <div class="col-md-3 col-xs-6 col-sm-6 partner">
+                <a href="#companies" class="partner__link">
+                    <img class="partner_img" src="https://image.ibb.co/imgOYb/googlelogo.png">
+                </a>
+            </div>
+
+            <div class="col-md-3 col-xs-6 col-sm-6 partner">
+                <a href="#companies" class="partner__link">
+                    <img class="partner_img" src="https://image.ibb.co/ebGAeG/dribbblelogo.png">
+                </a>
+            </div>
+
+
+        </div>
+        <div class="row row--center">
+            <div class="col-md-3 col-xs-6 col-sm-6 partner">
+                <a href="#companies" class="partner__link">
+                    <img class="partner_img" src="https://image.ibb.co/npV8Yb/gitlogo.png">
+                </a>
+            </div>
+
+            <div class="col-md-3 col-xs-6 col-sm-6 partner">
+                <a href="#companies" class="partner__link">
+                    <img class="partner_img" src="https://image.ibb.co/cGyZ6w/stacklogo.png">
+                </a>
+            </div>
+
+
+            <div class="col-md-3 col-xs-6 col-sm-6 partner">
+                <a href="#companies" class="partner__link">
+                    <img class="partner_img" src="https://image.ibb.co/ij03zG/inlogo.png">
+                </a>
+            </div>
+
+            <div class="col-md-3 col-xs-6 col-sm-6 partner">
+                <a href="#companies" class="partner__link">
+                    <img class="partner_img" src="https://image.ibb.co/ekqdzG/codepenlogo.png">
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="sect sect--padding-bottom" id="contact">
+    <div class="container">
+        <div class="row">
+            <h1 class="row__title">
+                Contact Us
+            </h1>
+            <h2 class="row__sub">Feel free to ask any questions</h2>
+        </div>
+        <div class="row row--margin">
+            <div class="col-md-1"></div>
+            <div class="col-md-4">
+                <div class="contacts">
+                    <a href="#" class="contacts__link">
+                        <img src="/images/logo_transparant.png" style="width: 180px">
+                    </a>
+                    <p class="contacts__address">
+                        Rachelsmolen 1<br>
+                        5612 MA Eindhoven<br>
+                        The Netherlands
+                    </p>
+                    <p class="contacts__info">
+                        tel. <a href="#contact" class="contacts__info-link">+31 123 456 789</a>
+                    </p>
+                    <p class="contacts__info">
+                        m. <a href="#contact"class="contacts__info-link">info@deskmate.com</a>
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <form class="form">
+                    <div class="form-group">
+                        <select class="form__field form__select">
+                            <option selected value="0">Choose topic*</option>
+                            <option value="1">Pricing</option>
+                            <option value="2">Success Stories</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <div class="form__field--half">
+                            <input type="text" placeholder="Name*" class="form__field form__text"></input>
+                        </div>
+                        <div class="form__field--half">
+                            <input type="text" placeholder="Surname" class="form__field form__text"></input>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="form__field--half">
+                            <input type="text" placeholder="Email address*" class="form__field form__text"></input>
+                        </div>
+                        <div class="form__field--half">
+                            <input type="text" placeholder="Phone number" class="form__field form__text"></input>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <textarea type="text" placeholder="Your messsage*" class="form__field form__textarea"></textarea>
+                        <button class="btn btn--blue btn--up btn--width" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        var words = ["straightforward", "convenient", "effortless", "accessible", "efficient"];
+        var index = 0;
+        setInterval(function() {
+          var word = words[index];
+          var span = $('#head_text_wrap');
+          var width = span.width();
+          span.animate({ width: '0px' }, 350, function() {
+            $('#head_text').text(word);
+            width = span.children().width() + 16;
+            span.animate({ width: width + 'px' }, 350);
+          });
+          index = (index + 1) % words.length;
+        }, 3000);
+      });
+</script>
+
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Lato', sans-serif;
+        color: #1f4568;
+    }
+    
+    body {
+        background-image: url("https://image.ibb.co/de6JzG/bitmap_1_1.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+</style>

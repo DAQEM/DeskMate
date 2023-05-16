@@ -7,22 +7,19 @@
 }
 
 <div class="d-flex justify-content-center flex-wrap">
-    @foreach (Workspace workspace in Model.Workspaces)
-    {
-        <div class="d-flex flex-column m-3 p-3 bg-primary rounded">
-            <div>
-                <h1>@workspace.Name</h1>
-            </div>
-            <div>
-                @foreach(Characteristic characteristic in workspace.Characteristics)
-                {
-                    <div class="d-flex">
-                        <p><strong>@characteristic.Amount</strong></p>
-                        <p> @characteristic.Type</p>
-                    </div>
-                }
-            </div>
-        </div>
-    }
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Workspace Name</th>
+            <th>Characteristics</th>
+            <th class="AvailabilityClass">Current availability</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (Workspace workspace in Model.Workspaces)
+        {
+            @await Html.PartialAsync("Partial/Components/_WorkspacePartial", workspace)
+        }
+        </tbody>
+    </table>
 </div>
-

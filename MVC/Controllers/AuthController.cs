@@ -1,10 +1,23 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using BLL.Data.Auth;
+using BLL.DTOs;
+using BLL.Entities;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
 using MVC.Models.Auth;
+using MVC.Models.Dashboard;
 
 namespace MVC.Controllers;
 
 public class AuthController : BaseController<AuthController>
 {
+    private readonly IAuthService _authService;
+
+    public AuthController(IAuthService authService)
+    {
+        _authService = authService;
+    }
 
     [HttpGet]
     [Route("login")]
@@ -15,22 +28,49 @@ public class AuthController : BaseController<AuthController>
 
     [HttpPost]
     [Route("login")]
-    public IActionResult Login(LoginModel loginModel)
+    public async Task<IActionResult> Login(LoginModel loginModel)
     {
         if (!ModelState.IsValid)
         {
-            //TODO: login
-            return RedirectToAction("Index", "Home");
+            return View(loginModel);
         }
 
-        return View();
+        Employee? employee =
+            _authService.LoginEmployee(new Employee(email: loginModel.Email, hashedPassword: loginModel.Password));
+
+        if (employee == null)
+        {
+            ModelState.AddModelError("Password", "Password incorrect.");
+            return View(loginModel);
+        }
+
+        List<Claim> claim = new()
+        {
+            new Claim(ClaimTypes.NameIdentifier, employee.Id.ToString()),
+            new Claim(ClaimTypes.Name, employee.Name),
+            new Claim(ClaimTypes.Email, employee.Email)
+        };
+
+        ClaimsIdentity identity = new(claim, CookieAuthenticationDefaults.AuthenticationScheme);
+
+
+        await HttpContext.SignInAsync(
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            new ClaimsPrincipal(identity),
+            new AuthenticationProperties
+            {
+                IsPersistent = loginModel.RememberMe
+            });
+
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpGet]
     [Route("logout")]
-    public IActionResult Logout()
+    public async Task<IActionResult> Logout()
     {
-        //TODO: logout
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
         return RedirectToAction("Index", "Home");
     }
 
@@ -46,10 +86,28 @@ public class AuthController : BaseController<AuthController>
     public IActionResult Register(RegisterModel registerModel)
     {
         if (!ModelState.IsValid)
-            //TODO: register
-            return RedirectToAction("Index", "Home");
         {
-            return View();
+            return View(registerModel);
         }
+
+        bool isEmailTaken = _authService.RegisterEmployeeIfNotTaken(RegisterModelToUserDto(registerModel).ToEmployee());
+
+        if (isEmailTaken)
+        {
+            ModelState.AddModelError("Email", "Email is already taken");
+            return View(registerModel);
+        }
+
+        return RedirectToAction("Index", "Home");
+    }
+
+    public UserDTO RegisterModelToUserDto(RegisterModel registerModel)
+    {
+        return new UserDTO
+        {
+            Name = registerModel.Username,
+            Email = registerModel.Email,
+            Password = registerModel.Password
+        };
     }
 }

@@ -1,7 +1,7 @@
 ﻿@model SelectionModel
 
 @Html.AntiForgeryToken()
-<h4>Who?</h4>
+<h4 id="who">Who?</h4>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div>
     <div id="employee-search" class="d-flex flex-column justify-content-center align-items-center">
@@ -19,24 +19,15 @@
                 @Html.HiddenFor(model => model.EmployeeModels[i].Name)
                 @Html.HiddenFor(model => model.EmployeeModels[i].Email)
                 <button type="button" class="btn btn-danger m-0"
-                        onclick="document.getElementById('employee-@i').remove()">
+                        onclick="document.getElementById('employee-@i').remove(); renumberEmployees(); document.getElementById('SectionChanged').value = 'who'; document.getElementById('form').submit()">
                     X
                 </button>
             </div>
         }
     </div>
-    <div>
-        <button type="submit" class="btn btn-primary w-100"
-                onclick="{
-                    document.getElementById('step').value = 3;
-                    document.getElementById('form').submit();
-                }">
-            Submit Employees
-        </button>
-    </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+@* <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> *@
 <script>
     // This is the script that prevents the form from submitting when the enter key is pressed
     $(document).ready(function() {
@@ -49,7 +40,7 @@
     });
     
     function fetchEmployees(search) {
-        fetch(`/employees?search=${search}`)
+        fetch(`/employee/employees?search=${search}`)
             .then((response) => response.json())
             .then((data) => {
                 data = data.employees;
@@ -57,6 +48,9 @@
                 data.forEach((employee) => {
                     addSearchResult(employee);
                 });
+                if (document.getElementById('employee-search-results').children.length === 0) {
+                    setNoResults();
+                }
             });
     }
     
@@ -69,16 +63,28 @@
     }
     
     function addSearchResult(employee) {
-        let id = document.getElementById("employee-selection").children.length;
-        let employeeSearchResults = document.getElementById("employee-search-results");
-        let employeeSearchResult = document.createElement("div");
-        employeeSearchResult.id = "employee-search-result-" + id;
-        employeeSearchResult.className = "d-flex justify-content-between align-items-center p-2 my-2 rounded bg-white border-1 border";
-        employeeSearchResult.innerHTML = `
-            <p class="m-0">${employee.name}</p>
-            <button type="button" class="btn btn-primary m-0" onclick="addEmployee('${id}', '${employee.id}', '${employee.name}', '${employee.email}')">+</button>
-        `;
-        employeeSearchResults.appendChild(employeeSearchResult);
+        if (!isEmployeeAlreadySelected(employee.id)) {
+            let id = document.getElementById("employee-selection").children.length;
+            let employeeSearchResults = document.getElementById("employee-search-results");
+            let employeeSearchResult = document.createElement("div");
+            employeeSearchResult.id = "employee-search-result-" + id;
+            employeeSearchResult.className = "d-flex justify-content-between align-items-center p-2 my-2 rounded bg-white border-1 border";
+            employeeSearchResult.innerHTML = `
+                <p class="m-0">${employee.name}</p>
+                <button type="submit" class="btn btn-primary m-0" onclick="addEmployee('${id}', '${employee.id}', '${employee.name}', '${employee.email}'); document.getElementById('SectionChanged').value = 'who'; document.getElementById('form').submit()">+</button>
+            `;
+            employeeSearchResults.appendChild(employeeSearchResult);
+        }
+    }
+    
+    function isEmployeeAlreadySelected(employeeId) {
+        let employeeSelection = document.getElementById("employee-selection");
+        for (let i = 0; i < employeeSelection.children.length; i++) {
+            if (employeeSelection.children[i].children[1].value === employeeId) {
+                return true;
+            }
+        }
+        return false;
     }
     
     function addEmployee(id, employeeId, employeeName, employeeEmail) {
@@ -91,10 +97,60 @@
             <input data-val="true" data-val-required="The Id field is required." id="EmployeeModels_${id}__Id" name="EmployeeModels[${id}].Id" type="hidden" value="${employeeId}">
             <input data-val="true" data-val-required="The Name field is required." id="EmployeeModels_${id}__Name" name="EmployeeModels[${id}].Name" type="hidden" value="${employeeName}">
             <input data-val="true" data-val-required="The Email field is required." id="EmployeeModels_${id}__Email" name="EmployeeModels[${id}].Email" type="hidden" value="${employeeEmail}">
-            <button type="button" class="btn btn-danger m-0" onclick="document.getElementById('employee-${id}').remove()">X</button>
+            <button type="button" class="btn btn-danger m-0" onclick="document.getElementById('employee-${id}').remove(); renumberEmployees(); document.getElementById('SectionChanged').value = 'who'; document.getElementById('form').submit()">X</button>
         `;
         document.getElementById("employee-selection").appendChild(employeeElement);
         document.getElementById("EmployeeSearch").value = "";
         clearSearchResults();
+    }
+    
+    function renumberEmployees() {
+        //loop through all employees in id 'employee-selection' with jQuery
+        $('#employee-selection').children().each(function(index) {
+            //change id of employee
+            $(this).attr('id', 'employee-' + index);
+
+            //change id of employee id hidden input
+            $(this).children('input').each(function() {
+                if ($(this).attr('id').includes('__Id')) { 
+                    $(this).attr('id', 'EmployeeModels_' + index + '__Id');
+                    $(this).attr('name', 'EmployeeModels[' + index + '].Id');
+                    $(this).attr('value', document.getElementById('EmployeeModels_' + index + '__Id').value);
+                }
+            });
+
+            //change id of employee name hidden input
+            $(this).children('input').each(function() {
+                if ($(this).attr('id').includes('__Name')) { 
+                    $(this).attr('id', 'EmployeeModels_' + index + '__Name');
+                    $(this).attr('name', 'EmployeeModels[' + index + '].Name');
+                    $(this).attr('value', document.getElementById('EmployeeModels_' + index + '__Name').value);
+                }
+            });
+
+            //change id of employee email hidden input
+            $(this).children('input').each(function() {
+                if ($(this).attr('id').includes('__Email')) { 
+                    $(this).attr('id', 'EmployeeModels_' + index + '__Email');
+                    $(this).attr('name', 'EmployeeModels[' + index + '].Email');
+                    $(this).attr('value', document.getElementById('EmployeeModels_' + index + '__Email').value);
+                }
+            });
+
+            //change onclick of button
+            $(this).children('button').each(function() {
+                $(this).attr('onclick', "document.getElementById('employee-" + index + "').remove(); renumberEmployees(); document.getElementById('SectionChanged').value = 'who'; document.getElementById('form').submit()");
+            });
+        });
+    }
+    
+    function setNoResults() {
+        let employeeSearchResults = document.getElementById("employee-search-results");
+        let employeeSearchResult = document.createElement("div");
+        employeeSearchResult.className = "text-center";
+        employeeSearchResult.innerHTML = `
+            <p class="m-0">No results</p>
+        `;
+        employeeSearchResults.appendChild(employeeSearchResult);
     }
 </script>

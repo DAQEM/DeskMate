@@ -1,0 +1,148 @@
+﻿@using System.Security.Claims
+@{
+    ViewBag.Title = "Reservations";
+    Layout = "_Layout";
+}
+
+<h2 class="text-center">Reservations</h2>
+
+<div class="d-flex justify-content-center m-3">
+    <div id="filters" class="d-flex flex-row gap-3" style="max-width: 500px">
+        <div>
+            <label>
+                <strong>Date from</strong>
+            </label>
+            <input id="date-from" type="date" class="form-control"/>
+        </div>
+        <div>
+            <label>
+                <strong>Date to</strong>
+            </label>
+            <input id="date-to" type="date" class="form-control"/>
+        </div>
+    </div>
+</div>
+
+
+<div class="container" id="reservations">
+    <div class="row my-1">
+        <div class="col-md-1"></div>
+        <div class="col-md-2"><strong>Name</strong></div>
+        <div class="col-md-2"><strong>Workspace Name</strong></div>
+        <div class="col-md-2"><strong>Start Date</strong></div>
+        <div class="col-md-2"><strong>End Date</strong></div>
+        <div class="col-md-3"><strong>Actions</strong></div>
+    </div>
+</div>
+
+@* <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> *@
+<script>
+    $(document).ready(function () {
+        const dateFromElement = document.getElementById("date-from");
+        const dateToElement = document.getElementById("date-to");
+        
+        const date = new Date();
+        dateFromElement.valueAsDate = date;
+        date.setDate(date.getDate() + 7);
+        dateToElement.valueAsDate = date;
+        
+        Fetch();
+        
+        dateFromElement.addEventListener("change", function () {
+            ClearReservations();
+            Fetch();
+        });
+        dateToElement.addEventListener("change", function () {
+            ClearReservations();
+            Fetch();
+        });
+    });
+    
+    function Fetch() {
+        const dateFromElement = document.getElementById("date-from");
+        const dateToElement = document.getElementById("date-to");
+        const url = "/api/filtered/reservation/@User.FindFirst(ClaimTypes.NameIdentifier).Value?dateFrom=" + new Date(dateFromElement.value).toISOString() + "&dateTo=" + new Date(dateToElement.value).toISOString();
+        $.ajax({
+            url: url,
+            type: "GET",
+            success: function (data) {
+                data.reservations.forEach(r => PrintReservation(r));
+            },
+            error: function (data) {
+                alert(data.status + " " + data.statusText + "\n" + data.responseText);
+            }
+        });
+    }
+
+    function Edit(event) {
+        const id = event.target.parentNode.id;
+        window.location.href = "/Reservation/Edit/" + id;
+    }
+    
+    function Delete(event) {
+            const id = event.target.parentNode.id;
+            const url = "/Reservation/Delete/" + id;
+            $.ajax({
+                url: url,
+                type: "POST",
+                success: function () {
+                    location.reload();
+                },
+                error: function (data) {
+                    alert(data.status + " " + data.statusText + "\n" + data.responseText);
+                }
+            });
+        }
+        
+    function PrintReservation(reservation) {
+        const element = document.createElement("div");
+        const mainElement = document.getElementById("reservations");
+        element.id = reservation.id;
+        if (mainElement.children.length % 2 == 0) {
+            element.className = "row my-2";
+        } else {
+            element.className = "row my-2 bg-light";
+        }
+        element.style.borderRadius = "5px";
+        const startDate = new Date(reservation.startDate);
+        const endDate = new Date(reservation.endDate);
+        element.innerHTML = `
+            ${getDot(reservation)}
+            <p class="col-md-2">${reservation.employee.name}</p>
+            <p class="col-md-2">${reservation.workspace.name}</p>
+            <p class="col-md-2">${startDate.toLocaleString()}</p>
+            <p class="col-md-2">${endDate.toLocaleString()}</p>
+            <div class="col-md-3">${getButtons(reservation)}</div>
+        `;
+        mainElement.appendChild(element);
+    }
+    
+    function getDot(reservation) {
+        const startDate = new Date(reservation.startDate);
+        const endDate = new Date(reservation.endDate);
+        if (endDate < new Date()) {
+            return `<div class="col-md-1"><div class="dot bg-danger"></div></div>`;
+        } else if (startDate < new Date()) {
+            return `<div class="col-md-1"><div class="dot bg-warning"></div></div>`;
+        } else if (startDate > new Date()) {
+            return `<div class="col-md-1"><div class="dot bg-success"></div></div>`;
+        }
+    }
+    
+    function getButtons(reservation) {
+        const endDate = new Date(reservation.endDate);
+        if (endDate < new Date()) {
+            return ``;
+        } else {
+            return `<button class="btn btn-primary mx-2" onclick="Edit(event)">Edit</button>
+                    <button class="btn btn-danger mx-2" onclick="Delete(event)">Delete</button>`;
+        }
+    }
+    
+    function ClearReservations() {     
+        const reservationsElement = document.getElementById("reservations");
+        while (reservationsElement.firstChild) {
+            reservationsElement.removeChild(reservationsElement.firstChild);
+        }
+    }
+</script>

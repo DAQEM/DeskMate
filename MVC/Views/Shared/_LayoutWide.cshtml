@@ -8,16 +8,16 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
 </head>
 <body>
-<header>
-    @Html.Partial("Partial/_NavbarPartial")
-</header>
-@RenderBody()
-<footer class="border-top footer text-muted">
-    @Html.Partial("Partial/_FooterPartial")
-</footer>
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+<header>
+    @await Html.PartialAsync("Partial/_NavbarPartial")
+</header>
+@RenderBody()
+<footer class="footer">
+    @await Html.PartialAsync("Partial/_FooterPartial")
+</footer>
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

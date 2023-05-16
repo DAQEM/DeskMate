@@ -1,16 +1,106 @@
-﻿@model SelectionModel
+﻿@using BLL.Entities
+@model SelectionModel
+
+@functions {
+
+    private List<EmployeeModel> GetEmployees(WorkspacePropModel workspace)
+    {
+        List<EmployeeModel> employees = new(Model.EmployeeModels);
+        string workspaceId = workspace.Id.ToString();
+
+        List<string> reservedEmployeeIds = Model.Reservations
+            .Where(r => r.Key != workspaceId)
+            .Where(r => !string.IsNullOrEmpty(r.Value))
+            .Select(r => r.Value)
+            .ToList();
+
+        if (reservedEmployeeIds.Count > 0)
+        {
+            employees.RemoveAll(e => reservedEmployeeIds.Contains(e.Id.ToString()));
+        }
+
+        return employees;
+    }
+
+}
 
 @Html.AntiForgeryToken()
-<h4>Where?</h4>
+<h4 id="where">Where?</h4>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-<div class="d-flex justify-content-between align-items-end gap-5">
-    <div style="flex: .5">
-        <button type="submit" class="btn btn-primary w-100"
-                onclick="{
-                    document.getElementById('step').value = 4;
-                    document.getElementById('form').submit();
-                }">
-            Submit
-        </button>
+<div class="d-flex justify-content-between flex-wrap">
+    <div class="d-flex flex-row flex-wrap w-100 gap-5 mb-5">
+        <div style="flex: 1">
+            @if (Model.LocationModels.Any())
+            {
+                @Html.LabelFor(model => model.SelectedLocationId, "Location", new { @class = "w-100 control-label" })
+                @Html.DropDownListFor(model => model.SelectedLocationId, new SelectList(Model.LocationModels, "Id", "Name"), new { @class = "w-100 form-control form__select", placeholder = "Location", required = true, id = "location_selection" })
+            }
+        </div>
+        <div style="flex: 1">
+            @if (Model.FloorModels.Any())
+            {
+                @Html.LabelFor(model => model.SelectedFloorId, "Floor", new { @class = "w-100 control-label" })
+                @Html.DropDownListFor(model => model.SelectedFloorId, new SelectList(Model.FloorModels.OrderBy(fm => fm.FloorNumber), "Id", "Name"), new { @class = "w-100 form-control form__select", placeholder = "Floor", required = true, id = "floor_selection" })
+            }
+        </div>
+    </div>
+    <div class="d-flex flex-column w-100">
+        <p class="m-0">Available workspaces</p>
+        <div class="d-flex flex-column">
+            @foreach (WorkspacePropModel workspace in Model.WorkspaceModels)
+            {
+                <div class="w-100 my-2 p-2 border rounded">
+                    <div class="d-flex justify-content-between align-items-center">
+                        @if (workspace.Occupied)
+                        {
+                            <div class="rounded-circle bg-danger me-2" style="width: 1.5rem; height: 1.5rem"></div>
+                        }
+                        else
+                        {
+                            <div class="rounded-circle bg-success me-2" style="width: 1.5rem; height: 1.5rem"></div>
+                        }
+                        <p class="m-0" style="flex: 1">@workspace.Name</p>
+                        <div style="flex: 1">
+                            @foreach (Characteristic characteristic in workspace.Characteristics)
+                            {
+                                <span style="font-weight:300" class="badge  text-black badge-primary mr-2">@characteristic.Amount @characteristic.Type</span>
+                            }
+                        </div>
+                        @{
+                            if (!Model.Reservations.ContainsKey(workspace.Id.ToString()))
+                            {
+                                Model.Reservations.Add(workspace.Id.ToString(), "");
+                            }
+                        }
+                        @if (workspace.Occupied)
+                        {
+                            @Html.DropDownListFor(model => model.Reservations[workspace.Id.ToString()], new SelectList(GetEmployees(workspace), "Id", "Name"), "Select Employee", new { @class = "w-100 form-control", style = "max-width: 200px; color: lightgray; flex: 1", placeholder = "Employee", onchange = "changeWorkspaceEmployee()", disabled = true })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(model => model.Reservations[workspace.Id.ToString()], new SelectList(GetEmployees(workspace), "Id", "Name"), "Select Employee", new { @class = "w-100 form-control", style = "max-width: 200px; color: lightgray; flex: 1", placeholder = "Employee", onchange = "changeWorkspaceEmployee()" })
+                        }
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </div>
+
+<script>
+    $("#location_selection").change(function () {
+        $('#floor_selection').val('');
+        $("#SectionChanged").val("where");
+        $("#form").submit();
+    });
+    
+    $("#floor_selection").change(function () {
+        $("#SectionChanged").val("where");
+        $("#form").submit();
+    });
+    
+    function changeWorkspaceEmployee() {
+        $("#SectionChanged").val("where");
+        $("#form").submit();
+    }
+</script>

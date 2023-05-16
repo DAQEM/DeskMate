@@ -1,4 +1,6 @@
 ﻿using System.Diagnostics;
+using BLL.Data.Employee;
+using BLL.Entities;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
 
@@ -6,6 +8,13 @@ namespace MVC.Controllers;
 
 public class HomeController : BaseController<HomeController>
 {
+    private readonly IEmployeeService _employeeService;
+
+    public HomeController(IEmployeeService employeeService)
+    {
+        _employeeService = employeeService;
+    }
+
     public IActionResult Index()
     {
         return View();
