@@ -1,8 +1,9 @@
-using System.Text;
 using BLL.Data;
 using BLL.Data.Auth;
 using BLL.Data.Employee;
 using BLL.Data.Employee.Reservation;
+using BLL.Data.Employee.Role;
+using BLL.Data.Employee.Role.Permission;
 using BLL.Data.Floor;
 using DAL;
 using DAL.Repositories;
@@ -47,12 +48,19 @@ services.AddScoped<IReservationService, ReservationService>();
 services.AddScoped<IAuthRepository, AuthRepository>();
 services.AddScoped<IAuthService, AuthService>();
 
+services.AddScoped<IRoleRepository, RoleRepository>();
+services.AddScoped<IRoleService, RoleService>();
+
+services.AddScoped<IPermissionRepository, PermissionRepository>();
+services.AddScoped<IPermissionService, PermissionService>();
+
 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme,
         options =>
         {
             options.LoginPath = "/login";
             options.LogoutPath = "/logout";
+            options.AccessDeniedPath = "/access-denied";
         });
 
 WebApplication app = builder.Build();
