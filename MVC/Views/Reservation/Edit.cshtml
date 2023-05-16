@@ -1,4 +1,4 @@
-﻿@model BLL.Entities.Reservation
+﻿@model MVC.Models.Reservation.EditReservationModel
 
 @{
     ViewBag.Title = "Edit Reservation";
@@ -12,4 +12,35 @@
 else
 {
     <h2>Edit Reservation</h2>
+    @using (Html.BeginForm("Edit", "Reservation", FormMethod.Post, new { id = "form" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <h4 id="when">When?</h4>
+        <div class="d-flex justify-content-between align-items-end gap-5 flex-wrap">
+            <div style="flex: 1">
+                @Html.LabelFor(model => model.DateTimeSelectionModel.Date, "Date", new { @class = "control-label" })
+                @Html.TextBoxFor(model => model.DateTimeSelectionModel.Date, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control", onclick = "this.showPicker()", id = "date_selection" })
+                @Html.ValidationMessageFor(model => model.DateTimeSelectionModel.Date, "", new { @class = "text-danger" })
+            </div>
+            <div style="flex: 1">
+                @Html.LabelFor(model => model.DateTimeSelectionModel.StartTime, "Start time", new { @class = "control-label" })
+                @Html.TextBoxFor(model => model.DateTimeSelectionModel.StartTime, "{0:HH:mm}", new { type = "time", @class = "form-control", onclick = "this.showPicker()", id = "start_time_selection" })
+                @Html.ValidationMessageFor(model => model.DateTimeSelectionModel.StartTime, "", new { @class = "text-danger" })
+            </div>
+            <div style="flex: 1">
+                @Html.LabelFor(model => model.DateTimeSelectionModel.EndTime, "End time", new { @class = "control-label" })
+                @Html.TextBoxFor(model => model.DateTimeSelectionModel.EndTime, "{0:HH:mm}", new { type = "time", @class = "form-control", onclick = "this.showPicker()", id = "end_time_selection" })
+                @Html.ValidationMessageFor(model => model.DateTimeSelectionModel.EndTime, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center">
+            <button type="submit"
+                    class="btn btn-primary w-100 my-3"
+                    style="max-width: 200px">
+                Edit Reservation
+            </button>
+        </div>
+    }
 }

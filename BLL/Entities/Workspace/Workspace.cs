@@ -26,6 +26,7 @@ public class Workspace
     public List<Characteristic> Characteristics => _characteristics;
     public List<Reservation> Reservations => _reservations;
     public Room Room => _room;
+
     public bool Occupied
     {
         get => _occupied;
@@ -59,7 +60,7 @@ public class Workspace
             }
         ).ToList();
     }
-    
+
     public bool IsOccupied(DateTime startDate, DateTime endDate)
     {
         return _reservations.Any(r => r.IsOccupied(startDate, endDate));

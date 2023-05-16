@@ -61,8 +61,7 @@ public class WorkspaceDTO
             new List<Characteristic>(),
             new List<Reservation>(),
             roomDTO.ToRoom());
-            
-            
+
 
         foreach (ReservationDTO reservationDTO in reservationDTOs)
         {
@@ -83,14 +82,24 @@ public class WorkspaceDTO
 
             workspace.Characteristics.Add(characteristic);
         }
-        
+
         return workspace;
     }
-    
+
     public Workspace ToSmallWorkspace()
     {
         return new Workspace(
             Id,
             Name);
+    }
+
+    public Workspace? ToWorkspaceWithRoomFloorAndLocation()
+    {
+        return new Workspace(
+            Id,
+            Name,
+            new List<Characteristic>(),
+            new List<Reservation>(),
+            roomDTO.ToRoomWithFloorAndLocation());
     }
 }

@@ -44,7 +44,7 @@ public class SelectionController : BaseController<SelectionController>
             _locationService.GetAllLocations().Select(LocationModel.FromLocation).ToList();
 
         List<FloorModel> floorModels =
-            _floorService.GetFloorsByLocationId(locationModels[0].Id).Select(FloorModel.FromFloor).ToList();
+            _floorService.GetAllFloorsByLocationId(locationModels[0].Id).Select(FloorModel.FromFloor).ToList();
 
         DateTimeSelectionModel dateTimeSelectionModel = new()
         {
@@ -80,7 +80,7 @@ public class SelectionController : BaseController<SelectionController>
             _locationService.GetAllLocations().Select(LocationModel.FromLocation).ToList();
 
         model.FloorModels =
-            _floorService.GetFloorsByLocationId(model.SelectedLocationId).Select(FloorModel.FromFloor).ToList();
+            _floorService.GetAllFloorsByLocationId(model.SelectedLocationId).Select(FloorModel.FromFloor).ToList();
 
         model.SelectedFloorId = model.SelectedFloorId == Guid.Empty ? model.FloorModels[0].Id : model.SelectedFloorId;
 
