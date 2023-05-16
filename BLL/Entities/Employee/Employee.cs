@@ -6,27 +6,29 @@ namespace BLL.Entities;
 
 public class Employee
 {
+    private readonly string _email;
     private readonly Guid _id;
     private readonly string _name;
-    private readonly string _email;
-    private string _hashedPassword;
     private readonly List<Reservation> _reservations;
+    private readonly Role _role;
 
     public Employee(Guid? id = null, string name = "", string email = "", string hashedPassword = "",
-        List<Reservation>? reservations = null)
+        List<Reservation>? reservations = null, Role? role = null)
     {
         _id = id ?? Guid.Empty;
         _name = name;
         _email = email;
-        _hashedPassword = hashedPassword;
+        HashedPassword = hashedPassword;
         _reservations = reservations ?? new List<Reservation>();
+        _role = role ?? new Role();
     }
 
     public Guid Id => _id;
     public string Name => _name;
     public string Email => _email;
     public List<Reservation> Reservations => _reservations;
-    public string HashedPassword => _hashedPassword;
+    public string HashedPassword { get; private set; }
+    public Role Role => _role;
 
     public bool HasReservationForDate(DateTime date)
     {
@@ -40,8 +42,10 @@ public class Employee
             Id = _id,
             Name = _name,
             Email = _email,
-            Password = _hashedPassword,
-            reservationDTOs = _reservations.Select(r => r.ToReservationDTO()).ToList()
+            Password = HashedPassword,
+            reservationDTOs = _reservations.Select(r => r.ToReservationDTO()).ToList(),
+            RoleId = _role.Id,
+            CompanyId = new Guid("9f5d2d3c-26cb-47ab-bfb8-097568addba2")
         };
     }
 
@@ -49,7 +53,7 @@ public class Employee
     {
         MD5 md5 = MD5.Create();
 
-        byte[] inputBytes = Encoding.ASCII.GetBytes(_hashedPassword);
+        byte[] inputBytes = Encoding.ASCII.GetBytes(HashedPassword);
         byte[] hash = md5.ComputeHash(inputBytes);
 
         StringBuilder sb = new();
@@ -59,6 +63,6 @@ public class Employee
             sb.Append(b.ToString("X2"));
         }
 
-        _hashedPassword = sb.ToString();
+        HashedPassword = sb.ToString();
     }
 }

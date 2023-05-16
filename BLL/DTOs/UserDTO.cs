@@ -34,4 +34,15 @@ public class UserDTO
             Name,
             Email);
     }
+
+    public Employee ToEmployeeWithRole()
+    {
+        return new Employee(
+            Id,
+            Name,
+            Email,
+            Password,
+            new List<Reservation>(),
+            roleDTO.ToRole());
+    }
 }

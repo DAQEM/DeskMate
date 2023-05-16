@@ -1,5 +1,4 @@
 @using System.Security.Claims
-@using System.Web
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light mb-3">
     <div class="container">
@@ -33,9 +32,12 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Workspace" asp-action="Index">Workspaces</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
-                    </li>
+                    if (User.IsInRole("CEO"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
+                        </li>
+                    }
                 }
             </ul>
             <ul class="navbar-nav justify-content-center align-items-center">
