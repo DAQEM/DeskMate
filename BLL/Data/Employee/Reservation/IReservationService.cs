@@ -6,9 +6,11 @@ public interface IReservationService
 
     Entities.Reservation? GetReservationById(Guid guid);
 
+    Entities.Reservation? GetReservationWithEmployeeWorkspaceRoomFloorAndLocationById(Guid guid);
+
     Entities.Reservation CreateReservation(Entities.Reservation reservation);
 
-    Entities.Reservation UpdateReservation(Entities.Reservation reservation);
+    void UpdateReservation(Entities.Reservation reservation);
 
     void DeleteReservation(Guid guid);
 

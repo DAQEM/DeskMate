@@ -3,5 +3,5 @@
 public interface IFloorService
 {
     List<Entities.Floor> GetAllFloors();
-    List<Entities.Floor> GetFloorsByLocationId(Guid locationId);
+    List<Entities.Floor> GetAllFloorsByLocationId(Guid locationId);
 }

@@ -1,7 +1,11 @@
-﻿using BLL.Data.Employee.Reservation;
+﻿using BLL.Data;
+using BLL.Data.Employee.Reservation;
+using BLL.Data.Floor;
 using BLL.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MVC.Models;
+using MVC.Models.Reservation;
 
 namespace MVC.Controllers;
 
@@ -9,11 +13,16 @@ namespace MVC.Controllers;
 [Route("Reservation")]
 public class ReservationController : BaseController<ReservationController>
 {
+    private readonly IFloorService _floorService;
+    private readonly ILocationService _locationService;
     private readonly IReservationService _reservationService;
 
-    public ReservationController(IReservationService reservationService)
+    public ReservationController(IReservationService reservationService, IFloorService floorService,
+        ILocationService locationService)
     {
         _reservationService = reservationService;
+        _floorService = floorService;
+        _locationService = locationService;
     }
 
     [HttpGet]
@@ -35,8 +44,47 @@ public class ReservationController : BaseController<ReservationController>
     [Route("edit/{guid}")]
     public IActionResult Edit(Guid guid)
     {
-        Reservation reservation = _reservationService.GetReservationById(guid);
-        return View(reservation);
+        EditReservationModel model = new();
+        Reservation? reservation =
+            _reservationService.GetReservationWithEmployeeWorkspaceRoomFloorAndLocationById(guid);
+
+        if (reservation != null)
+        {
+            model.DateTimeSelectionModel = new DateTimeSelectionModel
+            {
+                Date = reservation.StartDate,
+                StartTime = reservation.StartDate,
+                EndTime = reservation.EndDate
+            };
+        }
+
+        return View(model);
+    }
+
+    [HttpPost]
+    [Route("edit/{guid}")]
+    public IActionResult Edit(Guid guid, EditReservationModel model)
+    {
+        Console.WriteLine(ModelState.IsValid);
+        if (ModelState.IsValid)
+        {
+            Reservation? reservation =
+                _reservationService.GetReservationWithEmployeeWorkspaceRoomFloorAndLocationById(guid);
+
+            if (reservation != null)
+            {
+                _reservationService.UpdateReservation(new Reservation(
+                    reservation.Id,
+                    model.DateTimeSelectionModel.Date.Add(model.DateTimeSelectionModel.StartTime.TimeOfDay),
+                    model.DateTimeSelectionModel.Date.Add(model.DateTimeSelectionModel.EndTime.TimeOfDay),
+                    reservation.Employee,
+                    reservation.Workspace
+                ));
+                return RedirectToAction("Index");
+            }
+        }
+
+        return View(model);
     }
 
     [HttpGet]

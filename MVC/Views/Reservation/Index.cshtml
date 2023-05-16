@@ -69,6 +69,7 @@
     });
     
     function Fetch() {
+        PrintLoading();
         const dateFromElement = document.getElementById("date-from");
         const dateToElement = document.getElementById("date-to");
         const url = "/api/filtered/reservation/@User.FindFirst(ClaimTypes.NameIdentifier).Value?dateFrom=" + new Date(dateFromElement.value).toISOString() + "&dateTo=" + new Date(dateToElement.value).toISOString();
@@ -76,6 +77,7 @@
             url: url,
             type: "GET",
             success: function (data) {
+                ClearReservations();
                 data.reservations.forEach(r => PrintReservation(r));
             },
             error: function (data) {
@@ -127,6 +129,15 @@
         mainElement.appendChild(element);
     }
     
+    function PrintLoading() {
+        const element = document.createElement("div");
+        element.className = "my-3 text-center";
+        element.innerHTML = "Loading...";
+        const mainElement = document.getElementById("reservations");
+        mainElement.appendChild(element);
+
+    }
+    
     function getDot(reservation) {
         const startDate = new Date(reservation.startDate);
         const endDate = new Date(reservation.endDate);
@@ -151,8 +162,8 @@
     
     function ClearReservations() {     
         const reservationsElement = document.getElementById("reservations");
-        while (reservationsElement.firstChild) {
-            reservationsElement.removeChild(reservationsElement.firstChild);
+        while (reservationsElement.children.length > 1) {
+            reservationsElement.removeChild(reservationsElement.lastChild);
         }
     }
 </script>
