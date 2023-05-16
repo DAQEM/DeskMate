@@ -52,4 +52,15 @@ public class WorkspaceRepository : IWorkspaceRepository
             .Include(w => w.reservationDTOs)
             .ToList();
     }
+
+    public List<WorkspaceDTO> GetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloor()
+    {
+        return _context.workspace
+            .Include(w => w.workspaceCharacteristicsDTOs)
+            .ThenInclude(wc => wc.characteristicDTO)
+            .Include(w => w.reservationDTOs)
+            .Include(w => w.roomDTO)
+            .ThenInclude(r => r.floorDTO)
+            .ToList();
+    }
 }
