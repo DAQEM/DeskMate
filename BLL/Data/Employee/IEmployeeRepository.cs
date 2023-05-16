@@ -8,5 +8,5 @@ public interface IEmployeeRepository
     UserDTO? GetEmployeeById(Guid guid);
     List<UserDTO> GetEmployeeBySearch(string search);
     void CreateEmployee(UserDTO toUserDto);
-    //void EditEmployee(UserDTO userDto);
+    void EditEmployee(UserDTO userDto);
 }
