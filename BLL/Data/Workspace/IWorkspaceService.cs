@@ -15,4 +15,6 @@ public interface IWorkspaceService
     Workspace GetWorkspaceById(Guid workspaceId);
 
     List<Workspace> GetWorkspacesWithCharacteristicsAndReservationsByFloorId(Guid floorId);
+    
+    List<Workspace> GetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloor();
 }

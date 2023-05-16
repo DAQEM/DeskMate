@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using BLL.Entities;
 
 namespace BLL.DTOs
 {
@@ -9,5 +10,14 @@ namespace BLL.DTOs
         public Guid FloorId { get; set; }
         public FloorDTO floorDTO { get; set; }
         public ICollection<WorkspaceDTO> workplaceDTO { get; set; }
+
+        public Room ToRoom()
+        {
+            return new Room(
+                Id,
+                Name,
+                new List<Workspace>(),
+                floorDTO.ToFloor());
+        }
     }
 }

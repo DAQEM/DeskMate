@@ -86,4 +86,21 @@ public class WorkspaceService : IWorkspaceService
 
         return workspaces;
     }
+
+    public List<Workspace> GetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloor()
+    {
+        List<Workspace> workspaces = _workspaceRepository.GetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloor()
+            .Select(w => w.ToWorkspaceWithCharacteristicAndReservationAndRoomAndFloor())
+            .ToList();
+        
+        foreach (Workspace workspace in workspaces)
+        {
+            if (workspace.Reservations.Where(r => DateTime.Now >= r.StartDate && DateTime.Now < r.EndDate).Any())
+            {
+                workspace.Occupied = true;
+            }
+        }
+        return workspaces;
+    }
+    
 }
