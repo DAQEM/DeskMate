@@ -6,7 +6,7 @@ using MVC.Models.Dashboard;
 
 namespace MVC.Controllers;
 
-[Authorize]
+[Authorize(Roles = "CEO")]
 [Route("dashboard")]
 public class DashboardController : BaseController<DashboardController>
 {
@@ -53,6 +53,7 @@ public class DashboardController : BaseController<DashboardController>
             ModelState.AddModelError("Username", "An error occurred while creating the user");
             return View("Index", model);
         }
+
         return RedirectToAction(nameof(Details), new { id = employee.Id });
     }
 }

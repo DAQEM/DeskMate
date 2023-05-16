@@ -1,39 +1,34 @@
-﻿using BLL.DTOs;
-using System.Security.Cryptography;
-using System.Text;
+﻿namespace BLL.Data.Auth;
 
-namespace BLL.Data.Auth
+public class AuthService : IAuthService
 {
-	public class AuthService : IAuthService
-	{
-		private readonly IAuthRepository _authRepository;
+    private readonly IAuthRepository _authRepository;
 
-		public AuthService(IAuthRepository authRepository)
-		{
-			_authRepository = authRepository;
-		}
+    public AuthService(IAuthRepository authRepository)
+    {
+        _authRepository = authRepository;
+    }
 
-		public bool RegisterEmployeeIfNotTaken(Entities.Employee employee)
-		{
-			if (IsEmailTaken(employee.Email)) return true;
+    public bool RegisterEmployeeIfNotTaken(Entities.Employee employee)
+    {
+        if (IsEmailTaken(employee.Email)) return true;
 
-            employee.HashPassword();
+        employee.HashPassword();
 
-			_authRepository.RegisterEmployee(employee.ToUserDTO());
+        _authRepository.RegisterEmployee(employee.ToUserDTO());
 
-			return false;
-		}
+        return false;
+    }
 
-		public Entities.Employee? LoginEmployee(Entities.Employee employee)
-		{
-            employee.HashPassword();
+    public Entities.Employee? LoginEmployee(Entities.Employee employee)
+    {
+        employee.HashPassword();
 
-			return _authRepository.LoginEmployee(employee.ToUserDTO())?.ToEmployee();
-		}
+        return _authRepository.LoginEmployee(employee.ToUserDTO())?.ToEmployeeWithRole();
+    }
 
-		public bool IsEmailTaken(string email)
-		{
-			return _authRepository.IsEmailTaken(email);
-		}
+    public bool IsEmailTaken(string email)
+    {
+        return _authRepository.IsEmailTaken(email);
     }
 }
