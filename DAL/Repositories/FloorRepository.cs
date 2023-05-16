@@ -17,7 +17,7 @@ public class FloorRepository : IFloorRepository
         return _context.floor.ToList();
     }
 
-    public List<FloorDTO> GetFloorsByLocationId(Guid locationId)
+    public List<FloorDTO> GetAllFloorsByLocationId(Guid locationId)
     {
         return _context.floor.Where(f => f.LocationId == locationId).ToList();
     }

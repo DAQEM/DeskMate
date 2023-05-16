@@ -44,6 +44,17 @@ public class ReservationRepository : IReservationRepository
             .FirstOrDefault(r => r.Id == guid);
     }
 
+    public ReservationDTO? GetReservationWithEmployeeWorkspaceRoomFloorAndLocationById(Guid guid)
+    {
+        return _context.reservation
+            .Include(r => r.userDTO)
+            .Include(r => r.WorkspaceDTO)
+            .ThenInclude(w => w.roomDTO)
+            .ThenInclude(r => r.floorDTO)
+            .ThenInclude(f => f.locationDTO)
+            .FirstOrDefault(r => r.Id == guid);
+    }
+
     public ReservationDTO CreateReservation(ReservationDTO reservation)
     {
         _context.reservation.Add(reservation);
@@ -53,13 +64,19 @@ public class ReservationRepository : IReservationRepository
         return reservation;
     }
 
-    public ReservationDTO UpdateReservation(ReservationDTO reservation)
+    public void UpdateReservation(ReservationDTO updatedReservation)
     {
-        _context.Update(reservation);
+        ReservationDTO? existingReservation = _context.reservation.Find(updatedReservation.Id);
 
-        _context.SaveChanges();
+        if (existingReservation != null)
+        {
+            _context.Entry(existingReservation).State = EntityState.Detached;
 
-        return reservation;
+            _context.Attach(updatedReservation);
+            _context.Entry(updatedReservation).State = EntityState.Modified;
+
+            _context.SaveChanges();
+        }
     }
 
     public void DeleteReservation(Guid guid)

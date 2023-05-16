@@ -21,4 +21,15 @@ public class FloorDTO
             new Floorplan(),
             new List<Room>());
     }
+
+    public Floor ToFloorWithLocation()
+    {
+        return new Floor(
+            Id,
+            Name,
+            Number,
+            new Floorplan(),
+            new List<Room>(),
+            locationDTO.ToLocation());
+    }
 }
