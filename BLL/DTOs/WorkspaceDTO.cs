@@ -59,8 +59,9 @@ public class WorkspaceDTO
             Id,
             Name,
             new List<Characteristic>(),
-            new List<Reservation>());
-            roomDTO.ToRoom();
+            new List<Reservation>(),
+            roomDTO.ToRoom());
+            
             
 
         foreach (ReservationDTO reservationDTO in reservationDTOs)
