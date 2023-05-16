@@ -1,4 +1,5 @@
 ﻿using BLL.DTOs;
+using BLL.Entities;
 using BLL.Exception;
 
 namespace BLL.Data.Employee;
@@ -26,7 +27,7 @@ public class EmployeeService : IEmployeeService
             throw new ServiceException(nameof(Entities.Employee), guid.ToString());
         }
 
-        return employee.ToEmployee();
+        return employee.ToEmployeeWithRole();
     }
 
     public List<Entities.Employee> GetEmployeeBySearch(string search)
@@ -53,5 +54,42 @@ public class EmployeeService : IEmployeeService
         }
 
         return null;
+    }
+
+  public Entities.Employee? EditEmployee(Entities.Employee currentEmployee, Entities.Employee editedEmployee)
+    {
+        if (!string.IsNullOrWhiteSpace(editedEmployee.HashedPassword) && !string.IsNullOrEmpty(editedEmployee.HashedPassword))
+        {
+            editedEmployee.HashPassword();
+
+            if (currentEmployee.HashedPassword != editedEmployee.HashedPassword)
+            {
+                currentEmployee = new(
+                    currentEmployee.Id,
+                    currentEmployee.Name,
+                    currentEmployee.Email,
+                    editedEmployee.HashedPassword,
+                    role: currentEmployee.Role
+                );
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(editedEmployee.Name) && !string.IsNullOrEmpty(editedEmployee.Name))
+        {
+            if (currentEmployee.Name != editedEmployee.Name)
+            {
+                currentEmployee = new(
+                    currentEmployee.Id,
+                    editedEmployee.Name,
+                    currentEmployee.Email,
+                    currentEmployee.HashedPassword,
+                    role: currentEmployee.Role
+                );
+            }
+        }
+
+        _employeeRepository.EditEmployee(currentEmployee.ToUserDTO());
+
+        return currentEmployee;
     }
 }

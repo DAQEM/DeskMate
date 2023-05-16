@@ -43,7 +43,9 @@ public class Employee
             Name = _name,
             Email = _email,
             Password = HashedPassword,
-            reservationDTOs = _reservations.Select(r => r.ToReservationDTO()).ToList()
+            reservationDTOs = _reservations.Select(r => r.ToReservationDTO()).ToList(),
+            RoleId = _role.Id,
+            CompanyId = new Guid("9f5d2d3c-26cb-47ab-bfb8-097568addba2")
         };
     }
 
