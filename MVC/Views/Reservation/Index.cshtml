@@ -27,11 +27,21 @@
 <div class="container" id="reservations">
     <div class="row my-1">
         <div class="col-md-1"></div>
-        <div class="col-md-2"><strong>Name</strong></div>
-        <div class="col-md-2"><strong>Workspace Name</strong></div>
-        <div class="col-md-2"><strong>Start Date</strong></div>
-        <div class="col-md-2"><strong>End Date</strong></div>
-        <div class="col-md-3"><strong>Actions</strong></div>
+        <div class="col-md-2">
+            <strong>Name</strong>
+        </div>
+        <div class="col-md-2">
+            <strong>Workspace Name</strong>
+        </div>
+        <div class="col-md-2">
+            <strong>Start Date</strong>
+        </div>
+        <div class="col-md-2">
+            <strong>End Date</strong>
+        </div>
+        <div class="col-md-3">
+            <strong>Actions</strong>
+        </div>
     </div>
 </div>
 
@@ -75,12 +85,12 @@
     }
 
     function Edit(event) {
-        const id = event.target.parentNode.id;
+        const id = event.target.parentNode.parentNode.id;
         window.location.href = "/Reservation/Edit/" + id;
     }
     
     function Delete(event) {
-            const id = event.target.parentNode.id;
+            const id = event.target.parentNode.parentNode.id;
             const url = "/Reservation/Delete/" + id;
             $.ajax({
                 url: url,
@@ -112,7 +122,7 @@
             <p class="col-md-2">${reservation.workspace.name}</p>
             <p class="col-md-2">${startDate.toLocaleString()}</p>
             <p class="col-md-2">${endDate.toLocaleString()}</p>
-            <div class="col-md-3">${getButtons(reservation)}</div>
+            <div id="" class="col-md-3">${getButtons(reservation)}</div>
         `;
         mainElement.appendChild(element);
     }
