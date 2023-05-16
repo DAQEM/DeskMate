@@ -2,6 +2,7 @@
 @model BLL.Entities.Workspace
 
 <tr>
+    <td>@Model.Room.Name</td>
     <td>@Model.Name</td>
     <td>
         @foreach (Characteristic characteristic in Model.Characteristics)
