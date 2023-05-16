@@ -17,4 +17,5 @@ public interface IEmployeeService
     ///     Otherwise returns null.
     /// </returns>
     Entities.Employee? CreateEmployee(Entities.Employee employee);
+    //Entities.Employee? EditEmployee(Entities.Employee employee);
 }

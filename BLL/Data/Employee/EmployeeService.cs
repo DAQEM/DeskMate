@@ -54,4 +54,22 @@ public class EmployeeService : IEmployeeService
 
         return null;
     }
+
+/*    public Entities.Employee? EditEmployee(Entities.Employee employee)
+    {
+        if (!string.IsNullOrWhiteSpace(employee.Name) &&
+            !string.IsNullOrWhiteSpace(employee.HashedPassword))
+        {
+            Entities.Employee newEmployee = new(
+                employee.Id,
+                employee.Name,
+                employee.Email,
+                employee.HashedPassword
+            );
+            newEmployee.HashPassword();
+            _employeeRepository.EditEmployee(newEmployee.ToUserDTO());
+            return newEmployee;
+        }));
+        return new Entities.Employee();
+    }*/
 }
