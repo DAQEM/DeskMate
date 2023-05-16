@@ -14,8 +14,8 @@ public class FloorService : IFloorService
         return _floorRepository.GetAllFloors().Select(f => f.ToFloor()).ToList();
     }
 
-    public List<Entities.Floor> GetFloorsByLocationId(Guid locationId)
+    public List<Entities.Floor> GetAllFloorsByLocationId(Guid locationId)
     {
-        return _floorRepository.GetFloorsByLocationId(locationId).Select(f => f.ToFloor()).ToList();
+        return _floorRepository.GetAllFloorsByLocationId(locationId).Select(f => f.ToFloor()).ToList();
     }
 }

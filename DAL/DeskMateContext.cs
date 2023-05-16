@@ -83,4 +83,9 @@ public class DeskMateContext : DbContext
             .WithOne(wc => wc.characteristicDTO)
             .HasForeignKey(wc => wc.CharacteristicId);
     }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.EnableSensitiveDataLogging();
+    }
 }

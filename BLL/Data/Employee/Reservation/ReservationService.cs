@@ -21,14 +21,20 @@ public class ReservationService : IReservationService
         return _reservationRepository.GetReservationById(guid)?.ToReservation();
     }
 
+    public Entities.Reservation? GetReservationWithEmployeeWorkspaceRoomFloorAndLocationById(Guid guid)
+    {
+        return _reservationRepository.GetReservationWithEmployeeWorkspaceRoomFloorAndLocationById(guid)
+            ?.ToReservationWithEmployeeWorkspaceRoomFloorAndLocation();
+    }
+
     public Entities.Reservation CreateReservation(Entities.Reservation reservation)
     {
         return _reservationRepository.CreateReservation(reservation.ToSmallReservationDTO()).ToSmallReservation();
     }
 
-    public Entities.Reservation UpdateReservation(Entities.Reservation reservation)
+    public void UpdateReservation(Entities.Reservation reservation)
     {
-        return _reservationRepository.UpdateReservation(reservation.ToSmallReservationDTO()).ToSmallReservation();
+        _reservationRepository.UpdateReservation(reservation.ToSmallReservationDTO());
     }
 
     public void DeleteReservation(Guid guid)

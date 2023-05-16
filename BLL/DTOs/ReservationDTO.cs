@@ -37,4 +37,14 @@ public class ReservationDTO
     {
         return new Reservation(Id, StartDate, EndDate);
     }
+
+    public Reservation? ToReservationWithEmployeeWorkspaceRoomFloorAndLocation()
+    {
+        return new Reservation(
+            Id,
+            StartDate,
+            EndDate,
+            userDTO.ToEmployee(),
+            WorkspaceDTO.ToWorkspaceWithRoomFloorAndLocation());
+    }
 }

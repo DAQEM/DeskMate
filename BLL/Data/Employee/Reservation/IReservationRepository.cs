@@ -8,9 +8,11 @@ public interface IReservationRepository
 
     ReservationDTO? GetReservationById(Guid guid);
 
+    ReservationDTO? GetReservationWithEmployeeWorkspaceRoomFloorAndLocationById(Guid guid);
+
     ReservationDTO CreateReservation(ReservationDTO reservation);
 
-    ReservationDTO UpdateReservation(ReservationDTO reservation);
+    void UpdateReservation(ReservationDTO reservation);
 
     void DeleteReservation(Guid guid);
     List<ReservationDTO> GetFilteredReservationsByEmployeeId(Guid employeeId, DateTime dateFrom, DateTime dateTo);
