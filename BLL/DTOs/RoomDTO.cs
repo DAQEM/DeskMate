@@ -28,4 +28,20 @@ public class RoomDTO
             new List<Workspace>(),
             floorDTO.ToFloorWithLocation());
     }
+
+    public Room ToRoomWithWorkspaces()
+    {
+        return new Room(
+            Id,
+            Name,
+            workplaceDTO.Select(w => w.ToWorkspace()).ToList());
+    }
+
+    public Room ToRoomWithWorkspacesAndReservations()
+    {
+        return new Room(
+            Id,
+            Name,
+            workplaceDTO.Select(w => w.ToWorkspaceWithReservations()).ToList());
+    }
 }

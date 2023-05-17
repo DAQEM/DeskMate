@@ -16,18 +16,14 @@ public class WorkspaceDTO
     {
         return new Workspace(
             Id,
-            Name,
-            reservations: new List<Reservation>(),
-            characteristics: new List<Characteristic>());
+            Name);
     }
 
     public Workspace ToWorkspaceWithCharacteristicAndReservation()
     {
         Workspace workspace = new(
             Id,
-            Name,
-            new List<Characteristic>(),
-            new List<Reservation>());
+            Name);
 
         foreach (ReservationDTO reservationDTO in reservationDTOs)
         {
@@ -58,9 +54,7 @@ public class WorkspaceDTO
         Workspace workspace = new(
             Id,
             Name,
-            new List<Characteristic>(),
-            new List<Reservation>(),
-            roomDTO.ToRoom());
+            room: roomDTO.ToRoom());
 
 
         foreach (ReservationDTO reservationDTO in reservationDTOs)
@@ -98,8 +92,15 @@ public class WorkspaceDTO
         return new Workspace(
             Id,
             Name,
-            new List<Characteristic>(),
-            new List<Reservation>(),
-            roomDTO.ToRoomWithFloorAndLocation());
+            room: roomDTO.ToRoomWithFloorAndLocation());
+    }
+
+    public Workspace ToWorkspaceWithReservations()
+    {
+        return new Workspace(
+            Id,
+            Name,
+            reservations: reservationDTOs.Select(r => r.ToSmallReservation()).ToList()
+        );
     }
 }

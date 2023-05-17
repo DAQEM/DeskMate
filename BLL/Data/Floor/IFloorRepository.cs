@@ -6,4 +6,5 @@ public interface IFloorRepository
 {
     List<FloorDTO> GetAllFloors();
     List<FloorDTO> GetAllFloorsByLocationId(Guid locationId);
+    FloorDTO? GetFloorWithRoomsAndWorkspacesWithOccupancyById(Guid id);
 }

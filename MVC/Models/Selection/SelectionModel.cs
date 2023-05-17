@@ -1,4 +1,6 @@
-﻿namespace MVC.Models;
+﻿using BLL.Entities;
+
+namespace MVC.Models;
 
 public class SelectionModel
 {
@@ -12,5 +14,6 @@ public class SelectionModel
     public Guid SelectedLocationId { get; set; } = new();
     public List<FloorModel> FloorModels { get; set; } = new();
     public Guid SelectedFloorId { get; set; } = new();
+    public Floor SelectedFloor { get; set; } = new();
     public Dictionary<string, string> Reservations { get; set; } = new();
 }

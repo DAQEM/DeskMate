@@ -46,12 +46,16 @@ public class SelectionController : BaseController<SelectionController>
         List<FloorModel> floorModels =
             _floorService.GetAllFloorsByLocationId(locationModels[0].Id).Select(FloorModel.FromFloor).ToList();
 
+
         DateTimeSelectionModel dateTimeSelectionModel = new()
         {
             Date = DateTime.Now,
             StartTime = DateTime.Now,
             EndTime = DateTime.Now.AddHours(1)
         };
+
+        Floor? selectedFloor = _floorService.GetFloorWithRoomsAndWorkspacesWithOccupancyById(floorModels[0].Id,
+            dateTimeSelectionModel.StartTime, dateTimeSelectionModel.EndTime);
 
         List<WorkspacePropModel> workspaceModels =
             _workspaceService.GetWorkspacesWithCharacteristicsAndReservationsByFloorId(floorModels[0].Id)
@@ -66,7 +70,8 @@ public class SelectionController : BaseController<SelectionController>
             LocationModels = locationModels,
             FloorModels = floorModels,
             WorkspaceModels = workspaceModels,
-            DateTimeSelectionModel = dateTimeSelectionModel
+            DateTimeSelectionModel = dateTimeSelectionModel,
+            SelectedFloor = selectedFloor
         };
 
         return View(model);
@@ -91,6 +96,9 @@ public class SelectionController : BaseController<SelectionController>
         DateTime endDate = DateTime.ParseExact(model.DateTimeSelectionModel.Date.ToString("yyyy-MM-dd") + " " +
                                                model.DateTimeSelectionModel.EndTime.ToString("HH:mm:ss"),
             "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+
+        model.SelectedFloor = _floorService.GetFloorWithRoomsAndWorkspacesWithOccupancyById(model.SelectedFloorId,
+            startDate, endDate);
 
         model.WorkspaceModels =
             _workspaceService.GetWorkspacesWithCharacteristicsAndReservationsByFloorId(model.SelectedFloorId)
