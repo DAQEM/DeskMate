@@ -9,6 +9,8 @@ public class WorkspaceDTO
     [Column(TypeName = "varchar(200)")] public string Name { get; set; }
     public Guid RoomId { get; set; }
     public RoomDTO roomDTO { get; set; }
+    public Guid? WorkspacePlacementId { get; set; }
+    public WorkspacePlacementDTO? workspacePlacementDTO { get; set; }
     public ICollection<ReservationDTO> reservationDTOs { get; set; }
     public ICollection<WorkspaceCharacteristicsDTO> workspaceCharacteristicsDTOs { get; set; }
 
@@ -95,12 +97,13 @@ public class WorkspaceDTO
             room: roomDTO.ToRoomWithFloorAndLocation());
     }
 
-    public Workspace ToWorkspaceWithReservations()
+    public Workspace ToWorkspaceWithReservationsAndPlacement()
     {
         return new Workspace(
             Id,
             Name,
-            reservations: reservationDTOs.Select(r => r.ToSmallReservation()).ToList()
+            reservations: reservationDTOs.Select(r => r.ToSmallReservation()).ToList(),
+            workspacePlacement: workspacePlacementDTO?.ToWorkspacePlacement()
         );
     }
 }

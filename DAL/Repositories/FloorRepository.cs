@@ -29,6 +29,9 @@ public class FloorRepository : IFloorRepository
             .Include(f => f.roomDTO)
             .ThenInclude(r => r.workplaceDTO)
             .ThenInclude(r => r.reservationDTOs)
+            .Include(f => f.roomDTO)
+            .ThenInclude(r => r.workplaceDTO)
+            .ThenInclude(r => r.workspacePlacementDTO)
             .FirstOrDefault(f => f.Id == id);
     }
 }

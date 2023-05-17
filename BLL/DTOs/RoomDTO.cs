@@ -37,11 +37,11 @@ public class RoomDTO
             workplaceDTO.Select(w => w.ToWorkspace()).ToList());
     }
 
-    public Room ToRoomWithWorkspacesAndReservations()
+    public Room ToRoomWithWorkspacesAndReservationsAndPlacement()
     {
         return new Room(
             Id,
             Name,
-            workplaceDTO.Select(w => w.ToWorkspaceWithReservations()).ToList());
+            workplaceDTO.Select(w => w.ToWorkspaceWithReservationsAndPlacement()).ToList());
     }
 }

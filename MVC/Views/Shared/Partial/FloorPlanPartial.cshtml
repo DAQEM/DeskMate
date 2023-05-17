@@ -5,10 +5,7 @@
     int innerContainerWidth = 0;
     int innerContainerHeight = 0;
 
-    const int space = 50;
-    const int border = 150;
-    const int width = 120;
-    const int height = 80;
+    const int border = 100;
 }
 
 <style>
@@ -49,10 +46,11 @@
 
 <div id="floor-plan-container">
     <div id="inner-container">
-        @for (int i = 0; i < workspaces.Count; i++)
+        @foreach (Workspace workspace in workspaces)
         {
-            int right = i * (width + space) + width + border * 2;
-            int bottom = border * 2;
+            WorkspacePlacement placement = workspace.WorkspacePlacement;
+            int right = placement.PositionX + placement.Width + border * 2;
+            int bottom = placement.PositionY + placement.Height + border * 2;
             if (right > innerContainerWidth)
             {
                 innerContainerWidth = right;
@@ -70,20 +68,25 @@
             }
         </style>
 
-        @for (int i = 0; i < workspaces.Count; i++)
+        @foreach (Workspace workspace in workspaces)
         {
-            Workspace workspace = workspaces[i];
-            int right = i * (width + space) + border;
-            int bottom = border;
+            WorkspacePlacement placement = workspace.WorkspacePlacement;
+            int right = placement.PositionX + border;
+            int bottom = placement.PositionY + border;
 
             <div class="table"
-                 style="left: @(right)px; top: @(bottom)px; width: @(width)px; height: @(height)px;">
+                 style="left: @(right)px; top: @(bottom)px; width: @(placement.Width)px; height: @(placement.Height)px; transform: rotate(@(placement.Rotation)deg)">
                 <div class="table-dot @(workspace.Occupied ? "bg-danger" : "bg-success")"
-                     style="left: @(width / 2 - 18)px; top: -12px">
+                     style="left: @(placement.Width / 2 - 18)px; top: -12px">
                 </div>
-                <p class=" w-100 m-0 text-center" style="margin-top: 28px !important;">@workspace.Name</p>
+                @{
+                    int backwardsRotation = placement.Rotation > 90 ? 180 : 0;
+                }
+                <p class=" w-100 m-0 text-center" style="margin-top: 28px !important; transform: rotate(@(backwardsRotation)deg)">@workspace.Name</p>
             </div>
         }
+
+
     </div>
 </div>
 

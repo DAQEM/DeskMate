@@ -43,13 +43,13 @@ public class FloorDTO
             roomDTO.Select(r => r.ToRoomWithWorkspaces()).ToList());
     }
 
-    public Floor ToFloorWithRoomsWorkspacesAndReservations()
+    public Floor ToFloorWithRoomsWorkspacesAndReservationsAndPlacement()
     {
         return new Floor(
             Id,
             Name,
             Number,
             new Floorplan(),
-            roomDTO.Select(r => r.ToRoomWithWorkspacesAndReservations()).ToList());
+            roomDTO.Select(r => r.ToRoomWithWorkspacesAndReservationsAndPlacement()).ToList());
     }
 }

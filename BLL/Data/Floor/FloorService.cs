@@ -25,7 +25,7 @@ public class FloorService : IFloorService
         DateTime endDate)
     {
         Entities.Floor? floor = _floorRepository.GetFloorWithRoomsAndWorkspacesWithOccupancyById(id)
-            ?.ToFloorWithRoomsWorkspacesAndReservations();
+            ?.ToFloorWithRoomsWorkspacesAndReservationsAndPlacement();
 
         if (floor != null)
         {
