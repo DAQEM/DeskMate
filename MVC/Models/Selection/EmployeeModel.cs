@@ -1,6 +1,4 @@
-﻿using BLL.Entities;
-
-namespace MVC.Models;
+﻿namespace MVC.Models;
 
 public class EmployeeModel
 {
@@ -11,7 +9,7 @@ public class EmployeeModel
         Email = "";
     }
 
-    public EmployeeModel(Employee employee)
+    public EmployeeModel(BLL.Entities.Employee employee)
     {
         Id = employee.Id;
         Name = employee.Name;

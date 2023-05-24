@@ -9,16 +9,20 @@ public class Workspace
     private readonly string _name;
     private readonly List<Reservation> _reservations;
     private readonly Room _room;
+    private readonly WorkspacePlacement _workspacePlacement;
     private bool _occupied = false;
 
     public Workspace(Guid? id = null, string name = "",
-        List<Characteristic>? characteristics = null, List<Reservation>? reservations = null, Room? room = null)
+        List<Characteristic>? characteristics = null,
+        List<Reservation>? reservations = null, Room? room = null,
+        WorkspacePlacement? workspacePlacement = null)
     {
         _id = id ?? Guid.Empty;
         _name = name;
         _characteristics = characteristics ?? new List<Characteristic>();
         _reservations = reservations ?? new List<Reservation>();
         _room = room;
+        _workspacePlacement = workspacePlacement ?? new WorkspacePlacement();
     }
 
     public Guid Id => _id;
@@ -26,6 +30,7 @@ public class Workspace
     public List<Characteristic> Characteristics => _characteristics;
     public List<Reservation> Reservations => _reservations;
     public Room Room => _room;
+    public WorkspacePlacement WorkspacePlacement => _workspacePlacement;
 
     public bool Occupied
     {

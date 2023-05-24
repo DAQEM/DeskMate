@@ -23,8 +23,7 @@ public class UserDTO
             Id,
             Name,
             Email,
-            Password,
-            new List<Reservation>());
+            Password);
     }
 
     public Employee ToSmallEmployee()
@@ -33,5 +32,16 @@ public class UserDTO
             Id,
             Name,
             Email);
+    }
+
+    public Employee ToEmployeeWithRole()
+    {
+        return new Employee(
+            Id,
+            Name,
+            Email,
+            Password,
+            new List<Reservation>(),
+            roleDTO.ToRole());
     }
 }

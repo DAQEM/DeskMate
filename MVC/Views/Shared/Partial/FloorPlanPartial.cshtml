@@ -1,0 +1,133 @@
+﻿@using BLL.Entities
+@model BLL.Entities.Floor
+@{
+    List<Workspace> workspaces = Model.Rooms.SelectMany(r => r.Workspaces).ToList();
+    int innerContainerWidth = 0;
+    int innerContainerHeight = 0;
+
+    const int border = 100;
+}
+
+<style>
+    #floor-plan-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        min-height: 300px;
+        max-height: 600px;
+        border: 15px solid #eee;
+        border-radius: 20px;
+    }
+
+    #inner-container {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .table {
+        position: absolute;
+        border-radius: 15px;
+        background-color: #d7dfe5;
+    }
+    
+    .table-dot {
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        background-color: green;
+        border: 5px solid #fff;
+        position: absolute;
+    }
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
+
+<div id="floor-plan-container">
+    <div id="inner-container">
+        @foreach (Workspace workspace in workspaces)
+        {
+            WorkspacePlacement placement = workspace.WorkspacePlacement;
+            int right = placement.PositionX + placement.Width + border * 2;
+            int bottom = placement.PositionY + placement.Height + border * 2;
+            if (right > innerContainerWidth)
+            {
+                innerContainerWidth = right;
+            }
+            if (bottom > innerContainerHeight)
+            {
+                innerContainerHeight = bottom;
+            }
+        }
+
+        <style>
+            #inner-container {
+                width: @(innerContainerWidth)px;
+                height: @(innerContainerHeight)px;
+            }
+        </style>
+
+        @foreach (Workspace workspace in workspaces)
+        {
+            WorkspacePlacement placement = workspace.WorkspacePlacement;
+            int right = placement.PositionX + border;
+            int bottom = placement.PositionY + border;
+
+            <div class="table"
+                 style="left: @(right)px; top: @(bottom)px; width: @(placement.Width)px; height: @(placement.Height)px; transform: rotate(@(placement.Rotation)deg)">
+                <div class="table-dot @(workspace.Occupied ? "bg-danger" : "bg-success")"
+                     style="left: @(placement.Width / 2 - 18)px; top: -12px">
+                </div>
+                @{
+                    int backwardsRotation = placement.Rotation > 90 ? 180 : 0;
+                }
+                <p class=" w-100 m-0 text-center" style="margin-top: 28px !important; transform: rotate(@(backwardsRotation)deg)">@workspace.Name</p>
+            </div>
+        }
+
+
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+<script>
+    $(document).ready(function () {
+        const floorPlanContainer = $('#floor-plan-container');
+        const innerContainer = $('#inner-container');
+        console.log(innerContainer.height())
+        floorPlanContainer.css('height', innerContainer.height() + 30);
+        const zoomLevel = 1;
+        let pointerX;
+        let pointerY;
+        innerContainer.draggable({
+            start: function(evt, ui) {
+                pointerY = (evt.pageY - floorPlanContainer.offset().top) / zoomLevel - parseInt($(evt.target).css('top'));
+                pointerX = (evt.pageX - floorPlanContainer.offset().left) / zoomLevel - parseInt($(evt.target).css('left'));
+            },
+            drag: function(evt,ui) {
+                const canvasTop = floorPlanContainer.offset().top;
+                const canvasLeft = floorPlanContainer.offset().left;
+                const canvasHeight = floorPlanContainer.height();
+                const canvasWidth = floorPlanContainer.width();
+        
+                // Fix for zoom
+                ui.position.top = Math.round((evt.pageY - canvasTop) / zoomLevel - pointerY); 
+                ui.position.left = Math.round((evt.pageX - canvasLeft) / zoomLevel - pointerX); 
+        
+                // Check if element is outside canvas
+                if (ui.position.left < canvasWidth - ui.helper.width()) ui.position.left = canvasWidth - ui.helper.width();
+                if (ui.position.top < canvasHeight - ui.helper.height()) ui.position.top = canvasHeight - ui.helper.height();
+                if (ui.position.left > 0) ui.position.left = 0;
+                if (ui.position.top > 0) ui.position.top = 0;
+        
+                // Finally, make sure offset aligns with position
+                ui.offset.top = Math.round(ui.position.top + canvasTop);
+                ui.offset.left = Math.round(ui.position.left + canvasLeft);
+            },
+            stop: function(event, ui) {
+            }
+        });
+    });
+</script>

@@ -9,6 +9,8 @@ public class WorkspaceDTO
     [Column(TypeName = "varchar(200)")] public string Name { get; set; }
     public Guid RoomId { get; set; }
     public RoomDTO roomDTO { get; set; }
+    public Guid? WorkspacePlacementId { get; set; }
+    public WorkspacePlacementDTO? workspacePlacementDTO { get; set; }
     public ICollection<ReservationDTO> reservationDTOs { get; set; }
     public ICollection<WorkspaceCharacteristicsDTO> workspaceCharacteristicsDTOs { get; set; }
 
@@ -16,18 +18,14 @@ public class WorkspaceDTO
     {
         return new Workspace(
             Id,
-            Name,
-            reservations: new List<Reservation>(),
-            characteristics: new List<Characteristic>());
+            Name);
     }
 
     public Workspace ToWorkspaceWithCharacteristicAndReservation()
     {
         Workspace workspace = new(
             Id,
-            Name,
-            new List<Characteristic>(),
-            new List<Reservation>());
+            Name);
 
         foreach (ReservationDTO reservationDTO in reservationDTOs)
         {
@@ -58,9 +56,7 @@ public class WorkspaceDTO
         Workspace workspace = new(
             Id,
             Name,
-            new List<Characteristic>(),
-            new List<Reservation>(),
-            roomDTO.ToRoom());
+            room: roomDTO.ToRoom());
 
 
         foreach (ReservationDTO reservationDTO in reservationDTOs)
@@ -101,8 +97,16 @@ public class WorkspaceDTO
         return new Workspace(
             Id,
             Name,
-            new List<Characteristic>(),
-            new List<Reservation>(),
-            roomDTO.ToRoomWithFloorAndLocation());
+            room: roomDTO.ToRoomWithFloorAndLocation());
+    }
+
+    public Workspace ToWorkspaceWithReservationsAndPlacement()
+    {
+        return new Workspace(
+            Id,
+            Name,
+            reservations: reservationDTOs.Select(r => r.ToSmallReservation()).ToList(),
+            workspacePlacement: workspacePlacementDTO?.ToWorkspacePlacement()
+        );
     }
 }
