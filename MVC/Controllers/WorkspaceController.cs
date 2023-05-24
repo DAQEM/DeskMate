@@ -25,4 +25,14 @@ public class WorkspaceController : BaseController<WorkspaceController>
         WorkspaceListModel model = new() { Workspaces = workspaces };
         return View(model);
     }
+
+    [HttpGet]
+    [Route("Detail")]
+    public IActionResult Detail(Guid id)
+    {
+        Workspace workspace = _workspaceService.GetWorkspaceWithCharateristicsAndReservationsAndRoomAndFloorByWorkplaceId(id);
+        List <Reservation> reservations = _workspaceService.GetReservationsAndUserFromCurrentDate(workspace);
+        WorkspaceDetailModel model = new(workspace.Name, workspace.Room.Floor.Name, workspace.Room.Name, workspace.Characteristics, reservations);
+        return View(model);
+    }
 }

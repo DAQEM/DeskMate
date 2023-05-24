@@ -68,7 +68,10 @@ public class WorkspaceDTO
             Reservation reservation = new(
                 reservationDTO.Id,
                 reservationDTO.StartDate,
-                reservationDTO.EndDate);
+                reservationDTO.EndDate,
+                employee: reservationDTO.userDTO.ToSmallEmployee()
+                );
+
 
             workspace.Reservations.Add(reservation);
         }

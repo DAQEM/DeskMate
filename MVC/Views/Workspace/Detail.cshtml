@@ -1,0 +1,49 @@
+﻿@using BLL.Entities
+
+
+@{
+    ViewBag.Title = "Workspace details";
+    Layout = "_Layout";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="card" style="width: 50rem;">
+            <div class="card-body">
+                <h2 class="card-title">@Model.Name</h2>
+                <h3 class="card-subtitle mb-2 text-muted">@Model.Floor, @Model.Room</h3>
+                <h4 class="card-text">
+                    @foreach (Characteristic characteristic in Model.Characteristics)
+                    {
+                        <span class="badge badge-primary mr-2">@characteristic.Amount @characteristic.Type</span>
+                    }
+                </h4>
+                <h4>Reservations:</h4>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Employee</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach(Reservation reservation in Model.Reservations)
+                        {
+                            <tr>
+                                <td>@reservation.Employee.Name</td>
+                                <td>@reservation.StartDate</td>
+                                <td>@reservation.EndDate</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
