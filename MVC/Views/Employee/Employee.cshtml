@@ -24,12 +24,12 @@ else
                 </div>
 
                 <p class="m-0">
-                    <strong>Role:</strong>@Model.Role.Type
+                    <strong>Role: </strong>@Model.Role.Type
                 </p>
                 <p class="m-0">
-                    <strong>Email:</strong> @Model.Email
+                    <strong>Email: </strong>@Model.Email
                 </p>
-                <p class="m-0"><strong>Phone:</strong> +31 123 456 789</p>
+                <p class="m-0"><strong>Phone: </strong>+31 123 456 789</p>
                 @if (User.FindFirst(ClaimTypes.NameIdentifier)?.Value == Model.Id.ToString())
                 {
                     <button class="btn btn--blue" onclick="location.href = '/Employee/Edit/@Model.Id.ToString()'">Edit Account Details</button>

@@ -65,7 +65,6 @@ public class ReservationController : BaseController<ReservationController>
     [Route("edit/{guid}")]
     public IActionResult Edit(Guid guid, EditReservationModel model)
     {
-        Console.WriteLine(ModelState.IsValid);
         if (ModelState.IsValid)
         {
             Reservation? reservation =
