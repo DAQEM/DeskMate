@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Security.Claims;
 using BLL.Data.Employee;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models;
@@ -17,7 +16,6 @@ public class HomeController : BaseController<HomeController>
 
     public IActionResult Index()
     {
-        Console.WriteLine(User.FindFirst(ClaimTypes.Role));
         return View();
     }
 

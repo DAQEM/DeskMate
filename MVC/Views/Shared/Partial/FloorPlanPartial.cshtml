@@ -2,72 +2,111 @@
 @model BLL.Entities.Floor
 @{
     List<Workspace> workspaces = Model.Rooms.SelectMany(r => r.Workspaces).ToList();
-    int innerContainerWidth = 0;
-    int innerContainerHeight = 0;
 
     const int border = 100;
+    int innerContainerWidth = 0;
+    int innerContainerHeight = 0;
+    @foreach (Room room in Model.Rooms)
+    {
+        if (room.Workspaces.Any())
+        {
+            int minX = int.MaxValue;
+            int minY = int.MaxValue;
+            int maxX = int.MinValue;
+            int maxY = int.MinValue;
+
+            foreach (Workspace workspace in room.Workspaces)
+            {
+                WorkspacePlacement placement = workspace.WorkspacePlacement;
+                int rotatedX = placement.PositionX;
+                int rotatedY = placement.PositionY;
+                int rotatedWidth = placement.Width;
+                int rotatedHeight = placement.Height;
+
+                if (placement.Rotation != 0)
+                {
+                    // Adjust the position and size based on rotation
+                    int centerX = placement.PositionX + placement.Width / 2;
+                    int centerY = placement.PositionY + placement.Height / 2;
+                    double radianAngle = placement.Rotation * Math.PI / 180.0;
+
+                    rotatedX = centerX + (int)((placement.PositionX - centerX) * Math.Cos(radianAngle) + (placement.PositionY - centerY) * Math.Sin(radianAngle));
+                    rotatedY = centerY + (int)((placement.PositionX - centerX) * Math.Sin(radianAngle) + (placement.PositionY - centerY) * Math.Cos(radianAngle));
+                    rotatedWidth = (int)(placement.Width * Math.Cos(radianAngle) + placement.Height * Math.Sin(radianAngle));
+                    rotatedHeight = (int)(placement.Width * Math.Sin(radianAngle) + placement.Height * Math.Cos(radianAngle));
+                }
+
+                minX = Math.Min(minX, rotatedX);
+                minY = Math.Min(minY, rotatedY);
+                maxX = Math.Max(maxX, rotatedX + rotatedWidth);
+                maxY = Math.Max(maxY, rotatedY + rotatedHeight);
+            }
+
+            int width = maxX - minX + border * 2;
+            int height = maxY - minY + border * 2;
+            int left = minX;
+            int top = minY;
+
+            innerContainerWidth = Math.Max(innerContainerWidth, left + width);
+            innerContainerHeight = Math.Max(innerContainerHeight, top + height);
+        }
+    }
 }
 
-<style>
-    #floor-plan-container {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        min-height: 300px;
-        max-height: 600px;
-        border: 15px solid #eee;
-        border-radius: 20px;
-    }
-
-    #inner-container {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-    }
-
-    .table {
-        position: absolute;
-        border-radius: 15px;
-        background-color: #d7dfe5;
-    }
-    
-    .table-dot {
-        border-radius: 50%;
-        width: 36px;
-        height: 36px;
-        background-color: green;
-        border: 5px solid #fff;
-        position: absolute;
-    }
-</style>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
-
 <div id="floor-plan-container">
+
+    @* Draggable inner container *@
     <div id="inner-container">
-        @foreach (Workspace workspace in workspaces)
+
+        @* Rooms *@
+        @foreach (Room room in Model.Rooms)
         {
-            WorkspacePlacement placement = workspace.WorkspacePlacement;
-            int right = placement.PositionX + placement.Width + border * 2;
-            int bottom = placement.PositionY + placement.Height + border * 2;
-            if (right > innerContainerWidth)
+            if (room.Workspaces.Any())
             {
-                innerContainerWidth = right;
-            }
-            if (bottom > innerContainerHeight)
-            {
-                innerContainerHeight = bottom;
+                int minX = int.MaxValue;
+                int minY = int.MaxValue;
+                int maxX = int.MinValue;
+                int maxY = int.MinValue;
+
+                foreach (Workspace workspace in room.Workspaces)
+                {
+                    WorkspacePlacement placement = workspace.WorkspacePlacement;
+                    int rotatedX = placement.PositionX;
+                    int rotatedY = placement.PositionY;
+                    int rotatedWidth = placement.Width;
+                    int rotatedHeight = placement.Height;
+
+                    if (placement.Rotation != 0)
+                    {
+                        // Adjust the position and size based on rotation
+                        int centerX = placement.PositionX + placement.Width / 2;
+                        int centerY = placement.PositionY + placement.Height / 2;
+                        double radianAngle = placement.Rotation * Math.PI / 180.0;
+
+                        rotatedX = centerX + (int)((placement.PositionX - centerX) * Math.Cos(radianAngle) + (placement.PositionY - centerY) * Math.Sin(radianAngle));
+                        rotatedY = centerY + (int)((placement.PositionX - centerX) * Math.Sin(radianAngle) + (placement.PositionY - centerY) * Math.Cos(radianAngle));
+                        rotatedWidth = (int)(placement.Width * Math.Cos(radianAngle) + placement.Height * Math.Sin(radianAngle));
+                        rotatedHeight = (int)(placement.Width * Math.Sin(radianAngle) + placement.Height * Math.Cos(radianAngle));
+                    }
+
+                    minX = Math.Min(minX, rotatedX);
+                    minY = Math.Min(minY, rotatedY);
+                    maxX = Math.Max(maxX, rotatedX + rotatedWidth);
+                    maxY = Math.Max(maxY, rotatedY + rotatedHeight);
+                }
+
+                int width = maxX - minX + border;
+                int height = maxY - minY + border;
+                int left = minX + border / 2;
+                int top = minY + border / 2;
+
+                <div class="room" style="left: @(left)px; top: @(top)px; width: @(width)px; height: @(height)px">
+                    <p class="text-white fw-bold m-2">@room.Name</p>
+                </div>
             }
         }
 
-        <style>
-            #inner-container {
-                width: @(innerContainerWidth)px;
-                height: @(innerContainerHeight)px;
-            }
-        </style>
-
+        @* Workspaces *@
         @foreach (Workspace workspace in workspaces)
         {
             WorkspacePlacement placement = workspace.WorkspacePlacement;
@@ -77,7 +116,7 @@
             <div class="table"
                  style="left: @(right)px; top: @(bottom)px; width: @(placement.Width)px; height: @(placement.Height)px; transform: rotate(@(placement.Rotation)deg)">
                 <div class="table-dot @(workspace.Occupied ? "bg-danger" : "bg-success")"
-                     style="left: @(placement.Width / 2 - 18)px; top: -12px">
+                     style="left: @(placement.Width / 2 - 18)px; top: -15px">
                 </div>
                 @{
                     int backwardsRotation = placement.Rotation > 90 ? 180 : 0;
@@ -85,18 +124,28 @@
                 <p class=" w-100 m-0 text-center" style="margin-top: 28px !important; transform: rotate(@(backwardsRotation)deg)">@workspace.Name</p>
             </div>
         }
+    </div>
 
-
+    @* Legend *@
+    <div class="legend">
+        <div class="bg-black bg-opacity-25 p-2 rounded d-flex flex-column gap-2">
+            <p class="m-0">Rooms:</p>
+            @foreach (Room room in Model.Rooms
+                .OrderBy(r => r.Name))
+            {
+                <div class="bg-light bg-opacity-75 px-2 py-1 rounded col">@room.Name</div>
+            }
+        </div>
     </div>
 </div>
 
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 <script>
     $(document).ready(function () {
         const floorPlanContainer = $('#floor-plan-container');
         const innerContainer = $('#inner-container');
-        console.log(innerContainer.height())
         floorPlanContainer.css('height', innerContainer.height() + 30);
         const zoomLevel = 1;
         let pointerX;
@@ -131,3 +180,52 @@
         });
     });
 </script>
+
+<style>
+    #floor-plan-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        min-height: 300px;
+        max-height: 600px;
+        border: 15px solid #eee;
+        border-radius: 20px;
+    }
+
+    #inner-container {
+        position: absolute;
+        width: @(innerContainerWidth)px;
+        height: @(innerContainerHeight)px;
+        overflow: hidden;
+        background-color: #edf3f8;
+    }
+
+    .table {
+        position: absolute;
+        border-radius: 15px;
+        background-color: #afc0cd;
+    }
+    
+    .table-dot {
+        border-radius: 50%;
+        width: 36px;
+        height: 36px;
+        border: 5px solid #fff;
+        position: absolute;
+    }
+    
+    .room {
+        position: absolute;
+        border-radius: 15px;
+        background-color: #d7e3ed;
+    }
+    
+    .legend {
+        position: absolute;
+        bottom: 1rem;
+        right: 1rem;
+        pointer-events: none;
+        z-index: 2;
+    }
+</style>
