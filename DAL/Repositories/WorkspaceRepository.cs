@@ -59,6 +59,7 @@ public class WorkspaceRepository : IWorkspaceRepository
             .Include(w => w.workspaceCharacteristicsDTOs)
             .ThenInclude(wc => wc.characteristicDTO)
             .Include(w => w.reservationDTOs)
+            .ThenInclude(e => e.userDTO)
             .Include(w => w.roomDTO)
             .ThenInclude(r => r.floorDTO)
             .ToList();
