@@ -1,5 +1,4 @@
 ﻿using BLL.DTOs;
-using BLL.Entities;
 using BLL.Exception;
 
 namespace BLL.Data.Employee;
@@ -46,7 +45,8 @@ public class EmployeeService : IEmployeeService
                 Guid.NewGuid(),
                 employee.Name,
                 employee.Email,
-                employee.HashedPassword
+                employee.HashedPassword,
+                role: new Entities.Role(new Guid("82948653-f9fd-4e29-b057-b055cec46249"))
             );
             newEmployee.HashPassword();
             _employeeRepository.CreateEmployee(newEmployee.ToUserDTO());
@@ -56,15 +56,16 @@ public class EmployeeService : IEmployeeService
         return null;
     }
 
-  public Entities.Employee? EditEmployee(Entities.Employee currentEmployee, Entities.Employee editedEmployee)
+    public Entities.Employee? EditEmployee(Entities.Employee currentEmployee, Entities.Employee editedEmployee)
     {
-        if (!string.IsNullOrWhiteSpace(editedEmployee.HashedPassword) && !string.IsNullOrEmpty(editedEmployee.HashedPassword))
+        if (!string.IsNullOrWhiteSpace(editedEmployee.HashedPassword) &&
+            !string.IsNullOrEmpty(editedEmployee.HashedPassword))
         {
             editedEmployee.HashPassword();
 
             if (currentEmployee.HashedPassword != editedEmployee.HashedPassword)
             {
-                currentEmployee = new(
+                currentEmployee = new Entities.Employee(
                     currentEmployee.Id,
                     currentEmployee.Name,
                     currentEmployee.Email,
@@ -78,7 +79,7 @@ public class EmployeeService : IEmployeeService
         {
             if (currentEmployee.Name != editedEmployee.Name)
             {
-                currentEmployee = new(
+                currentEmployee = new Entities.Employee(
                     currentEmployee.Id,
                     editedEmployee.Name,
                     currentEmployee.Email,
