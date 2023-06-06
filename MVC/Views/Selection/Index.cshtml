@@ -15,11 +15,11 @@
     @Html.HiddenFor(model => model.ReservationIsDone, new { id = "ReservationIsDone" })
     @Html.HiddenFor(model => model.SectionChanged)
 
-    @await Html.PartialAsync("Partial/DateTimeSelection", Model)
+    @await Html.PartialAsync("Partial/Selection/DateTimeSelection", Model)
     <hr class="my-5"/>
-    @await Html.PartialAsync("Partial/EmployeeSelection", Model)
+    @await Html.PartialAsync("Partial/Selection/EmployeeSelection", Model)
     <hr class="my-5"/>
-    @await Html.PartialAsync("Partial/WorkspaceSelection", Model)
+    @await Html.PartialAsync("Partial/Selection/WorkspaceSelection", Model)
 
     <button type="submit" class="btn btn-primary w-100" onclick="document.getElementById('ReservationIsDone').value = 'True'; document.getElementById('form').submit()"> Make Reservation </button>
 }

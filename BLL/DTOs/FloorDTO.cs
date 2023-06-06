@@ -19,7 +19,8 @@ public class FloorDTO
             Name,
             Number,
             new Floorplan(),
-            new List<Room>());
+            new List<Room>(),
+            new Location(LocationId));
     }
 
     public Floor ToFloorWithLocation()
@@ -50,6 +51,7 @@ public class FloorDTO
             Name,
             Number,
             new Floorplan(),
-            roomDTO.Select(r => r.ToRoomWithWorkspacesAndReservationsAndPlacement()).ToList());
+            roomDTO.Select(r => r.ToRoomWithWorkspacesAndReservationsAndPlacement()).ToList(),
+            new Location(LocationId));
     }
 }

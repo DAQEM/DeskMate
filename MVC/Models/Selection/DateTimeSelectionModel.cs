@@ -26,4 +26,14 @@ public class DateTimeSelectionModel : IValidatableObject
             );
         }
     }
+
+    public DateTime GetStartDateTimeWithDate()
+    {
+        return new DateTime(Date.Year, Date.Month, Date.Day, StartTime.Hour, StartTime.Minute, StartTime.Second);
+    }
+
+    public DateTime GetEndDateTimeWithDate()
+    {
+        return new DateTime(Date.Year, Date.Month, Date.Day, EndTime.Hour, EndTime.Minute, EndTime.Second);
+    }
 }

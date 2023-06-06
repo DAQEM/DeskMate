@@ -33,6 +33,10 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Workspace" asp-action="Index">Workspaces</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="FloorPlan" asp-action="Index">Floor plan</a>
+                    </li>
+
                     if (User.IsInRole(Constants.AdminRole))
                     {
                         <li class="nav-item">
