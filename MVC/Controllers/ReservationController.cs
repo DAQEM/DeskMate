@@ -15,10 +15,10 @@ namespace MVC.Controllers;
 [Route("Reservation")]
 public class ReservationController : BaseController<ReservationController>
 {
+    private readonly IEmployeeService _employeeService;
     private readonly IFloorService _floorService;
     private readonly ILocationService _locationService;
     private readonly IReservationService _reservationService;
-    private readonly IEmployeeService _employeeService;
     private readonly IWorkspaceService _workspaceService;
 
     public ReservationController(IReservationService reservationService, IFloorService floorService,
@@ -115,17 +115,68 @@ public class ReservationController : BaseController<ReservationController>
                 DateTime.Parse(dateTo)).OrderBy(reservation => reservation.StartDate).ToList();
         return new JsonResult(new { reservations });
     }
-    
+
     [HttpPost("Modal")]
     public IActionResult Modal(ReservationModalModel model)
     {
-        if (ModelState.IsValid)
+        Console.WriteLine(model.Date);
+
+        List<string> errors = new();
+
+        if (model.Date == null)
+        {
+            errors.Add("Date is required");
+        }
+
+        if (model.StartTime == null)
+        {
+            errors.Add("Start time is required");
+        }
+
+        if (model.EndTime == null)
+        {
+            errors.Add("End time is required");
+        }
+
+        if (model.Date != null && model.StartTime != null && model.EndTime != null)
+        {
+            if (model.StartTime > model.EndTime)
+            {
+                errors.Add("Start time cannot be after end time");
+            }
+
+            if (model.StartTime == model.EndTime)
+            {
+                errors.Add("Start time cannot be the same as end time");
+            }
+
+            if (model.Date < DateTime.Now.Date)
+            {
+                errors.Add("Date cannot be in the past");
+            }
+
+            List<Reservation> reservations =
+                _reservationService.GetRunningReservationsForWorkspace(
+                        model.WorkspaceId,
+                        model.GetStartDateTimeWithDate(),
+                        model.GetEndDateTimeWithDate())
+                    .ToList();
+
+            if (reservations.Any())
+                foreach (Reservation reservation in reservations)
+                {
+                    errors.Add("Existing reservation: " + reservation.StartDate.TimeOfDay + " - " +
+                               reservation.EndDate.TimeOfDay);
+                }
+        }
+
+        if (!errors.Any())
         {
             Reservation reservation = new(
                 null,
-                model.DateTimeSelection.GetStartDateTimeWithDate(),
-                model.DateTimeSelection.GetEndDateTimeWithDate(),
-                _employeeService.GetEmployeeById(new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.ToString())),
+                model.GetStartDateTimeWithDate(),
+                model.GetEndDateTimeWithDate(),
+                _employeeService.GetEmployeeById(new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.Value)),
                 _workspaceService.GetWorkspaceWithCharateristicsAndReservationsAndRoomAndFloorByWorkplaceId(
                     model.WorkspaceId));
 
@@ -133,6 +184,8 @@ public class ReservationController : BaseController<ReservationController>
             return new JsonResult(new { success = true });
         }
 
-        return new JsonResult(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
+
+        return new JsonResult(new
+            { success = false, errors });
     }
 }

@@ -56,4 +56,12 @@ public class ReservationService : IReservationService
             .Select(r => r.ToReservationWithSmallEmployeeAndWorkspace())
             .ToList();
     }
+
+    public List<Entities.Reservation> GetRunningReservationsForWorkspace(Guid workspaceId, DateTime dateFrom,
+        DateTime dateTo)
+    {
+        return _reservationRepository.GetRunningReservationsForWorkspace(workspaceId, dateFrom, dateTo)
+            .Select(r => r.ToReservationWithSmallEmployeeAndWorkspace())
+            .ToList();
+    }
 }

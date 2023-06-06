@@ -1,6 +1,6 @@
 ﻿@using BLL.Entities
-
-
+@using MVC.Models.Reservation
+@model MVC.Models.Workspace.WorkspaceDetailModel
 @{
     ViewBag.Title = "Workspace details";
     Layout = "_Layout";
@@ -8,42 +8,67 @@
 
 <div class="container">
     <div class="row justify-content-center">
-        <div class="card" style="width: 50rem;">
+        <div class="card" style="max-width: 50rem;">
             <div class="card-body">
-                <h2 class="card-title">@Model.Name</h2>
-                <h3 class="card-subtitle mb-2 text-muted">@Model.Floor, @Model.Room</h3>
-                <h4 class="card-text">
-                    @foreach (Characteristic characteristic in Model.Characteristics)
-                    {
-                        <span class="badge  text-black badge-primary mr-2">@characteristic.Amount @characteristic.Type</span>
-                    }
-                </h4>
-                <h4>Reservations:</h4>
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Employee</th>
-                            <th>Start Date</th>
-                            <th>End Date</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach(Reservation reservation in Model.Reservations)
-                        {
-                            <tr>
-                                <td>@reservation.Employee.Name</td>
-                                <td>@reservation.StartDate</td>
-                                <td>@reservation.EndDate</td>
-                            </tr>
-                        }
-                        </tbody>
-                    </table>
+                <div class="d-flex justify-content-between">
+                    <div class="d-flex align-items-end gap-2">
+                        <h2 class="card-title m-0">@Model.Name</h2>
+                        <h5 style="height: min-content; margin-bottom: 5px">(@Model.Floor, @Model.Room)</h5>
+                    </div>
+
+                    <button class="btn--blue btn" data-toggle="modal" onclick="handleReservation()" data-target="#reservation_modal">Create reservation</button>
 
                 </div>
+                <p class="m-0 mt-3">This workspace has:</p>
+                <div class="d-flex gap-2 flex-wrap my-1">
+                    @foreach (Characteristic characteristic in Model.Characteristics)
+                    {
+                        <span class="text-black bg-black bg-opacity-10 p-2 px-4 rounded-pill ">@characteristic.Amount @characteristic.Type</span>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="card mt-3" style="max-width: 50rem;">
+            <h4 class="mt-1">Reservations:</h4>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (Reservation reservation in Model.Reservations)
+                    {
+                        <tr>
+                            <td>@reservation.Employee.Name</td>
+                            <td>@reservation.StartDate</td>
+                            <td>@reservation.EndDate</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+
             </div>
         </div>
     </div>
 </div>
+@await Html.PartialAsync("Partial/Reservation/ReservationModal",
+           new ReservationModalModel
+           {
+               WorkspaceId = Model.Id,
+               WorkspaceName = Model.Name,
+               FloorName = Model.Floor,
+               Date = DateTime.Now,
+               StartTime = DateTime.Now,
+               EndTime = DateTime.Now.AddHours(1)
+           })
 
+<script>
 
+    const handleReservation = () => {
+        $('#reservation_modal').modal('show');
+    }
+</script>
