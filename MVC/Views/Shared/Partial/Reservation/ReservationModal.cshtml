@@ -1,0 +1,97 @@
+﻿@model MVC.Models.Reservation.ReservationModalModel
+
+@Html.AntiForgeryToken()
+<div class="modal" tabindex="-1" role="dialog" id="reservation_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">New Reservation</h5>
+                @Html.HiddenFor(m => m.WorkspaceId, new { id = "workspace_id" })
+                <button type="button" class="btn-close" aria-label="Close" onclick="closeModal()">
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="alerts"></div>
+                <div class="d-flex gap-3">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.WorkspaceName, "Workspace")
+                        @Html.TextBoxFor(m => m.WorkspaceName, new { @class = "form-control", disabled = "disabled" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.FloorName, "Floor")
+                        @Html.TextBoxFor(m => m.FloorName, new { @class = "form-control", disabled = "disabled" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Date)
+                    @Html.TextBoxFor(m => m.Date, "{0:yyyy-MM-dd}", new { @class = "form-control", id = "date_picker", type = "date", onclick = "this.showPicker()" })
+                </div>
+                <div class="d-flex gap-3">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.StartTime, "From")
+                        @Html.TextBoxFor(m => m.StartTime, "{0:HH:mm}", new { @class = "form-control", id = "start_time_picker", type = "time", onclick = "this.showPicker()" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.EndTime, "To")
+                        @Html.TextBoxFor(m => m.EndTime, "{0:HH:mm}", new { @class = "form-control", id = "end_time_picker", type = "time", onclick = "this.showPicker()" })
+                    </div>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--blue" onclick="sendReservationRequest()">Save Reservation</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    const addAlert = (message) => {
+        const alert = `<div class="alert alert-danger alert-dismissible">
+                           <strong>${message}</strong>
+                           <button class="btn-close" aria-label="Close alert" onclick="this.parentElement.remove()"></button>
+                       </div>`
+                       
+        $("#alerts").prepend(alert);
+    }
+
+    const closeModal = () => {
+        $("#reservation_modal").modal("hide");
+    }
+    
+    const sendReservationRequest = () => {
+        
+        $("#alerts").empty();
+        
+        const workspaceId = $("#workspace_id").val();
+        const date = $("#date_picker").val();
+        const startTime = $("#start_time_picker").val();
+        const endTime = $("#end_time_picker").val();
+        
+        const token = $('input[name="__RequestVerificationToken"]').val();
+        
+        //create a fetch with content type of application/x-www-form-urlencoded
+        fetch("/Reservation/Modal", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: `WorkspaceId=${workspaceId}&Date=${date}&StartTime=${startTime}&EndTime=${endTime}&__RequestVerificationToken=${token}`
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    closeModal();
+                    window.location.reload();
+                }
+                else {
+                    const errors = data.errors;
+                    errors.forEach(error => addAlert(error));
+                }
+            })
+            .catch(error => console.log(error));
+    }
+
+</script>

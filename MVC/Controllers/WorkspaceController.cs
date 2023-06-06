@@ -30,9 +30,11 @@ public class WorkspaceController : BaseController<WorkspaceController>
     [Route("Detail")]
     public IActionResult Detail(Guid id)
     {
-        Workspace workspace = _workspaceService.GetWorkspaceWithCharateristicsAndReservationsAndRoomAndFloorByWorkplaceId(id);
-        List <Reservation> reservations = _workspaceService.GetReservationsAndUserFromCurrentDate(workspace);
-        WorkspaceDetailModel model = new(workspace.Name, workspace.Room.Floor.Name, workspace.Room.Name, workspace.Characteristics, reservations);
+        Workspace workspace =
+            _workspaceService.GetWorkspaceWithCharateristicsAndReservationsAndRoomAndFloorByWorkplaceId(id);
+        List<Reservation> reservations = _workspaceService.GetReservationsAndUserFromCurrentDate(workspace);
+        WorkspaceDetailModel model = new(workspace.Id, workspace.Name, workspace.Room.Floor.Name, workspace.Room.Name,
+            workspace.Characteristics, reservations);
         return View(model);
     }
 }
