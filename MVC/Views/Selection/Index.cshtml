@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Selection";
     Layout = "_Layout";
+    Console.WriteLine(Model.ReservationIsDone);
 }
 
 <h1>Workspace reservation</h1>
@@ -11,7 +12,7 @@
 
 @using (Html.BeginForm("Selection", "Selection", FormMethod.Post, new { id = "form" }))
 {
-    @Html.HiddenFor(model => model.ReservationIsDone)
+    @Html.HiddenFor(model => model.ReservationIsDone, new { id = "ReservationIsDone" })
     @Html.HiddenFor(model => model.SectionChanged)
 
     @await Html.PartialAsync("Partial/DateTimeSelection", Model)
@@ -26,5 +27,7 @@
 <script>
     $( document ).ready(function () {
         window.location.hash = "@Model.SectionChanged";
+        
+        $( '#ReservationIsDone' ).val("False");
     });
 </script>

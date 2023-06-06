@@ -105,23 +105,28 @@ public class SelectionController : BaseController<SelectionController>
                 .Select(w => WorkspacePropModel.FromWorkspaceWithOccupied(w, startDate, endDate))
                 .ToList();
 
-        if (model.ReservationIsDone)
+        //reservation is done when the user clicks on the reserve button
+        if (model.ReservationIsDone && ModelState.IsValid)
         {
-            List<string> dataTransferList = model.Reservations
-                .Where(x => x.Key != string.Empty && x.Key != null)
-                .Where(x => x.Value != string.Empty && x.Value != null)
-                .Select(x => x.Key + ":" + x.Value).ToList();
+            //check if there are any reservations
+            if (model.Reservations.Any(kpv => !string.IsNullOrEmpty(kpv.Value)))
+            {
+                List<string> dataTransferList = model.Reservations
+                    .Where(x => x.Key != string.Empty && x.Key != null)
+                    .Where(x => x.Value != string.Empty && x.Value != null)
+                    .Select(x => x.Key + ":" + x.Value).ToList();
 
-            TempData["reservationModel"] = dataTransferList.Aggregate((x, y) => x + "," + y);
+                TempData["reservationModel"] = dataTransferList.Aggregate((x, y) => x + "," + y);
 
-            TempData["date"] = model.DateTimeSelectionModel.Date.ToString("yyyy-MM-dd HH:mm:ss");
-            TempData["startTime"] = model.DateTimeSelectionModel.StartTime.ToString("HH:mm:ss");
-            TempData["endTime"] = model.DateTimeSelectionModel.EndTime.ToString("HH:mm:ss");
+                TempData["date"] = model.DateTimeSelectionModel.Date.ToString("yyyy-MM-dd HH:mm:ss");
+                TempData["startTime"] = model.DateTimeSelectionModel.StartTime.ToString("HH:mm:ss");
+                TempData["endTime"] = model.DateTimeSelectionModel.EndTime.ToString("HH:mm:ss");
 
-
-            return RedirectToAction("Reserve");
+                return RedirectToAction("Reserve");
+            }
         }
 
+        model.ReservationIsDone = false;
         return View("Index", model);
     }
 
