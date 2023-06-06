@@ -1,0 +1,63 @@
+﻿@model MVC.Models.FloorPlan.FloorPlanModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Floor plan";
+}
+
+<h1>Floor plan</h1>
+@await Html.PartialAsync("_ValidationScriptsPartial", Model)
+@using (Html.BeginForm("Index", "FloorPlan", FormMethod.Post, new { id = "form" }))
+{
+    @Html.ValidationMessageFor(model => model.DateTimeSelection.Date, "", new { @class = "text-danger" })
+    @Html.ValidationMessageFor(model => model.DateTimeSelection.StartTime, "", new { @class = "text-danger" })
+    @Html.ValidationMessageFor(model => model.DateTimeSelection.EndTime, "", new { @class = "text-danger" })
+    <div class="d-flex gap-4">
+        <div class="form-group flex-grow-1">
+            @Html.LabelFor(model => model.DateTimeSelection.Date, new { @class = "control-label" })
+            @Html.TextBoxFor(model => model.DateTimeSelection.Date, "{0:yyyy-MM-dd}", new { type = "date", @class = "form-control", onclick = "this.showPicker()", id = "date_selection" })
+        </div>
+        <div class="form-group flex-grow-1">
+            @Html.LabelFor(model => model.DateTimeSelection.StartTime, "From", new { @class = "control-label" })
+            @Html.TextBoxFor(model => model.DateTimeSelection.StartTime, "{0:HH:mm}", new { type = "time", @class = "form-control", onclick = "this.showPicker()", id = "start_time_selection" })
+        </div>
+        <div class="form-group flex-grow-1">
+            @Html.LabelFor(model => model.DateTimeSelection.EndTime, "To", new { @class = "control-label" })
+            @Html.TextBoxFor(model => model.DateTimeSelection.EndTime, "{0:HH:mm}", new { type = "time", @class = "form-control", onclick = "this.showPicker()", id = "end_time_selection" })
+        </div>
+    </div>
+
+    <div class="d-flex gap-4 align-items-end">
+        <div class="form-group">
+            @Html.LabelFor(model => model.LocationFloorSelection.Locations, new { @class = "control-label" })
+            @Html.DropDownListFor(model => model.SelectedLocationId, new SelectList(Model.LocationFloorSelection.Locations, "Id", "Name"), new { @class = "form-control", id = "location_selection" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.LocationFloorSelection.Floors, new { @class = "control-label" })
+            @Html.DropDownListFor(model => model.SelectedFloorId, new SelectList(Model.LocationFloorSelection.Floors, "Id", "Name"), new { @class = "form-control", id = "floor_selection" })
+        </div>
+    </div>
+}
+@await Html.PartialAsync("Partial/FloorPlanPartial", Model.SelectedFloor)
+
+<script>
+    $("#date_selection").focusout(function () {
+        $("#form").submit();
+    });
+
+    $("#start_time_selection").focusout(function () {
+        $("#form").submit();
+    });
+
+    $("#end_time_selection").focusout(function () {
+        $("#form").submit();
+    });
+
+    $("#location_selection").change(function () {
+        $("#form").submit();
+    });
+    
+    $("#floor_selection").change(function () {
+        $("#form").submit();
+    });
+</script>
