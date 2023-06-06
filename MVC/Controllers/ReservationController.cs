@@ -1,4 +1,6 @@
-﻿using BLL.Data;
+﻿using System.Security.Claims;
+using BLL.Data;
+using BLL.Data.Employee;
 using BLL.Data.Employee.Reservation;
 using BLL.Data.Floor;
 using BLL.Entities;
@@ -16,13 +18,17 @@ public class ReservationController : BaseController<ReservationController>
     private readonly IFloorService _floorService;
     private readonly ILocationService _locationService;
     private readonly IReservationService _reservationService;
+    private readonly IEmployeeService _employeeService;
+    private readonly IWorkspaceService _workspaceService;
 
     public ReservationController(IReservationService reservationService, IFloorService floorService,
-        ILocationService locationService)
+        ILocationService locationService, IEmployeeService employeeService, IWorkspaceService workspaceService)
     {
         _reservationService = reservationService;
         _floorService = floorService;
         _locationService = locationService;
+        _employeeService = employeeService;
+        _workspaceService = workspaceService;
     }
 
     [HttpGet]
@@ -108,5 +114,25 @@ public class ReservationController : BaseController<ReservationController>
             _reservationService.GetFilteredReservationsByEmployeeId(employeeGuid, DateTime.Parse(dateFrom),
                 DateTime.Parse(dateTo)).OrderBy(reservation => reservation.StartDate).ToList();
         return new JsonResult(new { reservations });
+    }
+    
+    [HttpPost("Modal")]
+    public IActionResult Modal(ReservationModalModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            Reservation reservation = new(
+                null,
+                model.DateTimeSelection.GetStartDateTimeWithDate(),
+                model.DateTimeSelection.GetEndDateTimeWithDate(),
+                _employeeService.GetEmployeeById(new Guid(User.FindFirst(ClaimTypes.NameIdentifier)!.ToString())),
+                _workspaceService.GetWorkspaceWithCharateristicsAndReservationsAndRoomAndFloorByWorkplaceId(
+                    model.WorkspaceId));
+
+            _reservationService.CreateReservation(reservation);
+            return new JsonResult(new { success = true });
+        }
+
+        return new JsonResult(new { success = false, errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage) });
     }
 }
