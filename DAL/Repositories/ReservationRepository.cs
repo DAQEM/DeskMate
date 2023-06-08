@@ -108,4 +108,20 @@ public class ReservationRepository : IReservationRepository
             .Where(r => r.StartDate >= dateStart && r.EndDate <= dateEnd)
             .ToList();
     }
+
+    public List<ReservationDTO> GetRunningReservationsForWorkspace(Guid workspaceId, DateTime dateFrom, DateTime dateTo)
+    {
+        return _context.reservation
+            .Include(r => r.userDTO)
+            .Include(r => r.WorkspaceDTO)
+            .Where(r =>
+                r.WorkspaceId == workspaceId &&
+                (
+                    (r.StartDate >= dateFrom && r.StartDate <= dateTo) || // Reservation starts within the range
+                    (r.EndDate >= dateFrom && r.EndDate <= dateTo) || // Reservation ends within the range
+                    (r.StartDate < dateFrom && r.EndDate > dateTo) // Reservation spans the entire range
+                )
+            )
+            .ToList();
+    }
 }

@@ -59,8 +59,22 @@ public class WorkspaceRepository : IWorkspaceRepository
             .Include(w => w.workspaceCharacteristicsDTOs)
             .ThenInclude(wc => wc.characteristicDTO)
             .Include(w => w.reservationDTOs)
+            .ThenInclude(e => e.userDTO)
             .Include(w => w.roomDTO)
             .ThenInclude(r => r.floorDTO)
+            .ToList();
+    }
+
+    public List<WorkspaceDTO> GetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloorAndLocation()
+    {
+        return _context.workspace
+            .Include(w => w.workspaceCharacteristicsDTOs)
+            .ThenInclude(wc => wc.characteristicDTO)
+            .Include(w => w.reservationDTOs)
+            .ThenInclude(e => e.userDTO)
+            .Include(w => w.roomDTO)
+            .ThenInclude(r => r.floorDTO)
+            .ThenInclude(f => f.locationDTO)
             .ToList();
     }
 }

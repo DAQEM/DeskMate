@@ -19,21 +19,22 @@ namespace DAL.Migrations
                 .HasAnnotation("ProductVersion", "7.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            modelBuilder.Entity("BLL.DTOS.CharacteristicDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.CharacteristicDTO", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<int>("Type")
-                        .HasColumnType("int");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.HasKey("Id");
 
                     b.ToTable("characteristic");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.CompanyDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.CompanyDTO", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -48,7 +49,7 @@ namespace DAL.Migrations
                     b.ToTable("company");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.FloorDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.FloorDTO", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -71,7 +72,7 @@ namespace DAL.Migrations
                     b.ToTable("floor");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.LocationDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.LocationDTO", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -111,7 +112,7 @@ namespace DAL.Migrations
                     b.ToTable("location");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.PermissionDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.PermissionDTO", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -131,7 +132,7 @@ namespace DAL.Migrations
                     b.ToTable("permission");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.ReservationDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.ReservationDTO", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -158,7 +159,7 @@ namespace DAL.Migrations
                     b.ToTable("reservation");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.RoleDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.RoleDTO", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -173,7 +174,7 @@ namespace DAL.Migrations
                     b.ToTable("role");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.RoomDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.RoomDTO", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -193,7 +194,7 @@ namespace DAL.Migrations
                     b.ToTable("room");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.UserDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.UserDTO", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -226,7 +227,7 @@ namespace DAL.Migrations
                     b.ToTable("user");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.WorkplaceCharacteristicsDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.WorkspaceCharacteristicsDTO", b =>
                 {
                     b.Property<Guid>("WorkspaceId")
                         .HasColumnType("char(36)");
@@ -241,10 +242,10 @@ namespace DAL.Migrations
 
                     b.HasIndex("CharacteristicId");
 
-                    b.ToTable("workplaceCharacteristic");
+                    b.ToTable("workspaceCharacteristic");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.WorkplaceDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.WorkspaceDTO", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -257,6 +258,9 @@ namespace DAL.Migrations
                     b.Property<Guid>("RoomId")
                         .HasColumnType("char(36)");
 
+                    b.Property<Guid?>("WorkspacePlacementId")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("RoomId");
@@ -264,9 +268,41 @@ namespace DAL.Migrations
                     b.ToTable("workspace");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.FloorDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.WorkspacePlacementDTO", b =>
                 {
-                    b.HasOne("BLL.DTOS.LocationDTO", "locationDTO")
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("Height")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PositionX")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PositionY")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Rotation")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("WorkspaceId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkspaceId")
+                        .IsUnique();
+
+                    b.ToTable("workspacePlacement");
+                });
+
+            modelBuilder.Entity("BLL.DTOs.FloorDTO", b =>
+                {
+                    b.HasOne("BLL.DTOs.LocationDTO", "locationDTO")
                         .WithMany("floorDTO")
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -275,9 +311,9 @@ namespace DAL.Migrations
                     b.Navigation("locationDTO");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.LocationDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.LocationDTO", b =>
                 {
-                    b.HasOne("BLL.DTOS.CompanyDTO", "companyDTO")
+                    b.HasOne("BLL.DTOs.CompanyDTO", "companyDTO")
                         .WithMany("locationDTOList")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -286,9 +322,9 @@ namespace DAL.Migrations
                     b.Navigation("companyDTO");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.PermissionDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.PermissionDTO", b =>
                 {
-                    b.HasOne("BLL.DTOS.RoleDTO", "roleDTO")
+                    b.HasOne("BLL.DTOs.RoleDTO", "roleDTO")
                         .WithMany("permissionDTO")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -297,28 +333,28 @@ namespace DAL.Migrations
                     b.Navigation("roleDTO");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.ReservationDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.ReservationDTO", b =>
                 {
-                    b.HasOne("BLL.DTOS.UserDTO", "userDTO")
+                    b.HasOne("BLL.DTOs.UserDTO", "userDTO")
                         .WithMany("reservationDTOs")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BLL.DTOS.WorkplaceDTO", "workplaceDTO")
+                    b.HasOne("BLL.DTOs.WorkspaceDTO", "WorkspaceDTO")
                         .WithMany("reservationDTOs")
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("userDTO");
+                    b.Navigation("WorkspaceDTO");
 
-                    b.Navigation("workplaceDTO");
+                    b.Navigation("userDTO");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.RoomDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.RoomDTO", b =>
                 {
-                    b.HasOne("BLL.DTOS.FloorDTO", "floorDTO")
+                    b.HasOne("BLL.DTOs.FloorDTO", "floorDTO")
                         .WithMany("roomDTO")
                         .HasForeignKey("FloorId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -327,15 +363,15 @@ namespace DAL.Migrations
                     b.Navigation("floorDTO");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.UserDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.UserDTO", b =>
                 {
-                    b.HasOne("BLL.DTOS.CompanyDTO", "companyDTO")
+                    b.HasOne("BLL.DTOs.CompanyDTO", "companyDTO")
                         .WithMany("userDTO")
                         .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BLL.DTOS.RoleDTO", "roleDTO")
+                    b.HasOne("BLL.DTOs.RoleDTO", "roleDTO")
                         .WithMany("userDTO")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -346,28 +382,28 @@ namespace DAL.Migrations
                     b.Navigation("roleDTO");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.WorkplaceCharacteristicsDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.WorkspaceCharacteristicsDTO", b =>
                 {
-                    b.HasOne("BLL.DTOS.CharacteristicDTO", "characteristicDTO")
-                        .WithMany("workplaceCharacteristicsDTOs")
+                    b.HasOne("BLL.DTOs.CharacteristicDTO", "characteristicDTO")
+                        .WithMany("workspaceCharacteristicsDTOs")
                         .HasForeignKey("CharacteristicId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BLL.DTOS.WorkplaceDTO", "workplaceDTO")
-                        .WithMany("workplaceCharacteristicsDTOs")
+                    b.HasOne("BLL.DTOs.WorkspaceDTO", "WorkspaceDto")
+                        .WithMany("workspaceCharacteristicsDTOs")
                         .HasForeignKey("WorkspaceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("characteristicDTO");
+                    b.Navigation("WorkspaceDto");
 
-                    b.Navigation("workplaceDTO");
+                    b.Navigation("characteristicDTO");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.WorkplaceDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.WorkspaceDTO", b =>
                 {
-                    b.HasOne("BLL.DTOS.RoomDTO", "roomDTO")
+                    b.HasOne("BLL.DTOs.RoomDTO", "roomDTO")
                         .WithMany("workplaceDTO")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -376,50 +412,63 @@ namespace DAL.Migrations
                     b.Navigation("roomDTO");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.CharacteristicDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.WorkspacePlacementDTO", b =>
                 {
-                    b.Navigation("workplaceCharacteristicsDTOs");
+                    b.HasOne("BLL.DTOs.WorkspaceDTO", "workspaceDTO")
+                        .WithOne("workspacePlacementDTO")
+                        .HasForeignKey("BLL.DTOs.WorkspacePlacementDTO", "WorkspaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("workspaceDTO");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.CompanyDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.CharacteristicDTO", b =>
+                {
+                    b.Navigation("workspaceCharacteristicsDTOs");
+                });
+
+            modelBuilder.Entity("BLL.DTOs.CompanyDTO", b =>
                 {
                     b.Navigation("locationDTOList");
 
                     b.Navigation("userDTO");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.FloorDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.FloorDTO", b =>
                 {
                     b.Navigation("roomDTO");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.LocationDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.LocationDTO", b =>
                 {
                     b.Navigation("floorDTO");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.RoleDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.RoleDTO", b =>
                 {
                     b.Navigation("permissionDTO");
 
                     b.Navigation("userDTO");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.RoomDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.RoomDTO", b =>
                 {
                     b.Navigation("workplaceDTO");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.UserDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.UserDTO", b =>
                 {
                     b.Navigation("reservationDTOs");
                 });
 
-            modelBuilder.Entity("BLL.DTOS.WorkplaceDTO", b =>
+            modelBuilder.Entity("BLL.DTOs.WorkspaceDTO", b =>
                 {
                     b.Navigation("reservationDTOs");
 
-                    b.Navigation("workplaceCharacteristicsDTOs");
+                    b.Navigation("workspaceCharacteristicsDTOs");
+
+                    b.Navigation("workspacePlacementDTO");
                 });
 #pragma warning restore 612, 618
         }

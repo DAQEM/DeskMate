@@ -46,12 +46,16 @@ public class SelectionController : BaseController<SelectionController>
         List<FloorModel> floorModels =
             _floorService.GetAllFloorsByLocationId(locationModels[0].Id).Select(FloorModel.FromFloor).ToList();
 
+
         DateTimeSelectionModel dateTimeSelectionModel = new()
         {
             Date = DateTime.Now,
             StartTime = DateTime.Now,
             EndTime = DateTime.Now.AddHours(1)
         };
+
+        Floor? selectedFloor = _floorService.GetFloorWithRoomsAndWorkspacesWithOccupancyById(floorModels[0].Id,
+            dateTimeSelectionModel.StartTime, dateTimeSelectionModel.EndTime);
 
         List<WorkspacePropModel> workspaceModels =
             _workspaceService.GetWorkspacesWithCharacteristicsAndReservationsByFloorId(floorModels[0].Id)
@@ -66,7 +70,8 @@ public class SelectionController : BaseController<SelectionController>
             LocationModels = locationModels,
             FloorModels = floorModels,
             WorkspaceModels = workspaceModels,
-            DateTimeSelectionModel = dateTimeSelectionModel
+            DateTimeSelectionModel = dateTimeSelectionModel,
+            SelectedFloor = selectedFloor
         };
 
         return View(model);
@@ -92,28 +97,36 @@ public class SelectionController : BaseController<SelectionController>
                                                model.DateTimeSelectionModel.EndTime.ToString("HH:mm:ss"),
             "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
 
+        model.SelectedFloor = _floorService.GetFloorWithRoomsAndWorkspacesWithOccupancyById(model.SelectedFloorId,
+            startDate, endDate);
+
         model.WorkspaceModels =
             _workspaceService.GetWorkspacesWithCharacteristicsAndReservationsByFloorId(model.SelectedFloorId)
                 .Select(w => WorkspacePropModel.FromWorkspaceWithOccupied(w, startDate, endDate))
                 .ToList();
 
-        if (model.ReservationIsDone)
+        //reservation is done when the user clicks on the reserve button
+        if (model.ReservationIsDone && ModelState.IsValid)
         {
-            List<string> dataTransferList = model.Reservations
-                .Where(x => x.Key != string.Empty && x.Key != null)
-                .Where(x => x.Value != string.Empty && x.Value != null)
-                .Select(x => x.Key + ":" + x.Value).ToList();
+            //check if there are any reservations
+            if (model.Reservations.Any(kpv => !string.IsNullOrEmpty(kpv.Value)))
+            {
+                List<string> dataTransferList = model.Reservations
+                    .Where(x => x.Key != string.Empty && x.Key != null)
+                    .Where(x => x.Value != string.Empty && x.Value != null)
+                    .Select(x => x.Key + ":" + x.Value).ToList();
 
-            TempData["reservationModel"] = dataTransferList.Aggregate((x, y) => x + "," + y);
+                TempData["reservationModel"] = dataTransferList.Aggregate((x, y) => x + "," + y);
 
-            TempData["date"] = model.DateTimeSelectionModel.Date.ToString("yyyy-MM-dd HH:mm:ss");
-            TempData["startTime"] = model.DateTimeSelectionModel.StartTime.ToString("HH:mm:ss");
-            TempData["endTime"] = model.DateTimeSelectionModel.EndTime.ToString("HH:mm:ss");
+                TempData["date"] = model.DateTimeSelectionModel.Date.ToString("yyyy-MM-dd HH:mm:ss");
+                TempData["startTime"] = model.DateTimeSelectionModel.StartTime.ToString("HH:mm:ss");
+                TempData["endTime"] = model.DateTimeSelectionModel.EndTime.ToString("HH:mm:ss");
 
-
-            return RedirectToAction("Reserve");
+                return RedirectToAction("Reserve");
+            }
         }
 
+        model.ReservationIsDone = false;
         return View("Index", model);
     }
 

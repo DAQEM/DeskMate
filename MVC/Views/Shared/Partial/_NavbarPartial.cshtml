@@ -1,4 +1,5 @@
 @using System.Security.Claims
+@using BLL.Util
 @using Microsoft.AspNetCore.Mvc.TagHelpers
 <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light mb-3">
     <div class="container">
@@ -32,7 +33,11 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Workspace" asp-action="Index">Workspaces</a>
                     </li>
-                    if (User.IsInRole("CEO"))
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="FloorPlan" asp-action="Index">Floor plan</a>
+                    </li>
+
+                    if (User.IsInRole(Constants.AdminRole))
                     {
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Dashboard" asp-action="Index">Dashboard</a>
@@ -43,10 +48,18 @@
             <ul class="navbar-nav justify-content-center align-items-center">
                 @if (User.Identity.IsAuthenticated)
                 {
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="/employee/@User.FindFirstValue(ClaimTypes.NameIdentifier)">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link text-dark" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="~/images/icon/profile_icon.png" alt="profile icon" style="height: 40px; opacity: 0.6; margin-top: 1px"/>
                         </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li>
+                                <a class="dropdown-item" href="/employee/@User.FindFirstValue(ClaimTypes.NameIdentifier)">Your profile</a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="/employee/edit/@User.FindFirstValue(ClaimTypes.NameIdentifier)">Edit profile</a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link text-white btn btn--blue btn--width" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>

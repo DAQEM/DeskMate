@@ -23,8 +23,7 @@ public class UserDTO
             Id,
             Name,
             Email,
-            Password,
-            new List<Reservation>());
+            Password);
     }
 
     public Employee ToSmallEmployee()

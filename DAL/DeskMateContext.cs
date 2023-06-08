@@ -18,12 +18,14 @@ public class DeskMateContext : DbContext
     public DbSet<ReservationDTO> reservation { get; set; }
     public DbSet<WorkspaceDTO> workspace { get; set; }
     public DbSet<WorkspaceCharacteristicsDTO> workspaceCharacteristic { get; set; }
+    public DbSet<WorkspacePlacementDTO> workspacePlacement { get; set; }
     public DbSet<RoomDTO> room { get; set; }
     public DbSet<UserDTO> user { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<WorkspaceCharacteristicsDTO>().HasKey(w => new { w.WorkspaceId, w.CharacteristicId });
+        modelBuilder.Entity<WorkspaceCharacteristicsDTO>()
+            .HasKey(w => new { w.WorkspaceId, w.CharacteristicId });
 
         modelBuilder.Entity<CompanyDTO>()
             .HasMany(c => c.locationDTOList)
@@ -78,14 +80,14 @@ public class DeskMateContext : DbContext
             .WithOne(wc => wc.WorkspaceDto)
             .HasForeignKey(wc => wc.WorkspaceId);
 
+        modelBuilder.Entity<WorkspaceDTO>()
+            .HasOne(w => w.workspacePlacementDTO)
+            .WithOne(wp => wp.workspaceDTO)
+            .HasForeignKey<WorkspacePlacementDTO>(wp => wp.WorkspaceId);
+
         modelBuilder.Entity<CharacteristicDTO>()
             .HasMany(c => c.workspaceCharacteristicsDTOs)
             .WithOne(wc => wc.characteristicDTO)
             .HasForeignKey(wc => wc.CharacteristicId);
-    }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.EnableSensitiveDataLogging();
     }
 }

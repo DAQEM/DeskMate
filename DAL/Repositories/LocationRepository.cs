@@ -16,4 +16,9 @@ public class LocationRepository : ILocationRepository
     {
         return _context.location.ToList();
     }
+
+    public LocationDTO? GetLocationById(Guid locationId)
+    {
+        return _context.location.FirstOrDefault(l => l.Id == locationId);
+    }
 }

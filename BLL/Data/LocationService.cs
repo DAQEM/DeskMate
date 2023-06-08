@@ -15,4 +15,9 @@ public class LocationService : ILocationService
     {
         return _locationRepository.GetAllLocations().Select(l => l.ToLocation()).ToList();
     }
+
+    public Location? GetLocationById(Guid locationId)
+    {
+        return _locationRepository.GetLocationById(locationId)?.ToLocation();
+    }
 }

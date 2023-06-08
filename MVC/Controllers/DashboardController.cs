@@ -1,12 +1,13 @@
 ﻿using BLL.Data.Employee;
 using BLL.Entities;
+using BLL.Util;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVC.Models.Dashboard;
 
 namespace MVC.Controllers;
 
-[Authorize(Roles = "CEO")]
+[Authorize(Roles = Constants.AdminRole)]
 [Route("dashboard")]
 public class DashboardController : BaseController<DashboardController>
 {

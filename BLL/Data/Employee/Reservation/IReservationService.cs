@@ -16,4 +16,6 @@ public interface IReservationService
 
     List<Entities.Reservation> GetFilteredReservationsByEmployeeId(Guid employeeId, DateTime dateFrom, DateTime dateTo);
     List<Entities.Reservation> GetFilteredReservations(DateTime dateStart, DateTime dateEnd);
+
+    List<Entities.Reservation> GetRunningReservationsForWorkspace(Guid workspaceId, DateTime dateFrom, DateTime dateTo);
 }
