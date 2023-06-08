@@ -11,4 +11,5 @@ public interface IWorkspaceRepository
     List<WorkspaceDTO> GetWorkspacesWithCharacteristicsAndReservations();
     List<WorkspaceDTO> GetWorkspacesWithCharacteristicsAndReservationsByFloorId(Guid floorId);
     List<WorkspaceDTO> GetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloor();
+    List<WorkspaceDTO> GetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloorAndLocation();
 }

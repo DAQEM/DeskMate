@@ -65,8 +65,42 @@ public class WorkspaceDTO
                 reservationDTO.Id,
                 reservationDTO.StartDate,
                 reservationDTO.EndDate,
-                employee: reservationDTO.userDTO.ToSmallEmployee()
-                );
+                reservationDTO.userDTO.ToSmallEmployee()
+            );
+
+
+            workspace.Reservations.Add(reservation);
+        }
+
+        foreach (WorkspaceCharacteristicsDTO workspacecharacteristicDTO in workspaceCharacteristicsDTOs)
+        {
+            Characteristic characteristic = new(
+                workspacecharacteristicDTO.characteristicDTO.Type,
+                workspacecharacteristicDTO.characteristicDTO.Id,
+                workspacecharacteristicDTO.Amount);
+
+            workspace.Characteristics.Add(characteristic);
+        }
+
+        return workspace;
+    }
+
+    public Workspace ToWorkspaceWithCharacteristicAndReservationAndRoomAndFloorAndLocation()
+    {
+        Workspace workspace = new(
+            Id,
+            Name,
+            room: roomDTO.ToRoomWithFloorAndLocation());
+
+
+        foreach (ReservationDTO reservationDTO in reservationDTOs)
+        {
+            Reservation reservation = new(
+                reservationDTO.Id,
+                reservationDTO.StartDate,
+                reservationDTO.EndDate,
+                reservationDTO.userDTO.ToSmallEmployee()
+            );
 
 
             workspace.Reservations.Add(reservation);
