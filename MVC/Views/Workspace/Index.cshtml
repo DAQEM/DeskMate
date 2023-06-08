@@ -1,26 +1,54 @@
-﻿@using BLL.Entities
-@model MVC.Models.Workspace.WorkspaceListModel
+﻿@model MVC.Models.Workspace.WorkspacesOverviewModel
 
 @{
     ViewBag.Title = "Workspaces";
     Layout = "_Layout";
 }
 
-<div class="d-flex justify-content-center flex-wrap">
-    <table class="table table-striped">
-        <thead>
-        <tr>
-            <th>Location</th>
-            <th>Workspace Name</th>
-            <th>Characteristics</th>
-            <th class="AvailabilityClass">Current availability</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (Workspace workspace in Model.Workspaces)
-        {
-            @await Html.PartialAsync("Partial/Components/_WorkspacePartial", workspace)
-        }
-        </tbody>
-    </table>
+<div id="_wrapper">
+    <div id="_filter">
+        @await Html.PartialAsync("Partial/Workspace/_FilterPartial", Model.Filter)
+    </div>
+    <div id="_workspaces">
+        @await Html.PartialAsync("Partial/Workspace/_WorkspacesPartial", Model.Workspaces)
+    </div>
 </div>
+
+<style>
+
+    @@media (max-width: 768px) {
+        #_wrapper {
+            grid-template-columns: 1fr !important;
+            grid-template-rows: min-content 1fr !important;
+            grid-template-areas: 'filter' 'workspaces' !important;
+
+        }
+    
+        #_filter {
+            grid-column: 1;
+            grid-row: 1;
+        }
+    
+        #_workspaces {
+            grid-column: 1;
+            grid-row: 2;
+        }
+    }
+
+    #_wrapper {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 16rem 3fr;
+        grid-template-rows: 1fr;
+        grid-template-areas: "filter workspaces";
+    }
+    
+    #_filter {
+        grid-area: filter;
+        height: max-content;
+    }
+    
+    #_workspaces {
+        grid-area: workspaces;
+    }
+</style>

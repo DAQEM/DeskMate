@@ -87,46 +87,40 @@ public class WorkspaceService : IWorkspaceService
         return workspaces;
     }
 
-    public List<Workspace> GetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloor()
+    public List<Workspace> GetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloorAndLocation()
     {
-        List<Workspace> workspaces = PrivateGetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloor();
+        List<Workspace> workspaces = _workspaceRepository
+            .GetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloorAndLocation()
+            .Select(w => w.ToWorkspaceWithCharacteristicAndReservationAndRoomAndFloorAndLocation())
+            .ToList();
 
 
         foreach (Workspace workspace in workspaces)
         {
-            if (workspace.Reservations.Where(r => DateTime.Now >= r.StartDate && DateTime.Now < r.EndDate).Any())
+            if (workspace.Reservations.Any(r => DateTime.Now >= r.StartDate && DateTime.Now < r.EndDate))
             {
                 workspace.Occupied = true;
             }
         }
-        return workspaces;
-    }
-
-    private List<Workspace> PrivateGetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloor()
-    {
-        List<Workspace> workspaces = _workspaceRepository.GetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloor()
-                 .Select(w => w.ToWorkspaceWithCharacteristicAndReservationAndRoomAndFloor())
-                 .ToList();
 
         return workspaces;
     }
 
     public Workspace GetWorkspaceWithCharateristicsAndReservationsAndRoomAndFloorByWorkplaceId(Guid workspaceId)
-    { 
-
-        List <Workspace> workspaces = PrivateGetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloor();
+    {
+        List<Workspace> workspaces = _workspaceRepository
+            .GetWorkspacesWithCharacteristicsAndReservationsAndRoomAndFloor()
+            .Select(w => w.ToWorkspaceWithCharacteristicAndReservationAndRoomAndFloor())
+            .ToList();
         Workspace workspace = workspaces.Where(w => w.Id == workspaceId).FirstOrDefault();
         return workspace;
     }
 
     public List<Reservation> GetReservationsAndUserFromCurrentDate(Workspace workspace)
     {
-
-       List<Reservation> reservations = workspace.Reservations.Where(r => r.EndDate > DateTime.Now).ToList();
+        List<Reservation> reservations = workspace.Reservations.Where(r => r.EndDate > DateTime.Now).ToList();
 
 
         return reservations;
     }
-
 }
-    

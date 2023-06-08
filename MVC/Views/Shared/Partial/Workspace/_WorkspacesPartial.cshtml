@@ -1,0 +1,9 @@
+﻿@using BLL.Entities
+@model MVC.Models.Workspace.WorkspaceListModel
+
+<div class="h-100 d-flex gap-3 flex-column">
+    @foreach (Workspace workspace in Model.Workspaces)
+    {
+        @await Html.PartialAsync("Partial/Workspace/_WorkspacePartial", workspace)
+    }
+</div>
